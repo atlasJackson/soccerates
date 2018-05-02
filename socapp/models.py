@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Group(models.Model):
     group_names = ["A","B","C","D","E","F","G","H"]
     CHOICES = tuple((g, g) for g in group_names)
@@ -19,6 +20,9 @@ class Group(models.Model):
     def __str__(self):
         return "Group {}".format(self.name)
 
+    def __eq__(self, other_group):
+        return type(other_group) is Group and self.name == other_group.name
+
 class Team(models.Model):
     name = models.CharField(max_length=32, unique=True)
     country_code = models.CharField(max_length=4) # Not required, could remove.
@@ -27,6 +31,9 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+    def __eq__(self, other_team):
+        return type(other_team) is Team and self.name == other_team.name
 
 # Potentially include details of whether it's a group match, or later... add penalties/extra time to the model (or result model)?
 class Fixture(models.Model):
@@ -66,9 +73,12 @@ class Fixture(models.Model):
     
     # Finds the winner.
     def get_winner(self):
-        if self.is_draw():
+        if self.result_available():
+            if self.is_draw():
+                return
+            return self.team1 if self.team1_goals > self.team2_goals else self.team2
+        else:
             return
-        return self.team1 if self.team1_goals > self.team2_goals else self.team2
         
 
     def __str__(self):
