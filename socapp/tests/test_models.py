@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils import timezone
 import socapp.tests.test_helpers as helpers
+
+from socapp.models import *
 
 # Tests for the Team model
 class TeamTests(TestCase):
@@ -45,3 +48,36 @@ class GroupTests(TestCase):
         h = helpers.generate_group("A")
         self.assertIsNotNone(h.id)
 
+# Tests for the Fixture model
+# Ensure to test team1/2 are not the same team (among others!)
+class FixtureTest(TestCase):
+    def setUp(self):
+        self.group = helpers.generate_group("A")
+        self.team1 = helpers.generate_team("Scotland","SCO",self.group)
+        self.team2 = helpers.generate_team("England", "ENG", self.group)
+        self.fixture = helpers.generate_fixture(self.team1, self.team2, timezone.now())
+    
+    def test_str_representation(self):
+        self.assertEqual("Scotland vs England", str(self.fixture))
+    
+    # Tests that the default match status is set to NOT_STARTED
+    def test_default_match_status(self):
+        self.assertFalse(self.fixture.status)
+    
+    # Test the status after changing: potentially, this may work by comparing the current date to the match-date in future
+    def test_match_status(self):
+        self.fixture.status = Fixture.MATCH_STATUS_FINISHED
+        self.assertTrue(self.fixture.status)
+
+    # Tests the get_group method returns the correct value
+    def test_get_group(self):
+        self.assertEqual(self.fixture.get_group(), self.group)
+        g = helpers.generate_group("B")
+        self.assertNotEqual(self.fixture.get_group(), g)
+
+    # Test to ensure the same team cannot be added as both team1 and team2
+    def test_prevent_duplicate_teams(self):
+        with self.assertRaises(ValidationError):
+            f = helpers.generate_fixture(self.team1, self.team1, timezone.now())
+
+    

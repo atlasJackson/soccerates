@@ -10,3 +10,7 @@ def generate_team(name, country_code, group):
     team.country_code = country_code
     team.save()
     return team
+
+def generate_fixture(team1, team2, match_date):
+    fixture = Fixture.objects.get_or_create(team1=team1, team2=team2, match_date=match_date)[0]
+    return fixture

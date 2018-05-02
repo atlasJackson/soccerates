@@ -45,14 +45,15 @@ class Fixture(models.Model):
         (MATCH_STATUS_FINISHED, "Match has finished")
     )
 
+    
     team1 = models.ForeignKey(Team, related_name="team1", on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name="team2", on_delete=models.CASCADE)
     match_date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_STARTED)
 
     # For the result: keep here, or extract to its own table?
-    team1_goals = models.PositiveIntegerField(default=0)
-    team2_goals = models.PositiveIntegerField(default=0)
+    team1_goals = models.PositiveIntegerField(null=True, blank=True)
+    team2_goals = models.PositiveIntegerField(null=True, blank=True)
 
     # Gets the group that the fixture is in
     def get_group(self):
@@ -68,7 +69,7 @@ class Fixture(models.Model):
     def is_draw(self):
         if self.result_available():
             return self.team1_goals == self.team2_goals
-        # raise exception?
+        return None
     
     # Finds the winner.
     def get_winner(self):
@@ -78,7 +79,13 @@ class Fixture(models.Model):
             return self.team1 if self.team1_goals > self.team2_goals else self.team2
         else:
             return
-        
+
+    ### OVERRIDES ###
+    def save(self, *args, **kwargs):
+        if self.team1 == self.team2:
+            raise ValidationError("Error assigning teams to this fixture")
+        # If it's a group stage match, must check to ensure both teams are in the same group. Implement later with stage field.
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return "{} vs {}".format(self.team1, self.team2)
