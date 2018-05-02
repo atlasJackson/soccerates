@@ -1,6 +1,7 @@
 from django.test import TestCase
 import socapp.tests.test_helpers as helpers
 
+# Tests for the Team model
 class TeamTests(TestCase):
 
     def setUp(self):
@@ -25,4 +26,10 @@ class GroupTests(TestCase):
     
     def test_group_equality(self):
         team = helpers.generate_team("Scotland", "SCO", self.group1)
+        group2 = helpers.generate_group("B")
+        group3 = helpers.generate_group("A")
         self.assertNotEqual(self.group1, team)
+        self.assertNotEqual(self.group1, group2)
+        self.assertEqual(self.group1, group3)
+
+
