@@ -1,5 +1,5 @@
+from django.core.exceptions import ValidationError
 from django.db import models
-
 
 class Group(models.Model):
     group_names = ["A","B","C","D","E","F","G","H"]
@@ -13,8 +13,7 @@ class Group(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.name in self.group_names:
-            print("Invalid")
-            return
+            raise ValidationError("Invalid group name")
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 import socapp.tests.test_helpers as helpers
 
@@ -21,9 +22,11 @@ class GroupTests(TestCase):
     def setUp(self):
         self.group1 = helpers.generate_group("A")
 
+    # Test the class's string representation
     def test_str_representation(self):
         self.assertEqual("Group A", str(self.group1))
     
+    # Test the definition of equality between two Group instances
     def test_group_equality(self):
         team = helpers.generate_team("Scotland", "SCO", self.group1)
         group2 = helpers.generate_group("B")
@@ -32,4 +35,13 @@ class GroupTests(TestCase):
         self.assertNotEqual(self.group1, group2)
         self.assertEqual(self.group1, group3)
 
+    # Test to ensure that groups outwith the range A-H cannot be added to the system
+    def test_group_name(self):
+        with self.assertRaises(ValidationError):
+            g = helpers.generate_group("X")
+        with self.assertRaises(ValidationError):
+            g = helpers.generate_group(1)
+        
+        h = helpers.generate_group("A")
+        self.assertIsNotNone(h.id)
 
