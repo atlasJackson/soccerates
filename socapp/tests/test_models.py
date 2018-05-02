@@ -49,7 +49,6 @@ class GroupTests(TestCase):
         self.assertIsNotNone(h.id)
 
 # Tests for the Fixture model
-# Ensure to test team1/2 are not the same team (among others!)
 class FixtureTest(TestCase):
     def setUp(self):
         self.group = helpers.generate_group("A")
@@ -62,13 +61,13 @@ class FixtureTest(TestCase):
     
     # Tests that the default match status is set to NOT_STARTED
     def test_default_match_status(self):
-        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_NOT_STARTED)
+        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_NOT_PLAYED)
         self.assertFalse(self.fixture.status)
     
     # Test the status after changing: potentially, this may work by comparing the current date to the match-date in future
     def test_match_status(self):
         self.fixture.status = Fixture.MATCH_STATUS_FINISHED
-        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_FINISHED)
+        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_PLAYED)
         self.assertTrue(self.fixture.status)
 
     # Tests the get_group method returns the correct value

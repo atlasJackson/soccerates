@@ -17,7 +17,7 @@ def generate_fixture(team1, team2, match_date):
 
 # Simulates the changes to the Fixture model upon the match being played
 def play_match(fixture, team1_goals, team2_goals):
-    fixture.status = Fixture.MATCH_STATUS_FINISHED
+    fixture.status = Fixture.MATCH_STATUS_PLAYED
     fixture.team1_goals = team1_goals
     fixture.team2_goals = team2_goals
     fixture.save()

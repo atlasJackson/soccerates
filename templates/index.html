@@ -1,29 +1,7 @@
 <!DOCTYPE html>
-
+{% extends 'base.html' %}
 {% load staticfiles %}
 
-<html>
-
-<head>
-    <title>Soccerates | Points-based World Cup App</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-    <script src="{% static 'js/main.js' %}" /></script>
-</head>
-<body>
-    <div>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">World Cup</a></li>
-                <li><a href="#">Leaderboards</a></li>
-                <li><a href="#">Forums</a></li>
-            </ul>
-        </nav>
-    </div>
-    <div>
-
-    </div>
-</body>
-
-</html>
+{% block body_block %}
+    <p>Filler</p>
+{% endblock %}

@@ -37,19 +37,19 @@ class Team(models.Model):
 # Potentially include details of whether it's a group match, or later... add penalties/extra time to the model (or result model)?
 class Fixture(models.Model):
     # Could maybe extend this to add a status for matches that are happening?    
-    MATCH_STATUS_NOT_STARTED = 0
-    MATCH_STATUS_FINISHED = 1
+    MATCH_STATUS_NOT_PLAYED = 0
+    MATCH_STATUS_PLAYED = 1
 
     MATCH_STATUS_CHOICES = (
-        (MATCH_STATUS_NOT_STARTED, "Match has not started"),
-        (MATCH_STATUS_FINISHED, "Match has finished")
+        (MATCH_STATUS_NOT_PLAYED, "Match has not started"),
+        (MATCH_STATUS_PLAYED, "Match has finished")
     )
 
     
     team1 = models.ForeignKey(Team, related_name="team1", on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name="team2", on_delete=models.CASCADE)
     match_date = models.DateTimeField(null=True, blank=True)
-    status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_STARTED)
+    status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_PLAYED)
 
     # For the result: keep here, or extract to its own table?
     team1_goals = models.PositiveIntegerField(null=True, blank=True)
@@ -63,7 +63,7 @@ class Fixture(models.Model):
 
     # Returns whether or not the match has occurred
     def result_available(self):
-        return self.status == self.MATCH_STATUS_FINISHED
+        return self.status == self.MATCH_STATUS_PLAYED
 
     # May need to alter this to accommodate extra time/penalties
     def is_draw(self):
