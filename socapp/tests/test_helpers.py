@@ -14,3 +14,10 @@ def generate_team(name, country_code, group):
 def generate_fixture(team1, team2, match_date):
     fixture = Fixture.objects.get_or_create(team1=team1, team2=team2, match_date=match_date)[0]
     return fixture
+
+# Simulates the changes to the Fixture model upon the match being played
+def play_match(fixture, team1_goals, team2_goals):
+    fixture.status = Fixture.MATCH_STATUS_FINISHED
+    fixture.team1_goals = team1_goals
+    fixture.team2_goals = team2_goals
+    fixture.save()

@@ -62,11 +62,13 @@ class FixtureTest(TestCase):
     
     # Tests that the default match status is set to NOT_STARTED
     def test_default_match_status(self):
+        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_NOT_STARTED)
         self.assertFalse(self.fixture.status)
     
     # Test the status after changing: potentially, this may work by comparing the current date to the match-date in future
     def test_match_status(self):
         self.fixture.status = Fixture.MATCH_STATUS_FINISHED
+        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_FINISHED)
         self.assertTrue(self.fixture.status)
 
     # Tests the get_group method returns the correct value
@@ -79,5 +81,15 @@ class FixtureTest(TestCase):
     def test_prevent_duplicate_teams(self):
         with self.assertRaises(ValidationError):
             f = helpers.generate_fixture(self.team1, self.team1, timezone.now())
+    
+    # Tests the logic behind the is_draw method
+    def test_is_draw(self):
+        self.assertIsNone(self.fixture.is_draw()) # Method should return None if the match hasn't been played
+        helpers.play_match(self.fixture, 3, 2) # Play match - not a draw, so the method should return false
+        self.assertFalse(self.fixture.is_draw())
+        helpers.play_match(self.fixture, 1, 1) # Play match - draw, so the method should return true
+        self.assertTrue(self.fixture.is_draw())
+        
+
 
     
