@@ -73,6 +73,7 @@ class Fixture(models.Model):
     def get_group(self):
         if self.stage == self.GROUP:
             return self.team1.group
+        return None
 
     # Determines whether or not the match has occurred
     def result_available(self):
@@ -88,10 +89,10 @@ class Fixture(models.Model):
     def get_winner(self):
         if self.result_available():
             if self.is_draw():
-                return
+                return None
             return self.team1 if self.team1_goals > self.team2_goals else self.team2
         else:
-            return
+            return None
 
     ### OVERRIDES ###
     def save(self, *args, **kwargs):

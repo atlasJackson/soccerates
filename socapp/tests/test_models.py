@@ -76,6 +76,9 @@ class FixtureTest(TestCase):
         self.assertEqual(self.fixture.get_group(), self.group)
         g = helpers.generate_group("B")
         self.assertNotEqual(self.fixture.get_group(), g)
+        # Test returns None in knockout stages
+        self.fixture.stage = Fixture.FINAL
+        self.assertIsNone(self.fixture.get_group())
 
     # Test to ensure the same team cannot be added as both team1 and team2
     def test_prevent_duplicate_teams(self):
@@ -109,6 +112,17 @@ class FixtureTest(TestCase):
         self.assertFalse(self.fixture.result_available())
         helpers.play_match(self.fixture, 3, 2)
         self.assertTrue(self.fixture.result_available())
+
+    # Tests get_winner method.
+    def test_get_winner(self):
+        self.assertIsNone(self.fixture.get_winner()) # Should be None by default, as the match has not happened yet.
+        helpers.play_match(self.fixture, 3,2) # team1 wins 3-2
+        self.assertEquals(self.team1, self.fixture.get_winner()) # Assert team1 is the winner
+        self.fixture.team2_goals = 4 # now team2 is the winner
+        self.assertEquals(self.team2, self.fixture.get_winner())
+
+        helpers.play_match(self.fixture, 1,1) # Fixture ends in a draw: should return None
+        self.assertIsNone(self.fixture.get_winner())
 
 
     
