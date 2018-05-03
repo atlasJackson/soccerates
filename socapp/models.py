@@ -36,6 +36,7 @@ class Team(models.Model):
 
 # Potentially include details of whether it's a group match, or later... add penalties/extra time to the model (or result model)?
 class Fixture(models.Model):
+    # Constants to determine if the match has been played, or not.
     # Could maybe extend this to add a status for matches that are happening?    
     MATCH_STATUS_NOT_PLAYED = 0
     MATCH_STATUS_PLAYED = 1
@@ -63,6 +64,8 @@ class Fixture(models.Model):
     team2 = models.ForeignKey(Team, related_name="team2", on_delete=models.CASCADE)
     match_date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_PLAYED)
+
+    # Could compare current-date to the match-date to determine whether or not the stage = PLAYED, or NOT PLAYED
     stage = models.IntegerField(choices=STAGE_CHOICES, default=GROUP)
 
     # For the result: keep here, or extract to its own table?
@@ -85,7 +88,7 @@ class Fixture(models.Model):
             return self.team1_goals == self.team2_goals
         return None
     
-    # Finds the winner.
+    # Finds the winner of this fixture.
     def get_winner(self):
         if self.result_available():
             if self.is_draw():
@@ -96,8 +99,9 @@ class Fixture(models.Model):
 
     ### OVERRIDES ###
     def save(self, *args, **kwargs):
+        # Prevent the same team being assigned to team1 and team2 (example: Brazil vs Brazil)
         if self.team1 == self.team2:
-            raise ValidationError("Error assigning teams to this fixture")
+            raise ValidationError("Error assigning teams to this fixture. Teams must be distinct")
         # For group stage fixturres, ensure both teams are in the same group.
         if self.stage == self.GROUP and not self.team1.group == self.team2.group:
             raise ValidationError("Cannot add a group-stage match if both teams are not in the same group")
@@ -105,3 +109,6 @@ class Fixture(models.Model):
 
     def __str__(self):
         return "{} vs {}".format(self.team1, self.team2)
+
+    def __eq__(self):
+        pass
