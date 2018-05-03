@@ -15,12 +15,17 @@
         <header>
             <div class="wrapper">
                 <div class="header-top">
-                    <h1>Soccerates</h1>
-                    <a href="#">Sign In</a>
+                    <h1>
+                        <a href="{% url 'index' %}">Soccerates</a>
+                    </h1>
+                    <div class="header-auth">
+                        <a href="#">Sign In</a>
+                        <a href="#">Register</a>
+                    </div>
                 </div>
                 <div class="header-bottom">
                     <nav>
-                        <a href="#">Home</a>
+                        <a href="{% url 'index' %}">Home</a>
                         <a href="#">Profile</a>
                         <a href="#">World Cup</a>
                         <a href="#">Leaderboards</a>
@@ -33,6 +38,10 @@
         {% block body_block %}
 
         {% endblock %}
+
+        <footer>
+            
+        </footer>
     
         <script src="{% static 'js/main.js' %}" /></script>
     </body>

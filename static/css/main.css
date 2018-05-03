@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 body {
   margin:0
 }
@@ -36,6 +40,15 @@ header h1 {
 
 .header-top a {
   color: inherit;
+}
+
+.header-top h1 a:hover {
+  text-decoration: none;
+}
+
+.header-auth > a {
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 .header-bottom {

@@ -5,6 +5,7 @@ import socapp.tests.test_helpers as helpers
 
 from socapp.models import *
 
+
 # Tests for the Team model
 class TeamTests(TestCase):
 
@@ -66,7 +67,7 @@ class FixtureTest(TestCase):
     
     # Test the status after changing: potentially, this may work by comparing the current date to the match-date in future
     def test_match_status(self):
-        self.fixture.status = Fixture.MATCH_STATUS_FINISHED
+        self.fixture.status = Fixture.MATCH_STATUS_PLAYED
         self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_PLAYED)
         self.assertTrue(self.fixture.status)
 
@@ -89,6 +90,25 @@ class FixtureTest(TestCase):
         helpers.play_match(self.fixture, 1, 1) # Play match - draw, so the method should return true
         self.assertTrue(self.fixture.is_draw())
         
+
+    # Test to ensure that, if the match is a group stage match, a ValidationError is raised if the teams aren't in the same group
+    # Also tests to ensure matches that AREN'T group stage matches do not raise this error.
+    def test_teams_in_same_group(self):
+        group = helpers.generate_group(name="B")
+        team = helpers.generate_team(name="Wales", country_code="WAL", group=group)
+        
+        with self.assertRaises(ValidationError):
+            f = helpers.generate_fixture(team1=self.team1, team2=team, match_date=timezone.now())
+        
+        # Test that the Fixture with teams from different groups can be added if not a group-stage match.
+        f = helpers.generate_fixture(team1=self.team1, team2=team, match_date=timezone.now(), stage=Fixture.QUARTER_FINALS)
+        self.assertIsNotNone(f.id)
+
+    # Tests that the result available method returns correctly
+    def test_result_available(self):
+        self.assertFalse(self.fixture.result_available())
+        helpers.play_match(self.fixture, 3, 2)
+        self.assertTrue(self.fixture.result_available())
 
 
     

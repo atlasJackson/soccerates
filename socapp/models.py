@@ -45,11 +45,25 @@ class Fixture(models.Model):
         (MATCH_STATUS_PLAYED, "Match has finished")
     )
 
+    # Constants to determine if the Fixture is a group match, knockout, etc
+    GROUP = 1
+    LAST_16 = 2
+    QUARTER_FINALS = 3
+    SEMI_FINALS = 4
+    FINAL = 5
+    STAGE_CHOICES = (
+        (GROUP, "Group"),
+        (LAST_16, "Round of 16"),
+        (QUARTER_FINALS, "Quarter Finals"),
+        (SEMI_FINALS, "Semi Finals"),
+        (FINAL, "Final")
+    )
     
     team1 = models.ForeignKey(Team, related_name="team1", on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name="team2", on_delete=models.CASCADE)
     match_date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_PLAYED)
+    stage = models.IntegerField(choices=STAGE_CHOICES, default=GROUP)
 
     # For the result: keep here, or extract to its own table?
     team1_goals = models.PositiveIntegerField(null=True, blank=True)
@@ -57,11 +71,10 @@ class Fixture(models.Model):
 
     # Gets the group that the fixture is in
     def get_group(self):
-        # if stage == group
-        if self.team1.group == self.team2.group:
+        if self.stage == self.GROUP:
             return self.team1.group
 
-    # Returns whether or not the match has occurred
+    # Determines whether or not the match has occurred
     def result_available(self):
         return self.status == self.MATCH_STATUS_PLAYED
 
@@ -84,7 +97,9 @@ class Fixture(models.Model):
     def save(self, *args, **kwargs):
         if self.team1 == self.team2:
             raise ValidationError("Error assigning teams to this fixture")
-        # If it's a group stage match, must check to ensure both teams are in the same group. Implement later with stage field.
+        # For group stage fixturres, ensure both teams are in the same group.
+        if self.stage == self.GROUP and not self.team1.group == self.team2.group:
+            raise ValidationError("Cannot add a group-stage match if both teams are not in the same group")
         super().save(*args, **kwargs)
 
     def __str__(self):
