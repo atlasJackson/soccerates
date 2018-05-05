@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socapp_filters %}
+
+{% block title_block %}
+    Sign In
+{% endblock %}
+
+{% block body_block %}
+<div class="container">
+    <div class="col-6 offset-3">
+        {% if user.is_authenticated %}
+            <h2 class="my-4 text-success">{{user.username}}, you're already logged in!</h2>
+            <a href="{% url 'index' %}">Click here</a> to return to the homepage.
+        {% else %}
+        <div class="card mt-5">
+        <div class="card-header">
+            <h3 class="mb-0">Sign In</h3>
+        </div>
+        <form action="/login" method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class="card-body m-2">
+                <div class="form-group">
+                        {{ form.username.label_tag}}
+                        {{ form.username|add_class:"form-control" }}
+                    </div>
+            
+                    <div class="form-group">
+                        {{ form.password.label_tag }}
+                        {{ form.password|add_class:"form-control" }}
+                    </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                
+{% comment %}                <div class="error my-3">
+                    {% include 'partials/messages.html' %}
+                </div> {% endcomment %}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

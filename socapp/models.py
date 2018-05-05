@@ -11,6 +11,10 @@ class Group(models.Model):
         # return all fixtures in the group. Implement for group-stage matches only.
         pass
 
+    def get_teams(self):
+        pass
+        teams = Team.objects.filter()
+
     def save(self, *args, **kwargs):
         if not self.name in self.group_names:
             raise ValidationError("Invalid group name")
