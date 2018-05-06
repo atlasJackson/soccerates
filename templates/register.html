@@ -3,10 +3,11 @@
 {% load socapp_filters %}
 
 {% block title_block %}
-    Sign In
+	Register
 {% endblock %}
 
 {% block body_block %}
+
 <div class="container">
     <div class="col-6 offset-3">
         {% if user.is_authenticated %}
@@ -15,25 +16,31 @@
         {% else %}
         <div class="card mt-5">
         <div class="card-header">
-            <h3 class="mb-0">Sign In</h3>
+            <h3 class="mb-0">Sign Up</h3>
         </div>
-        <form action="/login" method="POST" autocomplete="off">
+        <form action="/register" method="POST" autocomplete="off">
             {% csrf_token %}
             <div class="card-body m-2">
-                <div class="form-group">
-                    {{ form.username.label_tag}}
-                    {{ form.username|add_class:"form-control" }}
-                </div>
-        
-                <div class="form-group">
-                    {{ form.password.label_tag }}
-                    {{ form.password|add_class:"form-control" }}
-                </div>
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag}}
+                        {{ field|add_class:"form-control" }}
+                        {% if field.errors %}
+                            {% for err in field.errors %}
+                                <label class="error">{{ err }}</label>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
                 <button type="submit" class="btn btn-primary">Submit</button>
                 
-{% comment %}                <div class="error my-3">
+
+                {% comment %}
+                <div class="error my-3">
                     {% include 'partials/messages.html' %}
-                </div> {% endcomment %}
+                </div>
+                {% endcomment %}
             </div>
         </form>
     </div>

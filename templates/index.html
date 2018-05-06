@@ -4,6 +4,7 @@
 
 {% block body_block %}
     <div class="container mt-4">
+        
         {% if user.is_authenticated %}
             <p>Welcome, {{ user.username }}</p>
         {% else %}

@@ -2,6 +2,7 @@
 {% load staticfiles %}
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Soccerates | 
             {% block title_block %}
                 Points-based World Cup App
@@ -24,7 +25,7 @@
                             <a href="{% url 'logout' %}">Logout</a>
                         {% else %}
                             <a href="{% url 'login' %}">Sign In</a>
-                            <a href="#">Register</a>
+                            <a href="{% url 'register' %}">Register</a>
                         {% endif %}
                     </div>
                 </div>

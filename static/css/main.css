@@ -15,6 +15,20 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Form error styles */
+label.error {
+  font-size: 13px;
+  font-style: normal;
+  padding-left: 0px;
+  color: red;
+}
+
+label.error > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 /* HEADER STYLES */
 header {
   background-image: linear-gradient(to right, #a25b5b, #692e4c);
