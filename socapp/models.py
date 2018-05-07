@@ -8,12 +8,10 @@ class Group(models.Model):
     name = models.CharField(max_length=1, choices=CHOICES, unique=True)
 
     def get_fixtures(self):
-        # return all fixtures in the group. Implement for group-stage matches only.
-        pass
-
+        return Fixture.objects.filter(team1__group__name=self.name)
+    
     def get_teams(self):
-        pass
-        teams = Team.objects.filter()
+        return Team.objects.filter(group=self.id)
 
     def save(self, *args, **kwargs):
         if not self.name in self.group_names:
