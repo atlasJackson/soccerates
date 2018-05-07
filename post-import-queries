@@ -1,0 +1,2 @@
+To validate there are 4 teams in each group:
+    Team.objects.values('group').annotate(num=Count('group'))
