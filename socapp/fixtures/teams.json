@@ -1,0 +1,290 @@
+[
+    {
+        "model": "socapp.Team",
+        "pk": 1,
+        "fields": {
+            "name": "Russia",
+            "country_code": "RUS",
+            "group_id": 1
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 2,
+        "fields": {
+            "name": "Saudi Arabia",
+            "country_code": "KSA",
+            "group_id": 1
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 3,
+        "fields": {
+            "name": "Egypt",
+            "country_code": "EGY",
+            "group_id": 1
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 4,
+        "fields": {
+            "name": "Uruguay",
+            "country_code": "URU",
+            "group_id": 1
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 5,
+        "fields": {
+            "name": "Portugal",
+            "country_code": "POR",
+            "group_id": 2
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 6,
+        "fields": {
+            "name": "Spain",
+            "country_code": "SPA",
+            "group_id": 2
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 7,
+        "fields": {
+            "name": "Morocco",
+            "country_code": "MOR",
+            "group_id": 2
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 8,
+        "fields": {
+            "name": "Iran",
+            "country_code": "IRN",
+            "group_id": 2
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 9,
+        "fields": {
+            "name": "France",
+            "country_code": "FRA",
+            "group_id": 3
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 10,
+        "fields": {
+            "name": "Australia",
+            "country_code": "AUS",
+            "group_id": 3
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 11,
+        "fields": {
+            "name": "Peru",
+            "country_code": "PER",
+            "group_id": 3
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 12,
+        "fields": {
+            "name": "Denmark",
+            "country_code": "DEN",
+            "group_id": 3
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 13,
+        "fields": {
+            "name": "Argentina",
+            "country_code": "ARG",
+            "group_id": 4
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 14,
+        "fields": {
+            "name": "Iceland",
+            "country_code": "ICE",
+            "group_id": 4
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 15,
+        "fields": {
+            "name": "Croatia",
+            "country_code": "CRO",
+            "group_id": 4
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 16,
+        "fields": {
+            "name": "Nigeria",
+            "country_code": "NGA",
+            "group_id": 4
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 17,
+        "fields": {
+            "name": "Brazil",
+            "country_code": "BRZ",
+            "group_id": 5
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 18,
+        "fields": {
+            "name": "Switzerland",
+            "country_code": "SWI",
+            "group_id": 5
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 19,
+        "fields": {
+            "name": "Costa Rica",
+            "country_code": "CRC",
+            "group_id": 5
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 20,
+        "fields": {
+            "name": "Serbia",
+            "country_code": "SER",
+            "group_id": 5
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 21,
+        "fields": {
+            "name": "Germany",
+            "country_code": "GER",
+            "group_id": 6
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 22,
+        "fields": {
+            "name": "Mexico",
+            "country_code": "MEX",
+            "group_id": 6
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 23,
+        "fields": {
+            "name": "Sweden",
+            "country_code": "SWE",
+            "group_id": 6
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 24,
+        "fields": {
+            "name": "South Korea",
+            "country_code": "KOR",
+            "group_id": 6
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 25,
+        "fields": {
+            "name": "Belgium",
+            "country_code": "BEL",
+            "group_id": 7
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 26,
+        "fields": {
+            "name": "Panama",
+            "country_code": "PAN",
+            "group_id": 7
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 27,
+        "fields": {
+            "name": "Tunisia",
+            "country_code": "TUN",
+            "group_id": 7
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 28,
+        "fields": {
+            "name": "England",
+            "country_code": "ENG",
+            "group_id": 7
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 29,
+        "fields": {
+            "name": "Columbia",
+            "country_code": "COL",
+            "group_id": 8
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 30,
+        "fields": {
+            "name": "Senegal",
+            "country_code": "SEN",
+            "group_id": 8
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 31,
+        "fields": {
+            "name": "Poland",
+            "country_code": "POL",
+            "group_id": 8
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 32,
+        "fields": {
+            "name": "Japan",
+            "country_code": "JPN",
+            "group_id": 8
+        }
+    }
+]

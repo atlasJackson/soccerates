@@ -5,7 +5,7 @@ class Group(models.Model):
     group_names = ["A","B","C","D","E","F","G","H"]
     CHOICES = tuple((g, g) for g in group_names)
     
-    name = models.CharField(max_length=1, choices=CHOICES)
+    name = models.CharField(max_length=1, choices=CHOICES, unique=True)
 
     def get_fixtures(self):
         # return all fixtures in the group. Implement for group-stage matches only.

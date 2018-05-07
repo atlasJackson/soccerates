@@ -1,0 +1,58 @@
+[
+    {
+        "model": "socapp.Group",
+        "pk": 1,
+        "fields": {
+            "name": "A"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 2,
+        "fields": {
+            "name": "B"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 3,
+        "fields": {
+            "name": "C"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 4,
+        "fields": {
+            "name": "D"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 5,
+        "fields": {
+            "name": "E"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 6,
+        "fields": {
+            "name": "F"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 7,
+        "fields": {
+            "name": "G"
+        }
+    },
+    {
+        "model": "socapp.Group",
+        "pk": 8,
+        "fields": {
+            "name": "H"
+        }
+    }
+]
