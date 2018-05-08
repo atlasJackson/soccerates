@@ -8,7 +8,7 @@ class Group(models.Model):
     name = models.CharField(max_length=1, choices=CHOICES, unique=True)
 
     def get_fixtures(self):
-        return Fixture.objects.filter(team1__group__name=self.name)
+        return Fixture.objects.filter(team1__group__name=self.name, stage=Fixture.GROUP).order_by('match_date')
     
     def get_teams(self):
         return Team.objects.filter(group=self.id)
@@ -74,6 +74,7 @@ class Fixture(models.Model):
     team1_goals = models.PositiveIntegerField(null=True, blank=True)
     team2_goals = models.PositiveIntegerField(null=True, blank=True)
 
+    
     # Gets the group that the fixture is in
     def get_group(self):
         if self.stage == self.GROUP:
@@ -99,6 +100,10 @@ class Fixture(models.Model):
         else:
             return None
 
+    @staticmethod
+    def all_fixtures_by_date():
+        return Fixture.objects.order_by('match_date')
+
     ### OVERRIDES ###
     def save(self, *args, **kwargs):
         # Prevent the same team being assigned to team1 and team2 (example: Brazil vs Brazil)
@@ -109,9 +114,11 @@ class Fixture(models.Model):
             raise ValidationError("Cannot add a group-stage match if both teams are not in the same group")
         super().save(*args, **kwargs)
 
+    # Returns valid string representation of the fixture
     def __str__(self):
         return "{} vs {}".format(self.team1, self.team2)
 
+    # Defines whether or not two fixtures are equal
     def __eq__(self, other_fixture):
         if not type(other_fixture) is Fixture:
             return False

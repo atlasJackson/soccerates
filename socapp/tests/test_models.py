@@ -28,6 +28,10 @@ class TeamTests(TestCase):
         GROUP_STAGE = 1
         fixtures = Fixture.objects.filter((Q(team1=self.team1.id) | Q(team2=self.team1.id)) & Q(stage=GROUP_STAGE))
         self.assertEqual(fixtures.count(), GROUP_STAGE_FIXTURES)
+    
+    def test_team_name_unique_constraint(self):
+        with self.assertRaises(IntegrityError):
+            Team.objects.create(name="England")
 
     def test_str_representation(self):
         self.assertEqual("England", str(self.team1))
@@ -107,14 +111,16 @@ class GroupTests(TestCase):
 
 # Tests for the Fixture model
 class FixtureTest(TestCase):
+    fixtures = ['groups.json', 'teams.json', 'games.json']
+
     def setUp(self):
-        self.group = helpers.generate_group("A")
-        self.team1 = helpers.generate_team("Scotland","SCO",self.group)
+        self.group = helpers.generate_group("G")
+        self.team1 = helpers.generate_team("Panama","PAN",self.group)
         self.team2 = helpers.generate_team("England", "ENG", self.group)
         self.fixture = helpers.generate_fixture(self.team1, self.team2, timezone.now())
     
     def test_str_representation(self):
-        self.assertEqual("Scotland vs England", str(self.fixture))
+        self.assertEqual("Panama vs England", str(self.fixture))
     
     # Tests that the default match status is set to NOT_STARTED
     def test_default_match_status(self):
@@ -180,5 +186,17 @@ class FixtureTest(TestCase):
         helpers.play_match(self.fixture, 1,1) # Fixture ends in a draw: should return None
         self.assertIsNone(self.fixture.get_winner())
 
+    # Tests the static method on the Fixture model which returns all fixtures in order of their match-date
+    def test_get_all_fixtures_by_date(self):
+        fixtures = Fixture.all_fixtures_by_date()
+        
+        # Assert that 'fixtures' is ordered:
+        sorted = True # Flag: changed within the for-loop below if the result is NOT in sorted order
+        num_fixtures = len(fixtures)
+        for i in range(1, num_fixtures):
+            if fixtures[i-1].match_date > fixtures[i].match_date:
+                sorted = False
+        
+        self.assertTrue(sorted)
 
     
