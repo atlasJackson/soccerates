@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
 import socapp.tests.test_helpers as helpers
@@ -23,6 +24,9 @@ class TeamTests(TestCase):
 
 # Tests for the Group model
 class GroupTests(TestCase):
+    
+    fixtures = ['groups.json', 'teams.json', 'games.json']
+
     def setUp(self):
         self.group1 = helpers.generate_group("A")
 
@@ -48,6 +52,30 @@ class GroupTests(TestCase):
         
         h = helpers.generate_group("A")
         self.assertIsNotNone(h.id)
+    
+    # Test unique constraint on group name (important, as we should not have 2 groups with the same name in the DB)
+    def test_group_name_is_unique(self):
+        with self.assertRaises(IntegrityError):
+            Group.objects.create(name="A")
+        
+    # Tests the Group model's get_teams method, to ensure the correct Teams are returned
+    # Group 1 teams are: Russia, Saudi Arabia, Egypt, Uruguay
+    def test_get_teams(self):
+        team_set = self.group1.get_teams()
+        expected_teams = Team.objects.filter(group = self.group1.id)
+        self.assertQuerysetEqual(team_set, expected_teams, ordered=False, transform=lambda x: x)
+
+        # Assert the list matches expected values
+        expected = ["Russia", "Saudi Arabia", "Egypt", "Uruguay"]
+        team_names = list(team_set.values_list('name', flat=True))
+        self.assertEquals(team_names, expected)
+
+    def test_get_fixtures(self):
+        fixture_set = self.group1.get_fixtures()
+        expected_fixtures = Fixture.objects.filter(team1__group = self.group1.id)
+        self.assertQuerysetEqual(fixture_set, expected_fixtures, ordered=False, transform=lambda x: x)
+
+
 
 # Tests for the Fixture model
 class FixtureTest(TestCase):

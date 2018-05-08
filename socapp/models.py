@@ -112,5 +112,14 @@ class Fixture(models.Model):
     def __str__(self):
         return "{} vs {}".format(self.team1, self.team2)
 
-    def __eq__(self):
-        pass
+    def __eq__(self, other_fixture):
+        if not type(other_fixture) is Fixture:
+            return False
+        if not self.match_date == other_fixture.match_date:
+            return False
+        this_teams = [self.team1, self.team2]
+        other_teams = [other_fixture.team1, other_fixture.team2]
+        for team in this_teams:
+            if not team in other_teams:
+                return False
+        return True
