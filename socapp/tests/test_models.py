@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.db.models import Q
 from django.test import TestCase
 from django.utils import timezone
 import socapp.tests.test_helpers as helpers
@@ -10,13 +11,26 @@ from socapp.models import *
 # Tests for the Team model
 class TeamTests(TestCase):
 
+    fixtures = ['groups.json', 'teams.json', 'games.json']
+    
     def setUp(self):
-        self.group = helpers.generate_group("A")
-        self.team1 = helpers.generate_team("Scotland", "SCO", self.group)
-        self.team2 = helpers.generate_team("England", "ENG", self.group)
+        self.group = helpers.generate_group(name="G")
+        self.team1 = helpers.generate_team("England", "ENG", self.group)
+        self.team2 = helpers.generate_team("Belgium", "BEL", self.group) 
+    
+    # Tests that the correct number of teams/countries are present in the database
+    def test_correct_total_number_of_teams(self):
+        NUM_TEAMS = 32
+        self.assertEqual(Team.objects.count(), NUM_TEAMS)
+    
+    def test_team_has_three_group_stage_fixtures(self):
+        GROUP_STAGE_FIXTURES = 3
+        GROUP_STAGE = 1
+        fixtures = Fixture.objects.filter((Q(team1=self.team1.id) | Q(team2=self.team1.id)) & Q(stage=GROUP_STAGE))
+        self.assertEqual(fixtures.count(), GROUP_STAGE_FIXTURES)
 
     def test_str_representation(self):
-        self.assertEqual("Scotland", str(self.team1))
+        self.assertEqual("England", str(self.team1))
     
     def test_team_equality(self):
         self.assertEqual(self.team1, self.team1)
@@ -70,11 +84,25 @@ class GroupTests(TestCase):
         team_names = list(team_set.values_list('name', flat=True))
         self.assertEquals(team_names, expected)
 
+    # Tests the Group model's get_fixtures method returns the correct fixtures
     def test_get_fixtures(self):
         fixture_set = self.group1.get_fixtures()
         expected_fixtures = Fixture.objects.filter(team1__group = self.group1.id)
         self.assertQuerysetEqual(fixture_set, expected_fixtures, ordered=False, transform=lambda x: x)
 
+    # Test to ensure all groups have 4 teams
+    def test_each_group_has_four_teams(self):
+        all_groups = Group.objects.all()
+        for group in all_groups:
+            num_teams = group.get_teams().count()
+            self.assertEquals(num_teams, 4)
+    
+    # There are 6 fixtures per group, and this test should verify that
+    def test_each_group_has_six_fixtures(self):
+        all_groups = Group.objects.all()
+        for group in all_groups:
+            num_fixtures = group.get_fixtures().count()
+            self.assertEquals(num_fixtures, 6)
 
 
 # Tests for the Fixture model

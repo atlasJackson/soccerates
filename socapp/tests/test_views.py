@@ -4,5 +4,3 @@ import socapp.tests.test_helpers as helpers
 from socapp.models import *
 
 
-class TestApplicationRoutes(TestCase):
-    pass
