@@ -25,8 +25,7 @@ class TeamTests(TestCase):
     
     def test_team_has_three_group_stage_fixtures(self):
         GROUP_STAGE_FIXTURES = 3
-        GROUP_STAGE = 1
-        fixtures = Fixture.objects.filter((Q(team1=self.team1.id) | Q(team2=self.team1.id)) & Q(stage=GROUP_STAGE))
+        fixtures = Fixture.objects.filter((Q(team1=self.team1.id) | Q(team2=self.team1.id)) & Q(stage=Fixture.GROUP))
         self.assertEqual(fixtures.count(), GROUP_STAGE_FIXTURES)
     
     def test_team_name_unique_constraint(self):
@@ -187,7 +186,7 @@ class FixtureTest(TestCase):
         self.assertIsNone(self.fixture.get_winner())
 
     # Tests the static method on the Fixture model which returns all fixtures in order of their match-date
-    def test_get_all_fixtures_by_date(self):
+    def test_all_fixtures_by_date(self):
         fixtures = Fixture.all_fixtures_by_date()
         
         # Assert that 'fixtures' is ordered:
@@ -196,7 +195,29 @@ class FixtureTest(TestCase):
         for i in range(1, num_fixtures):
             if fixtures[i-1].match_date > fixtures[i].match_date:
                 sorted = False
+                break
         
         self.assertTrue(sorted)
 
-    
+    # Tests the static method on the Fixture model which returns all fixtures in belonging to a particular stage, ex: group, quarter-final
+    def test_all_fixtures_by_stage(self):
+        """ All fixtures seeded in the Django fixtures JSON files are group stage.
+            We make one fixture a latter-stage match here for testing purposes """
+        
+        f1 = Fixture.objects.get(pk=1)
+        f1.stage = Fixture.LAST_16
+        f1.save()
+
+        # Now, grab the group stage fixtures
+        fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP)
+        correct_stage = True
+        for fixture in fixtures:
+            if not fixture.stage == Fixture.GROUP:
+                correct_stage = False
+                break
+        self.assertTrue(correct_stage)
+
+        # Test for the last-16 fixtures - there should be one (created above), with a PK of 1
+        fixtures = Fixture.all_fixtures_by_stage(Fixture.LAST_16)
+        self.assertEqual(len(fixtures), 1)
+        self.assertIn(f1, fixtures)

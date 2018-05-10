@@ -103,6 +103,11 @@ class Fixture(models.Model):
     @staticmethod
     def all_fixtures_by_date():
         return Fixture.objects.order_by('match_date')
+    
+    @staticmethod
+    def all_fixtures_by_stage(stage):
+        return Fixture.objects.filter(stage=stage).order_by('match_date')
+
 
     ### OVERRIDES ###
     def save(self, *args, **kwargs):

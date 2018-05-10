@@ -26,6 +26,7 @@ class TestApplicationRoutes(TestCase):
         self.client.login(username=self.user.username, password='password')
         response = self.client.get(reverse('index'))
         self.assertContains(response, "Logout")
+        self.assertIsInstance(response.context['user'], User)
 
     # Ensure the login page is accessible to all
     def test_login_page(self):
@@ -38,6 +39,7 @@ class TestApplicationRoutes(TestCase):
         response = self.client.post(reverse('login'), data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Logout")
+        self.assertIsInstance(response.context['user'], User)
     
     # Tests POST request to login endpoint, with invalid credentials, does not login a user.
     def test_user_login_with_invalid_credentials(self):
@@ -62,3 +64,4 @@ class TestApplicationRoutes(TestCase):
         # Now, test that user is logged in
         response2 = self.client.get(reverse("index"))
         self.assertContains(response2, "Logout")
+        self.assertIsInstance(response.context['user'], User)
