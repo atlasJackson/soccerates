@@ -69,8 +69,6 @@ class Fixture(models.Model):
 
     # Could compare current-date to the match-date to determine whether or not the stage = PLAYED, or NOT PLAYED
     stage = models.IntegerField(choices=STAGE_CHOICES, default=GROUP)
-
-    # For the result: keep here, or extract to its own table?
     team1_goals = models.PositiveIntegerField(null=True, blank=True)
     team2_goals = models.PositiveIntegerField(null=True, blank=True)
 
@@ -107,6 +105,10 @@ class Fixture(models.Model):
     @staticmethod
     def all_fixtures_by_stage(stage):
         return Fixture.objects.filter(stage=stage).order_by('match_date')
+    
+    @staticmethod
+    def all_completed_fixtures():
+        return Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED)
 
 
     ### OVERRIDES ###
@@ -135,3 +137,6 @@ class Fixture(models.Model):
             if not team in other_teams:
                 return False
         return True
+    
+    class Meta:
+        ordering = ['match_date']

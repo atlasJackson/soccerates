@@ -201,12 +201,10 @@ class FixtureTest(TestCase):
 
     # Tests the static method on the Fixture model which returns all fixtures in belonging to a particular stage, ex: group, quarter-final
     def test_all_fixtures_by_stage(self):
-        """ All fixtures seeded in the Django fixtures JSON files are group stage.
+        """ All fixtures seeded in the Django fixtures JSON files are group stage games.
             We make one fixture a latter-stage match here for testing purposes """
         
-        f1 = Fixture.objects.get(pk=1)
-        f1.stage = Fixture.LAST_16
-        f1.save()
+        Fixture.objects.filter(pk=1).update(stage=Fixture.LAST_16)
 
         # Now, grab the group stage fixtures
         fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP)
@@ -220,4 +218,13 @@ class FixtureTest(TestCase):
         # Test for the last-16 fixtures - there should be one (created above), with a PK of 1
         fixtures = Fixture.all_fixtures_by_stage(Fixture.LAST_16)
         self.assertEqual(len(fixtures), 1)
-        self.assertIn(f1, fixtures)
+        self.assertIn(Fixture.objects.get(pk=1), fixtures)
+
+    #todo
+    def test_all_completed_fixtures(self):
+        """ By default, no games are completed. Here, we set 2 games to completed, and test the method. """
+        Fixture.objects.filter(pk__in=[1,2]).update(status=Fixture.MATCH_STATUS_PLAYED)
+        
+        completed_fixtures = Fixture.all_completed_fixtures()
+        self.assertEqual(completed_fixtures.count(), 2)
+        self.assertQuerysetEqual(Fixture.objects.filter(pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x)
