@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -72,6 +73,10 @@ class Fixture(models.Model):
     team1_goals = models.PositiveIntegerField(null=True, blank=True)
     team2_goals = models.PositiveIntegerField(null=True, blank=True)
 
+    # For knockout rounds. Subject to change
+    has_extra_time = models.BooleanField(default=False)
+    has_penalties = models.BooleanField(default=False)
+
     
     # Gets the group that the fixture is in
     def get_group(self):
@@ -140,3 +145,52 @@ class Fixture(models.Model):
     
     class Meta:
         ordering = ['match_date']
+
+
+# Models for questions/answers
+
+class TextQuestion(models.Model):
+    # SCORELINE = 1
+    # USER_INPUT = 2
+
+    # QUESTION_TYPES = (
+    #     (SCORELINE, "Scoreline"),
+    #     (USER_INPUT, "User Input")
+    # )
+
+    text = models.CharField(max_length=64, default="Choose a result")
+    # type
+
+    def __str__(self):
+        return self.text
+
+# Abstract base class for Answers. All answers are associated with a user, and most with a fixture.
+class Answer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # Link to fixture. Nullable for answers not related to a particular match (ie - top scorer in tournament)
+    fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+class ScorelineAnswer(Answer):
+    team1_goals = models.IntegerField()
+    team2_goals = models.IntegerField()
+
+    def __str__(self):
+        return "{} predicts: {} {} - {} {}".format(
+            self.user.username, 
+            self.fixture.team1.name, 
+            self.team1_goals, 
+            self.team2_goals, 
+            self.fixture.team2.name
+        d)
+    
+
+class TextAnswer(Answer):
+    question = models.ForeignKey(TextQuestion, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=56)
+
+    def __str__(self):
+        return "Q: {}. A: {}".format(self.question.text, self.answer)
