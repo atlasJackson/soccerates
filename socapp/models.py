@@ -3,16 +3,15 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 class Group(models.Model):
+
     group_names = ["A","B","C","D","E","F","G","H"]
     CHOICES = tuple((g, g) for g in group_names)
     
     name = models.CharField(max_length=1, choices=CHOICES, unique=True)
-
-    def get_fixtures(self):
-        return Fixture.objects.filter(team1__group__name=self.name, stage=Fixture.GROUP).order_by('match_date')
     
-    def get_teams(self):
-        return Team.objects.filter(group=self.id)
+    #################################
+    ### MODEL METHODS
+    #################################
 
     def save(self, *args, **kwargs):
         if not self.name in self.group_names:
@@ -25,17 +24,37 @@ class Group(models.Model):
     def __eq__(self, other_group):
         return type(other_group) is Group and self.name == other_group.name
 
+    #################################
+    ### HELPER METHODS
+    #################################
+
+    def get_fixtures(self):
+        return Fixture.objects.filter(team1__group__name=self.name, stage=Fixture.GROUP).order_by('match_date')
+    
+    def get_teams(self):
+        return Team.objects.filter(group=self.id)
+
+
+################################################################################
+
 class Team(models.Model):
     name = models.CharField(max_length=32, unique=True)
     country_code = models.CharField(max_length=4) # Not required, could remove.
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     #flag = models.ImageField()
 
+    #################################
+    ### MODEL METHODS
+    #################################
+
     def __str__(self):
         return self.name
 
     def __eq__(self, other_team):
         return type(other_team) is Team and self.name == other_team.name
+
+
+################################################################################
 
 # Potentially include details of whether it's a group match, or later... add penalties/extra time to the model (or result model)?
 class Fixture(models.Model):
@@ -77,7 +96,10 @@ class Fixture(models.Model):
     has_extra_time = models.BooleanField(default=False)
     has_penalties = models.BooleanField(default=False)
 
-    
+    #################################
+    ### HELPER METHODS
+    #################################
+
     # Gets the group that the fixture is in
     def get_group(self):
         if self.stage == self.GROUP:
@@ -103,6 +125,10 @@ class Fixture(models.Model):
         else:
             return None
 
+    #################################
+    ### STATIC METHODS
+    #################################
+
     @staticmethod
     def all_fixtures_by_date():
         return Fixture.objects.order_by('match_date')
@@ -116,7 +142,10 @@ class Fixture(models.Model):
         return Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED)
 
 
-    ### OVERRIDES ###
+    #################################
+    ### MODEL METHODS
+    #################################
+
     def save(self, *args, **kwargs):
         # Prevent the same team being assigned to team1 and team2 (example: Brazil vs Brazil)
         if self.team1 == self.team2:
@@ -147,22 +176,24 @@ class Fixture(models.Model):
         ordering = ['match_date']
 
 
+################################################################################
+
 # Models for questions/answers
 
-class TextQuestion(models.Model):
-    # SCORELINE = 1
-    # USER_INPUT = 2
+# class TextQuestion(models.Model):
+#     # SCORELINE = 1
+#     # USER_INPUT = 2
 
-    # QUESTION_TYPES = (
-    #     (SCORELINE, "Scoreline"),
-    #     (USER_INPUT, "User Input")
-    # )
+#     # QUESTION_TYPES = (
+#     #     (SCORELINE, "Scoreline"),
+#     #     (USER_INPUT, "User Input")
+#     # )
 
-    text = models.CharField(max_length=64, default="Choose a result")
-    # type
+#     text = models.CharField(max_length=64, default="Choose a result")
+#     # type
 
-    def __str__(self):
-        return self.text
+#     def __str__(self):
+#         return self.text
 
 # Abstract base class for Answers. All answers are associated with a user, and most with a fixture.
 class Answer(models.Model):
@@ -171,10 +202,6 @@ class Answer(models.Model):
     # Link to fixture. Nullable for answers not related to a particular match (ie - top scorer in tournament)
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE, blank=True, null=True)
 
-    class Meta:
-        abstract = True
-
-class ScorelineAnswer(Answer):
     team1_goals = models.IntegerField()
     team2_goals = models.IntegerField()
 
@@ -185,12 +212,31 @@ class ScorelineAnswer(Answer):
             self.team1_goals, 
             self.team2_goals, 
             self.fixture.team2.name
-        d)
+        )
+
+    #class Meta:
+     #   abstract = True
+
+###############################
+# !!!IGNORE FOR NOW
+
+# class ScorelineAnswer(Answer):
+#     team1_goals = models.IntegerField()
+#     team2_goals = models.IntegerField()
+
+#     def __str__(self):
+#         return "{} predicts: {} {} - {} {}".format(
+#             self.user.username, 
+#             self.fixture.team1.name, 
+#             self.team1_goals, 
+#             self.team2_goals, 
+#             self.fixture.team2.name
+#         )
     
 
-class TextAnswer(Answer):
-    question = models.ForeignKey(TextQuestion, on_delete=models.CASCADE)
-    answer = models.CharField(max_length=56)
+# class TextAnswer(Answer):
+#     question = models.ForeignKey(TextQuestion, on_delete=models.CASCADE)
+#     answer = models.CharField(max_length=56)
 
-    def __str__(self):
-        return "Q: {}. A: {}".format(self.question.text, self.answer)
+#     def __str__(self):
+#         return "Q: {}. A: {}".format(self.question.text, self.answer)

@@ -41,7 +41,7 @@ header h1 {
 }
 
 .wrapper {
-  max-width: 1200px;
+  max-width: 100%;
 }
 
 .header-top {
