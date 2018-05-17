@@ -1,10 +1,6 @@
 from socapp.models import *
 
 
-def generate_group(name):
-    group = Group.objects.get_or_create(name=name)[0]
-    return group
-
 def generate_team(name, country_code, group):
     team = Team.objects.get_or_create(name=name, group=group)[0]
     team.country_code = country_code
@@ -21,3 +17,7 @@ def play_match(fixture, team1_goals, team2_goals):
     fixture.team1_goals = team1_goals
     fixture.team2_goals = team2_goals
     fixture.save()
+
+# def generate_group(name):
+#     group = Group.objects.get_or_create(name=name)[0]
+#     return group

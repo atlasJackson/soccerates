@@ -1,57 +1,47 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 
-class Group(models.Model):
-
-    group_names = ["A","B","C","D","E","F","G","H"]
-    CHOICES = tuple((g, g) for g in group_names)
-    
-    name = models.CharField(max_length=1, choices=CHOICES, unique=True)
-    
-    #################################
-    ### MODEL METHODS
-    #################################
-
-    def save(self, *args, **kwargs):
-        if not self.name in self.group_names:
-            raise ValidationError("Invalid group name")
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return "Group {}".format(self.name)
-
-    def __eq__(self, other_group):
-        return type(other_group) is Group and self.name == other_group.name
-
-    #################################
-    ### HELPER METHODS
-    #################################
-
-    def get_fixtures(self):
-        return Fixture.objects.filter(team1__group__name=self.name, stage=Fixture.GROUP).order_by('match_date')
-    
-    def get_teams(self):
-        return Team.objects.filter(group=self.id)
-
-
-################################################################################
 
 class Team(models.Model):
-    name = models.CharField(max_length=32, unique=True)
-    country_code = models.CharField(max_length=4) # Not required, could remove.
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    #flag = models.ImageField()
+    group_names = ["A","B","C","D","E","F","G","H"]
+    CHOICES = tuple((g, g) for g in group_names)
 
+    name = models.CharField(max_length=32, unique=True)
+    country_code = models.CharField(max_length=4)
+    group = models.CharField(max_length=1, choices=CHOICES)
+    #flag = models.ImageField()
+    
+    games_won = models.IntegerField(default=0)
+    games_drawn = models.IntegerField(default=0)
+    games_lost = models.IntegerField(default=0)
+    goals_for = models.IntegerField(default=0)
+    goals_against = models.IntegerField(default=0)
+    
     #################################
     ### MODEL METHODS
     #################################
+    def save(self, *args, **kwargs):
+        if not self.group in self.group_names:
+            raise ValidationError("Invalid group name")
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
     def __eq__(self, other_team):
         return type(other_team) is Team and self.name == other_team.name
+
+
+    #################################
+    ### HELPER METHODS
+    #################################
+
+    # Returns a team's fixtures by looking at reverse relation to Fixture (based on Fixture's team1 and team2 fields)
+    # These fields have a related name of team1_set and team2_set. | is the OR (union) operator
+    def get_fixtures(self):
+        return self.team1_set.all() | self.team2_set.all()
 
 
 ################################################################################
@@ -82,8 +72,10 @@ class Fixture(models.Model):
         (FINAL, "Final")
     )
     
-    team1 = models.ForeignKey(Team, related_name="team1", on_delete=models.CASCADE)
-    team2 = models.ForeignKey(Team, related_name="team2", on_delete=models.CASCADE)
+    # Specify related names, since there are 2 foreign keys to the same parent model.
+    # This allows us to access the reverse relation, using team.team1_set or team.team2_set
+    team1 = models.ForeignKey(Team, related_name="team1_set", on_delete=models.CASCADE)
+    team2 = models.ForeignKey(Team, related_name="team2_set", on_delete=models.CASCADE)
     match_date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_PLAYED)
 
@@ -140,6 +132,12 @@ class Fixture(models.Model):
     @staticmethod
     def all_completed_fixtures():
         return Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED)
+    
+    @staticmethod
+    def all_fixtures_by_group(group):
+        if not group in Team.group_names:
+            raise ValidationError("Invalid group name supplied")
+        return Fixture.objects.filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
 
 
     #################################
@@ -195,13 +193,11 @@ class Fixture(models.Model):
 #     def __str__(self):
 #         return self.text
 
-# Abstract base class for Answers. All answers are associated with a user, and most with a fixture.
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Link to fixture. Nullable for answers not related to a particular match (ie - top scorer in tournament)
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE, blank=True, null=True)
-
     team1_goals = models.IntegerField()
     team2_goals = models.IntegerField()
 
@@ -240,3 +236,35 @@ class Answer(models.Model):
 
 #     def __str__(self):
 #         return "Q: {}. A: {}".format(self.question.text, self.answer)
+
+# class Group(models.Model):
+
+#     group_names = ["A","B","C","D","E","F","G","H"]
+#     CHOICES = tuple((g, g) for g in group_names)
+    
+#     name = models.CharField(max_length=1, choices=CHOICES, unique=True)
+    
+#     #################################
+#     ### MODEL METHODS
+#     #################################
+
+#     def save(self, *args, **kwargs):
+#         if not self.name in self.group_names:
+#             raise ValidationError("Invalid group name")
+#         super().save(*args, **kwargs)
+
+#     def __str__(self):
+#         return "Group {}".format(self.name)
+
+#     def __eq__(self, other_group):
+#         return type(other_group) is Group and self.name == other_group.name
+
+#     #################################
+#     ### HELPER METHODS
+#     #################################
+
+#     def get_fixtures(self):
+#         return Fixture.objects.filter(team1__group__name=self.name, stage=Fixture.GROUP).order_by('match_date')
+    
+#     def get_teams(self):
+#         return Team.objects.filter(group=self.id)

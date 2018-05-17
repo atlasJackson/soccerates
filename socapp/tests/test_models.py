@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.test import TestCase
 from django.utils import timezone
 import socapp.tests.test_helpers as helpers
@@ -11,10 +11,10 @@ from socapp.models import *
 # Tests for the Team model
 class TeamTests(TestCase):
 
-    fixtures = ['groups.json', 'teams.json', 'games.json']
+    fixtures = ['teams.json', 'games.json']
     
     def setUp(self):
-        self.group = helpers.generate_group(name="G")
+        self.group = "G"
         self.team1 = helpers.generate_team("England", "ENG", self.group)
         self.team2 = helpers.generate_team("Belgium", "BEL", self.group) 
     
@@ -25,12 +25,14 @@ class TeamTests(TestCase):
     
     def test_team_has_three_group_stage_fixtures(self):
         GROUP_STAGE_FIXTURES = 3
-        fixtures = Fixture.objects.filter((Q(team1=self.team1.id) | Q(team2=self.team1.id)) & Q(stage=Fixture.GROUP))
+        fixtures = Fixture.objects.filter(
+            (Q(team1=self.team1.id) | Q(team2=self.team1.id)) & Q(stage=Fixture.GROUP)
+        )
         self.assertEqual(fixtures.count(), GROUP_STAGE_FIXTURES)
     
     def test_team_name_unique_constraint(self):
         with self.assertRaises(IntegrityError):
-            Team.objects.create(name="England")
+            Team.objects.create(name="England", group=self.group)
 
     def test_str_representation(self):
         self.assertEqual("England", str(self.team1))
@@ -38,82 +40,46 @@ class TeamTests(TestCase):
     def test_team_equality(self):
         self.assertEqual(self.team1, self.team1)
         self.assertNotEqual(self.team1, self.team2)
-
-# Tests for the Group model
-class GroupTests(TestCase):
     
-    fixtures = ['groups.json', 'teams.json', 'games.json']
-
-    def setUp(self):
-        self.group1 = helpers.generate_group("A")
-
-    # Test the class's string representation
-    def test_str_representation(self):
-        self.assertEqual("Group A", str(self.group1))
-    
-    # Test the definition of equality between two Group instances
-    def test_group_equality(self):
-        team = helpers.generate_team("Scotland", "SCO", self.group1)
-        group2 = helpers.generate_group("B")
-        group3 = helpers.generate_group("A")
-        self.assertNotEqual(self.group1, team)
-        self.assertNotEqual(self.group1, group2)
-        self.assertEqual(self.group1, group3)
-
     # Test to ensure that groups outwith the range A-H cannot be added to the system
     def test_group_name(self):
         with self.assertRaises(ValidationError):
-            g = helpers.generate_group("X")
+            self.team1.group = "X"
+            self.team1.save()
         with self.assertRaises(ValidationError):
-            g = helpers.generate_group(1)
-        
-        h = helpers.generate_group("A")
-        self.assertIsNotNone(h.id)
+            self.team1.group = 1
+            self.team1.save()
     
-    # Test unique constraint on group name (important, as we should not have 2 groups with the same name in the DB)
-    def test_group_name_is_unique(self):
-        with self.assertRaises(IntegrityError):
-            Group.objects.create(name="A")
-        
-    # Tests the Group model's get_teams method, to ensure the correct Teams are returned
-    # Group 1 teams are: Russia, Saudi Arabia, Egypt, Uruguay
-    def test_get_teams(self):
-        team_set = self.group1.get_teams()
-        expected_teams = Team.objects.filter(group = self.group1.id)
-        self.assertQuerysetEqual(team_set, expected_teams, ordered=False, transform=lambda x: x)
-
-        # Assert the list matches expected values
-        expected = ["Russia", "Saudi Arabia", "Egypt", "Uruguay"]
-        team_names = list(team_set.values_list('name', flat=True))
-        self.assertEquals(team_names, expected)
-
-    # Tests the Group model's get_fixtures method returns the correct fixtures
-    def test_get_fixtures(self):
-        fixture_set = self.group1.get_fixtures()
-        expected_fixtures = Fixture.objects.filter(team1__group = self.group1.id)
-        self.assertQuerysetEqual(fixture_set, expected_fixtures, ordered=False, transform=lambda x: x)
-
+    def test_there_are_eight_groups(self):
+        num_unique_groups = Team.objects.values('group').distinct().count()
+        self.assertEqual(num_unique_groups, 8)
+    
     # Test to ensure all groups have 4 teams
     def test_each_group_has_four_teams(self):
-        all_groups = Group.objects.all()
-        for group in all_groups:
-            num_teams = group.get_teams().count()
-            self.assertEquals(num_teams, 4)
-    
+        group_counts = Team.objects.values('group').annotate(teams_per_group=Count('group'))
+        for group in group_counts:
+            self.assertEquals(group['teams_per_group'], 4)
+
+    # Tests the Team model's get_fixtures method returns the correct fixtures
+    def test_get_fixtures(self):
+        fixture_set = self.team1.get_fixtures()
+        expected_fixtures = Fixture.objects.filter(Q(team1 = self.team1.id) | Q(team2 = self.team1.id))
+        self.assertQuerysetEqual(fixture_set, expected_fixtures, ordered=False, transform=lambda x: x)
+
     # There are 6 fixtures per group, and this test should verify that
     def test_each_group_has_six_fixtures(self):
-        all_groups = Group.objects.all()
-        for group in all_groups:
-            num_fixtures = group.get_fixtures().count()
-            self.assertEquals(num_fixtures, 6)
-
+        groups = Team.objects.values('group').distinct()
+        for group in groups:
+            groupname = group['group']
+            num_fixtures_in_group = Fixture.objects.filter(Q(team1__group=groupname) | Q(team2__group=groupname)).count()
+            self.assertEquals(num_fixtures_in_group, 6)
 
 # Tests for the Fixture model
 class FixtureTest(TestCase):
-    fixtures = ['groups.json', 'teams.json', 'games.json']
+    fixtures = ['teams.json', 'games.json']
 
     def setUp(self):
-        self.group = helpers.generate_group("G")
+        self.group = "G"
         self.team1 = helpers.generate_team("Panama","PAN",self.group)
         self.team2 = helpers.generate_team("England", "ENG", self.group)
         self.fixture = helpers.generate_fixture(self.team1, self.team2, timezone.now())
@@ -135,8 +101,8 @@ class FixtureTest(TestCase):
     # Tests the get_group method returns the correct value
     def test_get_group(self):
         self.assertEqual(self.fixture.get_group(), self.group)
-        g = helpers.generate_group("B")
-        self.assertNotEqual(self.fixture.get_group(), g)
+        group_name = "B"
+        self.assertNotEqual(self.fixture.get_group(), group_name)
         # Test returns None in knockout stages
         self.fixture.stage = Fixture.FINAL
         self.assertIsNone(self.fixture.get_group())
@@ -158,7 +124,7 @@ class FixtureTest(TestCase):
     # Test to ensure that, if the match is a group stage match, a ValidationError is raised if the teams aren't in the same group
     # Also tests to ensure matches that AREN'T group stage matches do not raise this error.
     def test_teams_in_same_group(self):
-        group = helpers.generate_group(name="B")
+        group = "B"
         team = helpers.generate_team(name="Wales", country_code="WAL", group=group)
         
         with self.assertRaises(ValidationError):
@@ -227,4 +193,43 @@ class FixtureTest(TestCase):
         
         completed_fixtures = Fixture.all_completed_fixtures()
         self.assertEqual(completed_fixtures.count(), 2)
-        self.assertQuerysetEqual(Fixture.objects.filter(pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x)
+        self.assertQuerysetEqual(Fixture.objects.filter(
+            pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x
+        )
+
+    # Tests the Fixture model's get_fixtures_by_group method, to ensure the correct Fixtures are returned
+    # Group A teams are: Russia, Saudi Arabia, Egypt, Uruguay
+    def test_all_fixtures_by_group(self):
+        fixtures = Fixture.all_fixtures_by_group("A")
+        expected_teams = Team.objects.filter(group="A")
+        expected_fixtures = Fixture.objects.filter(team1__in=expected_teams)
+        self.assertQuerysetEqual(fixtures, expected_fixtures, ordered=False, transform=lambda x: x)
+
+        # Assert the list matches expected values
+        expected = ["Russia", "Saudi Arabia", "Egypt", "Uruguay"]
+        team_names = list(expected_teams.values_list('name', flat=True))
+        self.assertEquals(team_names, expected)
+
+        # Check that if an invalid group is passed as a parameter, a ValidationError is raised
+        with self.assertRaises(ValidationError):
+            fixtures = Fixture.all_fixtures_by_group("X")
+
+# Tests for the Group model
+#class GroupTests(TestCase):
+    
+    # Test unique constraint on group name (important, as we should not have 2 groups with the same name in the DB)
+    # def test_group_name_is_unique(self):
+    #     with self.assertRaises(IntegrityError):
+    #         Group.objects.create(name="A")
+        
+    # Tests the Group model's get_teams method, to ensure the correct Teams are returned
+    # Group 1 teams are: Russia, Saudi Arabia, Egypt, Uruguay
+    # def test_get_teams(self):
+    #     team_set = self.group1.get_teams()
+    #     expected_teams = Team.objects.filter(group = self.group1.id)
+    #     self.assertQuerysetEqual(team_set, expected_teams, ordered=False, transform=lambda x: x)
+
+    #     # Assert the list matches expected values
+    #     expected = ["Russia", "Saudi Arabia", "Egypt", "Uruguay"]
+    #     team_names = list(team_set.values_list('name', flat=True))
+    #     self.assertEquals(team_names, expected)
