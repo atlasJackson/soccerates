@@ -38,10 +38,10 @@ class Team(models.Model):
     ### HELPER METHODS
     #################################
 
-    # Returns a team's fixtures by looking at reverse relation to Fixture (based on Fixture's team1 and team2 fields)
-    # These fields have a related name of team1_set and team2_set. | is the OR (union) operator
+    # Returns the team instance's fixtures
     def get_fixtures(self):
-        return self.team1_set.all() | self.team2_set.all()
+        return Fixture.objects.select_related('team1', 'team2').filter(Q(team1=self.id) | Q(team2=self.id))
+        #return self.team1_set.all() | self.team2_set.all()
 
 
 ################################################################################
@@ -123,21 +123,22 @@ class Fixture(models.Model):
 
     @staticmethod
     def all_fixtures_by_date():
-        return Fixture.objects.order_by('match_date')
+        return Fixture.objects.select_related('team1', 'team2').order_by('match_date')
     
     @staticmethod
     def all_fixtures_by_stage(stage):
-        return Fixture.objects.filter(stage=stage).order_by('match_date')
+        return Fixture.objects.select_related('team1','team2').filter(stage=stage).order_by('match_date')
     
     @staticmethod
     def all_completed_fixtures():
-        return Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED)
+        return Fixture.objects.select_related('team1','team2').filter(status=Fixture.MATCH_STATUS_PLAYED)
     
     @staticmethod
     def all_fixtures_by_group(group):
         if not group in Team.group_names:
             raise ValidationError("Invalid group name supplied")
-        return Fixture.objects.filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
+        return Fixture.objects.select_related('team1', 'team2') \
+            .filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
 
 
     #################################
