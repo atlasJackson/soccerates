@@ -194,13 +194,28 @@ class Fixture(models.Model):
 #     def __str__(self):
 #         return self.text
 
-class Answer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+""" Models for users, their answers, and leaderboards """
 
-    # Link to fixture. Nullable for answers not related to a particular match (ie - top scorer in tournament)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0) # Hold the points for the user
+
+    def get_predictions(self):
+        return Answer.objects.filter(user=self.id)
+
+class Answer(models.Model):
+    POINTS_NOT_ADDED = 0
+    POINTS_ADDED = 1
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE, blank=True, null=True)
     team1_goals = models.IntegerField()
     team2_goals = models.IntegerField()
+
+    # For this answer, have the points been added to the user model?
+    # If not, and the game has been played, we should calculate the points accumulated for the game, and add them to the user model.
+    # Then set this attribute to True
+    points_added = models.BooleanField(default=POINTS_NOT_ADDED)
 
     def __str__(self):
         return "{} predicts: {} {} - {} {}".format(
@@ -211,8 +226,17 @@ class Answer(models.Model):
             self.fixture.team2.name
         )
 
-    #class Meta:
-     #   abstract = True
+class Leaderboard(models.Model):
+    IN_PROGRESS = 0
+    FINISHED = 1
+
+    name = models.CharField(max_length=64, unique=True)
+    users = models.ManyToManyField(User)
+    is_finished = models.BooleanField(default=IN_PROGRESS) # Is the tournament finished: can calculate the leaderboard's winner if so
+
+    """ Model methods """
+    def __str__(self):
+        return self.name
 
 ###############################
 # !!!IGNORE FOR NOW
