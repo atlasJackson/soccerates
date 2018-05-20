@@ -208,9 +208,9 @@ class Answer(models.Model):
     POINTS_ADDED = 1
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE, blank=True, null=True)
-    team1_goals = models.IntegerField()
-    team2_goals = models.IntegerField()
+    fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE)
+    team1_goals = models.PositiveIntegerField()
+    team2_goals = models.PositiveIntegerField()
 
     # For this answer, have the points been added to the user model?
     # If not, and the game has been played, we should calculate the points accumulated for the game, and add them to the user model.
