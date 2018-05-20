@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -197,7 +197,7 @@ class Fixture(models.Model):
 """ Models for users, their answers, and leaderboards """
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     points = models.IntegerField(default=0) # Hold the points for the user
 
     def get_predictions(self):
@@ -207,7 +207,7 @@ class Answer(models.Model):
     POINTS_NOT_ADDED = 0
     POINTS_ADDED = 1
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE, blank=True, null=True)
     team1_goals = models.IntegerField()
     team2_goals = models.IntegerField()
@@ -231,7 +231,7 @@ class Leaderboard(models.Model):
     FINISHED = 1
 
     name = models.CharField(max_length=64, unique=True)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     is_finished = models.BooleanField(default=IN_PROGRESS) # Is the tournament finished: can calculate the leaderboard's winner if so
 
     """ Model methods """
