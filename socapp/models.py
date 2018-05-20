@@ -209,8 +209,8 @@ class Answer(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE)
-    team1_goals = models.PositiveIntegerField()
-    team2_goals = models.PositiveIntegerField()
+    team1_goals = models.PositiveIntegerField(blank=True, null=True, default=0)
+    team2_goals = models.PositiveIntegerField(blank=True, null=True, default=0)
 
     # For this answer, have the points been added to the user model?
     # If not, and the game has been played, we should calculate the points accumulated for the game, and add them to the user model.
@@ -225,6 +225,10 @@ class Answer(models.Model):
             self.team2_goals, 
             self.fixture.team2.name
         )
+    
+    class Meta:
+        # A user should only be able to submit one scoreline prediction per fixture
+        unique_together = ('user', 'fixture')
 
 class Leaderboard(models.Model):
     IN_PROGRESS = 0
