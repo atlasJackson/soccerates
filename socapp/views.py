@@ -81,3 +81,9 @@ def answer_form(request):
             context_dict['answer_formset'] = None
 
     return render(request, 'answer_form.html', context=context_dict)
+
+# def get_user_answers():
+    
+
+
+#     return answers

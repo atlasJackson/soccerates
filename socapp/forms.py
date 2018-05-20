@@ -50,8 +50,8 @@ class RegistrationForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-    team1_goals = forms.IntegerField()
-    team2_goals = forms.IntegerField()
+    team1_goals = forms.IntegerField(min_value=0, max_value=10, initial=0)
+    team2_goals = forms.IntegerField(min_value=0, max_value=10, initial=0)
 
     class Meta:
         model = Answer

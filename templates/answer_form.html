@@ -16,6 +16,7 @@
                     {{ answer_formset.management_form }}
                     {% for answer_form in answer_formset %}
                         <tr style="height:30px;">
+                            <td>Group {{ fixtures|getGroup:forloop.counter0 }}
                             <td>{{ fixtures|getTeamOne:forloop.counter0 }}</td>
                             <td>{{ answer_form.team1_goals }}</td>
 

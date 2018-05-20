@@ -8,6 +8,11 @@ def add_class(field, css):
     return field.as_widget(attrs={"class": css})
 
 # Return first team in the list. Used in template to predict scores.
+@register.filter(name='getGroup')
+def getGroup(list, i):
+    return list[i].get_group()
+
+# Return first team in the list. Used in template to predict scores.
 @register.filter(name='getTeamOne')
 def getTeamOne(list, i):
     return list[i].team1
