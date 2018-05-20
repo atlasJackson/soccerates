@@ -197,7 +197,7 @@ class Fixture(models.Model):
 """ Models for users, their answers, and leaderboards """
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     points = models.IntegerField(default=0) # Hold the points for the user
 
     def get_predictions(self):

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, connection
 from django.db.models import Q, Count
@@ -215,6 +216,19 @@ class FixtureTests(TestCase):
         # Check that if an invalid group is passed as a parameter, a ValidationError is raised
         with self.assertRaises(ValidationError):
             fixtures = Fixture.all_fixtures_by_group("X")
+
+class UserProfileTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.user = User.objects.create_user(username="test", password="password")
+
+    # Tests to ensure a UserProfile is also created whenever a user is created
+    def test_userprofile_creation(self):
+        self.assertIsInstance(self.user.profile, UserProfile)
+    
+    # Tests that users have zero points upon creation
+    def test_user_starts_with_zero_points(self):
+        self.assertEquals(self.user.profile.points, 0)
 
 # Tests for the Group model
 #class GroupTests(TestCase):
