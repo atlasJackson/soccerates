@@ -5,3 +5,4 @@ from .models import *
 #admin.site.register(Group)
 admin.site.register(Team)
 admin.site.register(Fixture)
+admin.site.register(Answer)

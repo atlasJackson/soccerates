@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django import forms
 
+from socapp.models import Answer
+
 # For registering new users
 class RegistrationForm(forms.ModelForm):
     alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
@@ -45,3 +47,12 @@ class RegistrationForm(forms.ModelForm):
             self.cleaned_data['password']
         )
         return user
+
+
+class AnswerForm(forms.ModelForm):
+    team1_goals = forms.IntegerField()
+    team2_goals = forms.IntegerField()
+
+    class Meta:
+        model = Answer
+        fields = ('team1_goals', 'team2_goals')
