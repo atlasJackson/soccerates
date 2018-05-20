@@ -248,6 +248,12 @@ class AnswerTests(TestCase):
         a.save()
         self.assertEquals(Answer.objects.get(pk=a.id).team1_goals, 4)
 
+    def test_team_goals_fields_cannot_be_null(self):
+        a = helpers.generate_answer(self.user, self.fixture)
+        a.team1_goals = None
+        a.save()
+        self.assertEquals(a.team1_goals, 0)
+
 
 # Tests for the Group model
 #class GroupTests(TestCase):

@@ -209,13 +209,21 @@ class Answer(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE)
-    team1_goals = models.PositiveIntegerField(blank=True, null=True, default=0)
-    team2_goals = models.PositiveIntegerField(blank=True, null=True, default=0)
+    team1_goals = models.PositiveIntegerField(default=0)
+    team2_goals = models.PositiveIntegerField(default=0)
 
     # For this answer, have the points been added to the user model?
     # If not, and the game has been played, we should calculate the points accumulated for the game, and add them to the user model.
     # Then set this attribute to True
     points_added = models.BooleanField(default=POINTS_NOT_ADDED)
+
+
+    def save(self, *args, **kwargs):
+        if self.team1_goals is None:
+            self.team1_goals = 0
+        if self.team2_goals is None:
+            self.team2_goals = 0
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return "{} predicts: {} {} - {} {}".format(
