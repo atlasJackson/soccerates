@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, connection
 from django.db.models import Q, Count
@@ -219,8 +218,7 @@ class FixtureTests(TestCase):
 
 class UserProfileTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(username="test", password="password")
+        self.user = helpers.generate_user()
 
     # Tests to ensure a UserProfile is also created whenever a user is created
     def test_userprofile_creation(self):
@@ -229,6 +227,27 @@ class UserProfileTests(TestCase):
     # Tests that users have zero points upon creation
     def test_user_starts_with_zero_points(self):
         self.assertEquals(self.user.profile.points, 0)
+
+class AnswerTests(TestCase):
+    fixtures = ['teams.json', 'games.json']
+    
+    def setUp(self):
+        self.user = helpers.generate_user()
+        self.fixture = Fixture.objects.get(pk=1)
+    
+    # Tests the unique_together constraint, to ensure a user can only have 1 answer for a given fixture
+    def test_user_cannot_add_more_than_one_answer_per_match(self):
+        a = helpers.generate_answer(self.user, self.fixture)
+        self.assertIsInstance(a, Answer)
+        with self.assertRaises(IntegrityError):
+            a = helpers.generate_answer(self.user, self.fixture)
+    
+    def test_user_can_update_their_answer(self):
+        a = helpers.generate_answer(self.user, self.fixture)
+        a.team1_goals = 4
+        a.save()
+        self.assertEquals(Answer.objects.get(pk=a.id).team1_goals, 4)
+
 
 # Tests for the Group model
 #class GroupTests(TestCase):
