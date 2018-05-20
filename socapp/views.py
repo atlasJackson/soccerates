@@ -34,7 +34,7 @@ class RegistrationView(SuccessMessageMixin, CreateView):
 @login_required
 def answer_form(request):
     try:
-        answers = Answer.objects.get(user=request.user).order_by('fixture.match_date')
+        answers = Answer.objects.filter(user=request.user).order_by('fixture.match_date')
         context_dict = {'answers':answers}
 
     except Answer.DoesNotExist:
