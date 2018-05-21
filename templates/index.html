@@ -1,16 +1,18 @@
-<!DOCTYPE html>
 {% extends 'base.html' %}
 {% load staticfiles %}
 
 {% block body_block %}
     <div class="container mt-4">
         
-        {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}</p>
-        {% else %}
-            <p>Welcome.</p>
-                <a href="{% url 'login' %}">Click here</a> to sign in, or 
-                <a href="{% url 'register' %}">click here</a> to register</p>
-        {% endif %}
+        <div class="mb-5">
+            {% if user.is_authenticated %}
+                <h2>Welcome, {{ user.username }}</h2>
+            {% else %}
+                <p>Welcome.</p>
+                    <a href="{% url 'login' %}">Click here</a> to sign in, or 
+                    <a href="{% url 'register' %}">click here</a> to register
+                </p>
+            {% endif %}
+        </div>
     </div>
-{% endblock %}
+{% endblock %} 

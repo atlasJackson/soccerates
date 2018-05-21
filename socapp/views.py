@@ -9,11 +9,22 @@ from django.views.generic.edit import CreateView
 from django.forms import formset_factory
 from .forms import RegistrationForm, AnswerForm
 
-from .models import Fixture, Answer
+from .models import Fixture, Answer, Team
 
 
 def index(request):
     return render(request, "index.html")
+
+# Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
+def world_cup_schedule(request):
+    fixtures = {}
+    for group in Team.group_names:
+        fixtures[group] = Fixture.all_fixtures_by_group(group)
+
+    context = {
+        'fixtures': fixtures
+    }
+    return render(request, "world_cup.html", context)
 
 class RegistrationView(SuccessMessageMixin, CreateView):
     template_name = "register.html"
@@ -81,9 +92,3 @@ def answer_form(request):
             context_dict['answer_formset'] = None
 
     return render(request, 'answer_form.html', context=context_dict)
-
-# def get_user_answers():
-    
-
-
-#     return answers

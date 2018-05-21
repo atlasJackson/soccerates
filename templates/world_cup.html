@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    World Cup Schedule
+{% endblock %}
+
+{% block body_block %}
+    <div class="mt-5">
+        <main class="fixture-list">
+            {% for group, fixture_list in fixtures.items %}
+            <div class="group-table mb-5 border-right text-center">
+                <h3>Group {{group}}</h3>
+                <table class="mx-auto">
+                    <tbody>
+                        {% for fixture in fixture_list %}
+                        <tr class="mb-1">
+                            <td>{{fixture.team1.name}} vs {{ fixture.team2.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        </main>
+    </div>
+{% endblock %}

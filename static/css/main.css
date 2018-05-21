@@ -76,3 +76,13 @@ nav > a {
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
 }
+
+/* INDEX */
+.fixture-list {
+  display:flex;
+  flex-wrap: wrap;
+}
+
+.group-table {
+  flex: 1 0 25%;
+}
