@@ -26,3 +26,15 @@ def getTeamTwo(list, i):
 @register.filter(name='getMatchDate')
 def getMatchDate(list, i):
     return list[i].match_date
+
+# Returns distinct set of teams for the queryset of fixtures passed in
+@register.filter(name="getDistinctTeamsOrderedByPoints")
+def getDistinctTeamsOrderedByPoints(fixtures):
+    teams = []
+    while len(teams) < 4:
+        for fixture in fixtures:
+            if fixture.team1 not in teams:
+                teams.append(fixture.team1)
+            if fixture.team2 not in teams:
+                teams.append(fixture.team2)
+    return sorted(teams, key=lambda team: team.points, reverse=True)

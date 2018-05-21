@@ -255,7 +255,7 @@
         "model": "socapp.Team",
         "pk": 29,
         "fields": {
-            "name": "Columbia",
+            "name": "Colombia",
             "country_code": "COL",
             "group": "H"
         }

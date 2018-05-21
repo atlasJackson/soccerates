@@ -11,13 +11,21 @@ class Team(models.Model):
     name = models.CharField(max_length=32, unique=True)
     country_code = models.CharField(max_length=4)
     group = models.CharField(max_length=1, choices=CHOICES)
-    #flag = models.ImageField()
+    flag = models.ImageField(blank=True)
     
     games_won = models.IntegerField(default=0)
     games_drawn = models.IntegerField(default=0)
     games_lost = models.IntegerField(default=0)
     goals_for = models.IntegerField(default=0)
     goals_against = models.IntegerField(default=0)
+
+    @property
+    def points(self):
+        return (3 * self.games_won) + self.games_drawn
+    
+    @property
+    def goal_difference(self):
+        return self.goals_for - self.goals_against
     
     #################################
     ### MODEL METHODS

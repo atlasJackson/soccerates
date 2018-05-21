@@ -77,12 +77,28 @@ nav > a {
   color: rgba(255,255,255,0.5);
 }
 
-/* INDEX */
+/* SCHEDULE */
+
 .fixture-list {
   display:flex;
   flex-wrap: wrap;
 }
 
-.group-table {
+.group-fixtures {
   flex: 1 0 25%;
+}
+
+.flag {
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.world-cup-group {
+  text-align: left;
+  font-size: 14px;
+}
+
+.table-head-row > th {
+  margin: 0 8px;
+  text-align: left;
 }

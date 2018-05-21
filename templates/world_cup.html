@@ -1,21 +1,61 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load socapp_filters %}
 
 {% block title_block %}
     World Cup Schedule
 {% endblock %}
 
 {% block body_block %}
-    <div class="mt-5">
-        <main class="fixture-list">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center ml-2">
+            <h3>Groups and Fixtures</h3>
+        </div>
+        <main class="d-flex flex-wrap mt-5">
             {% for group, fixture_list in fixtures.items %}
-            <div class="group-table mb-5 border-right text-center">
-                <h3>Group {{group}}</h3>
-                <table class="mx-auto">
+            <div class="group-fixtures mb-5 text-center col-10 border-right">
+                <h4 class="m-2 text-left">Group {{group}}</h4>
+                <table class="table table-striped mb-3 world-cup-group border-bottom">
+                    <thead class="group-table-header thead-light">
+                        <tr class="table-head-row">
+                            <th scope="col">Country</th>
+                            <th>W</th><th>D</th><th>L</th>
+                            <th>GD</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- table -->
+                        {% for team in fixture_list|getDistinctTeamsOrderedByPoints %}
+                        <tr>
+                            <td>
+                                <img src="{% static team.flag.url %}" class="flag mr-1" alt="{{team.name}}"/>
+                                {{ team.name }}
+                            </td>
+                            <td>{{ team.games_won }}</td>
+                            <td>{{ team.games_drawn }}</td>
+                            <td>{{ team.games_lost }}</td>
+                            <td>{{ team.goal_difference }}</td>
+                            <td>{{ team.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            
+                <table class="table table-sm mx-auto">
                     <tbody>
                         {% for fixture in fixture_list %}
-                        <tr class="mb-1">
-                            <td>{{fixture.team1.name}} vs {{ fixture.team2.name }}</td>
+                        <tr class="mb-3">                            
+                            <td class="pb-3">
+                                <p>{{ fixture.match_date }}</p>
+                                {% if fixture.team1.flag %}                                
+                                    <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
+                                {% endif %}
+                                {{fixture.team1.name}} vs {{ fixture.team2.name }}
+                                {% if fixture.team2.flag %}
+                                    <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
