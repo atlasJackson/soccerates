@@ -17,9 +17,8 @@ def index(request):
 
 # Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
 def world_cup_schedule(request):
-    fixtures = {}
-    for group in Team.group_names:
-        fixtures[group] = Fixture.all_fixtures_by_group(group)
+    
+    fixtures = group_fixtures_dictionary()
 
     context = {
         'fixtures': fixtures
@@ -44,16 +43,11 @@ class RegistrationView(SuccessMessageMixin, CreateView):
 
 @login_required
 def answer_form(request):
-    try:
-        answers = Answer.objects.filter(user=request.user).order_by('fixture.match_date')
-        context_dict = {'answers':answers}
-
-    except Answer.DoesNotExist:
-        context_dict = {'answers': None}
-
+    
+    context_dict = {}
     # Get the list of fixtures. Ordered the same as answers.
     # Should create a helper function which gets the fixtures corresponding to fixture.STAGE in the future.
-    fixtures = Fixture.objects.order_by('match_date')
+    fixtures = group_fixtures_dictionary()
     context_dict['fixtures'] = fixtures
 
     # Create as many formsets as there are fixtures whose scores are to be predicted.
@@ -92,3 +86,11 @@ def answer_form(request):
             context_dict['answer_formset'] = None
 
     return render(request, 'answer_form.html', context=context_dict)
+
+# Returns a dictionary whose keys are the groups and whose values are a queryset of the fixtures in that group. 
+def group_fixtures_dictionary():
+    fixtures = {}
+    for group in Team.group_names:
+        fixtures[group] = Fixture.all_fixtures_by_group(group)
+
+    return fixtures

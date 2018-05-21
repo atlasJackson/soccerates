@@ -8,6 +8,33 @@
         {% if user.is_authenticated %}
             <p>Welcome, {{ user.username }}</p>
 
+
+
+            <div>
+                {% for group, groupfxts in fixtures.items %}
+                    <h3>Group {{ group }}</h3>
+                    <table class="table table-striped table-hover">
+                    {% for fixture in groupfxts %}
+                        <tr style="height:30px;">
+                            <td>{{ fixture.team1 }}</td>
+                            <td> T1G </td>
+
+                            <td> - </td>
+
+                            <td> T2G </td>
+                            <td>{{ fixture.team2 }}</td>
+
+                            <td>{{ fixture.match_date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                {% endfor %}
+            </div>
+
+
+
+<!-- Kept this for reference - going to rebuild the forms. -->
+            {% comment %}
             <div>           
                 <form id="answer_form" method="post" action="{% url 'answer_form' %}">
                 {% csrf_token %}
@@ -34,6 +61,8 @@
                 <input class="btn btn-primary btn-sm" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
                 </form>
             </div>
+
+            {% endcomment %}
 
         {% else %}
             <!-- Redirect -->
