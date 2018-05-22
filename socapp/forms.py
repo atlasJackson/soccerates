@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django import forms
 
-from socapp.models import Answer
+from socapp.models import Answer, Fixture
 
 # For registering new users
 class RegistrationForm(forms.ModelForm):
@@ -50,9 +50,11 @@ class RegistrationForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
+    # fixture - hidden field that ties the answer to a fixture
+    fixture = forms.ModelChoiceField(queryset=Fixture.objects.all(), widget=forms.HiddenInput())
     team1_goals = forms.IntegerField(min_value=0, max_value=10, initial=0)
     team2_goals = forms.IntegerField(min_value=0, max_value=10, initial=0)
 
     class Meta:
         model = Answer
-        fields = ('team1_goals', 'team2_goals')
+        fields = ('fixture','team1_goals', 'team2_goals')
