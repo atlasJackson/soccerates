@@ -49,19 +49,19 @@ def answer_form(request):
     # Create as many formsets as there are fixtures whose scores are to be predicted.
     group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
     AnswerFormSet = formset_factory(AnswerForm, extra=len(group_fixtures), max_num=len(group_fixtures))
-    a = AnswerFormSet()
+    formset = AnswerFormSet()
 
     # The zip Python method takes two (or more) lists/iterables, and binds them together in tuples, based on their index in each list (so the lists must have the same len).
     # So we're binding each form in the formset with a fixture, and setting the initial value of the form's hidden Fixture field to the associated/'zipped' fixture.
     # We also create a zipped_groups list, so we can track each fixture/form iteration's group in the template
     zipped_groups = []
-    for match, form in zip(group_fixtures, a):
+    for match, form in zip(group_fixtures, formset):
         form.fields['fixture'].initial = match
         zipped_groups.append(match.team1.group)
 
     # With the initial values set within the form, we add the zipped fixtures/forms/groups data structure to the template context. 
     # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
-    context_dict['fixtures_and_forms'] = zip(group_fixtures, a, zipped_groups)
+    context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
 
     # Check if the request was HTTP POST.
     if request.method == 'POST':
@@ -100,7 +100,7 @@ def answer_form(request):
         # These forms will be blank, ready for user input.
         # But first we check if the user has already submitted answers.
         if True: ## Fix this condition
-            context_dict['answer_formset'] = a
+            context_dict['answer_formset'] = formset
         else:
             context_dict['answer_formset'] = None
 
