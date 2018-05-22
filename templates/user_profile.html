@@ -6,14 +6,47 @@
         
         {% if user.is_authenticated %}
         <div>
-            <p>Welcome, {{ user.username }}</p>
+            <h3>Welcome, {{ user.username }}</h3>
         </div>
-        <div>
-
-
+        <hr/>
+        <div class="user-stats">
+            You currently have <strong>{{ user.profile.points }} points</strong>
         </div>
-        <div>
-
+        <div class="row mt-5">
+            <div class="user-predictions col-12 col-sm-6 text-center">
+                <h4 class="mb-3">Predictions</h4>
+                {% if answers %}
+                <table class="table table-striped table-hover">
+                    <tbody>
+                    {% for answer in answers %}
+                        <tr>
+                            <td>{{ answer.fixture.team1.name }}</td>
+                            <td>{{ answer.team1_goals }}</td>
+                            <td> - </td>
+                            <td>{{ answer.fixture.team2.name }}</td>
+                            <td>{{ answer.team2_goals }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    No answers
+                {% endif %}
+            </div>
+            <div class="leaderboards col-12 col-sm-6 text-center">
+                <h4 class="mb-3">Leaderboards</h4>
+                {% if leaderboards %}
+                    DUMMYDATA
+                {% else %}
+                    <p>You are not currently a member of any leaderboards.</p>
+                    <p>
+                        <a href="#" class="my-2">Join a leaderboard</a>
+                    </p>
+                    <p>
+                        <a href="#" class="my-3">Create leaderboard</a>
+                    </p>
+                {% endif %}
+            </div>    
         </div>
 
         {% else %}

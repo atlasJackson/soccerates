@@ -25,21 +25,13 @@ def world_cup_schedule(request):
     }
     return render(request, "world_cup.html", context)
 
-class RegistrationView(SuccessMessageMixin, CreateView):
-    template_name = "register.html"
-    form_class = RegistrationForm
-    success_url = "/"
-    success_message = "Registration successful. Welcome, %(username)s"
-
-    # Override to auto-login user when they register
-    def form_valid(self, form):
-        valid = super().form_valid(form)
-        username = self.request.POST['username']
-        pw = self.request.POST['password']
-        user = authenticate(username=username, password=pw)
-        login(self.request, user)
-        return valid
-
+def user_profile(request):
+    answers = request.user.profile.get_predictions()
+    
+    context = {
+        'answers': answers
+    }
+    return render(request, "user_profile.html", context)
 
 @login_required
 def answer_form(request):
@@ -65,7 +57,7 @@ def answer_form(request):
                     # A check to see if the user has already provided an answer for this fixture.
                     # If not, we create the Answer. Otherwise (in the else), we update.
                     # In future, we'll need to block this off based on a cutoff date (or just not show the answer form)
-                    if Answer.objects.filter(user=request.user, fixture=fixt).count() == 0:
+                    if not Answer.objects.filter(user=request.user, fixture=fixt).exists():
                         Answer.objects.create(
                             user=request.user, 
                             fixture=fixt,
@@ -90,7 +82,8 @@ def answer_form(request):
 
         user_answers = []
         for fixture in group_fixtures:
-            ans = Answer.objects.filter(fixture=fixture, user=request.user) # Check if user has an answer for this fixture
+            ans = Answer.objects.select_related('fixture','user') \
+                .filter(fixture=fixture, user=request.user) # Check if user has an answer for this fixture
             if ans.count() > 0:
                 user_answers.append(ans[0]) # If so add it to the answers list
             else:
@@ -114,6 +107,27 @@ def answer_form(request):
         context_dict['management_form'] = management_form
 
     return render(request, 'answer_form.html', context_dict)
+
+
+#################
+## AUTH VIEWS
+#################
+
+class RegistrationView(SuccessMessageMixin, CreateView):
+    template_name = "register.html"
+    form_class = RegistrationForm
+    success_url = "/"
+    success_message = "Registration successful. Welcome, %(username)s"
+
+    # Override to auto-login user when they register
+    def form_valid(self, form):
+        valid = super().form_valid(form)
+        username = self.request.POST['username']
+        pw = self.request.POST['password']
+        user = authenticate(username=username, password=pw)
+        login(self.request, user)
+        return valid
+
 
 # Returns a dictionary whose keys are the groups and whose values are a queryset of the fixtures in that group. 
 def group_fixtures_dictionary():

@@ -16,56 +16,56 @@
 
             <div class="scoreline-form">
                 <form id="answer_form" method="post" action="{% url 'answer_form' %}" class="mb-5 col-sm-8">
-                        {% csrf_token %}
+                    {% csrf_token %}
 
-                        <!-- We iterate over the data structure defined in the View here
-                            Each fixture/answer_form should be in sync, and for convenience we have the group too -->
-                            {% for fixture, answer_form, group in fixtures_and_forms %}
+                    <!-- We iterate over the data structure defined in the View here
+                        Each fixture/answer_form should be in sync, and for convenience we have the group too -->
+                        {% for fixture, answer_form, group in fixtures_and_forms %}
 
-                            <!-- Display management form on the first iteration, and create first group's table -->
-                            {% if forloop.first %} 
-                                {{ management_form }}
-                                <h3 class="mb-3">Group {{group}}</h3>
-                                <table class="table table-striped table-hover text-center mb-5">
-                                    <tbody>
-                            {% endif %}
-
-                            <!-- Since there are 6 fixtures per-group, end the table tags if iteration index is divisible by 6, and create next group's table -->
-                            {% if forloop.counter0|divisibleby:6 and not forloop.first %}
-                                </tbody>
-                            </table>
+                        <!-- Display management form on the first iteration, and create first group's table -->
+                        {% if forloop.first %} 
+                            {{ management_form }}
                             <h3 class="mb-3">Group {{group}}</h3>
                             <table class="table table-striped table-hover text-center mb-5">
                                 <tbody>
-                            {% endif %}
-
-                            <!-- Normal operation for every iteration: draw the table row with the fixture details, and the form -->
-                                <tr style="height:30px;">
-                                    {{ answer_form.fixture }}
-                                    <td class="d-flex justify-content-around align-items-center">
-                                        <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>
-                                        {{ fixture.team1.name }}</td>
-                                    <div class="form-group">
-                                            <td>{{ answer_form.team1_goals|add_class:"form-control-sm" }}</td>
-                                            <td> - </td>
-        
-                                            <td> {{ answer_form.team2_goals|add_class:"form-control-sm" }} </td>
-                                    </div>
-                                    <td class="d-flex justify-content-around align-items-center">                                    
-                                        {{ fixture.team2.name }}
-                                        <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{fixture.team1.name}}"/>        
-                                    </td>
-                                    <td>{{ fixture.match_date }}</td>
-                                </tr>
-                            
-                        <!-- If the last iteration, destroy the table! -->
-                        {% if forloop.last %}
-                            </tbody>
-                        </table>
                         {% endif %}
 
-                        {% endfor %}
-                        <input class="btn btn-primary btn-sm" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
+                        <!-- Since there are 6 fixtures per-group, end the table tags if iteration index is divisible by 6, and create next group's table -->
+                        {% if forloop.counter0|divisibleby:6 and not forloop.first %}
+                            </tbody>
+                        </table>
+                        <h3 class="mb-3">Group {{group}}</h3>
+                        <table class="table table-striped table-hover text-center mb-5">
+                            <tbody>
+                        {% endif %}
+
+                        <!-- Normal operation for every iteration: draw the table row with the fixture details, and the form -->
+                            <tr style="height:30px;">
+                                {{ answer_form.fixture }}
+                                <td class="d-flex justify-content-around align-items-center">
+                                    <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>
+                                    {{ fixture.team1.name }}</td>
+                                <div class="form-group">
+                                        <td>{{ answer_form.team1_goals|add_class:"form-control-sm" }}</td>
+                                        <td> - </td>
+    
+                                        <td> {{ answer_form.team2_goals|add_class:"form-control-sm" }} </td>
+                                </div>
+                                <td class="d-flex justify-content-around align-items-center">                                    
+                                    {{ fixture.team2.name }}
+                                    <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{fixture.team1.name}}"/>        
+                                </td>
+                                <td>{{ fixture.match_date }}</td>
+                            </tr>
+                        
+                    <!-- If the last iteration, destroy the table! -->
+                    {% if forloop.last %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+
+                    {% endfor %}
+                    <input class="btn btn-primary btn-sm" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
                 </form>
             </div>
         </div>
