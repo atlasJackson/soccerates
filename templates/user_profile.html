@@ -21,14 +21,14 @@
                     {% for answer in answers %}
                         <tr>
                             <td>
-                                <img class="flag mr-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team2.name}}">
+                                <img class="flag mr-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
                                 {{ answer.fixture.team1.name }}</td>
                             <td>{{ answer.team1_goals }}</td>
                             <td> - </td>
                             <td>{{ answer.team2_goals }}</td>
                             <td>
                                 {{ answer.fixture.team2.name }}
-                                <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team2.name}}">
+                                <img class="flag ml-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">
                             </td>
                         </tr>
                     {% endfor %}
