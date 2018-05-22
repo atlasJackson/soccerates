@@ -209,7 +209,8 @@ class UserProfile(models.Model):
     points = models.IntegerField(default=0) # Hold the points for the user
 
     def get_predictions(self):
-        return Answer.objects.select_related('fixture', 'user').filter(user=self.user)
+        return Answer.objects.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2') \
+            .filter(user=self.user)
 
 class Answer(models.Model):
     POINTS_NOT_ADDED = 0
