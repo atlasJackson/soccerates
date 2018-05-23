@@ -25,15 +25,15 @@ def world_cup_schedule(request):
     }
     return render(request, "world_cup.html", context)
 
+@login_required
 def user_profile(request):
     answers = request.user.profile.get_predictions()
-    
+
     context = {
         'answers': answers
     }
     return render(request, "user_profile.html", context)
 
-@login_required
 def answer_form(request):
     
     context_dict = {}
@@ -116,7 +116,7 @@ def answer_form(request):
 class RegistrationView(SuccessMessageMixin, CreateView):
     template_name = "register.html"
     form_class = RegistrationForm
-    success_url = "/"
+    success_url = "profile"
     success_message = "Registration successful. Welcome, %(username)s"
 
     # Override to auto-login user when they register
@@ -132,7 +132,8 @@ class RegistrationView(SuccessMessageMixin, CreateView):
 # Returns a dictionary whose keys are the groups and whose values are a queryset of the fixtures in that group. 
 def group_fixtures_dictionary():
     fixtures = {}
+    f = Fixture.objects.select_related('team1', 'team2').order_by('team1__group')
     for group in Team.group_names:
-        fixtures[group] = Fixture.all_fixtures_by_group(group)
+        fixtures[group] = f.filter(team1__group=group)
 
     return fixtures
