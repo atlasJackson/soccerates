@@ -212,6 +212,10 @@ class UserProfile(models.Model):
         return Answer.objects.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2') \
             .filter(user=self.user)
 
+    def __str__(self):
+        return self.user.username
+        
+
 class Answer(models.Model):
     POINTS_NOT_ADDED = 0
     POINTS_ADDED = 1
