@@ -156,10 +156,14 @@ def calculate_user_points(user):
             user_goal_difference = user_team1_goals - user_team2_goals
             actual_goal_difference = actual_team1_goals - actual_team2_goals
 
-            if (true): # Check the result is correct
+            # Check the result is correct
+            if ((user_goal_difference > 0 and actual_goal_difference > 0) or
+                (user_goal_difference < 0 and actual_goal_difference < 0) or
+                (user_goal_difference == actual_goal_difference == 0)): 
+                
                 add_user_points(user, ans, 2)
 
-            # Check the total goals scored or the goal difference is correct (can't have both, or the prediction would be be correct).
+            # Check the total goals scored or the goal difference is correct (can't have both, or the prediction would be correct).
             elif ((user_total_goals == actual_total_goals) or (user_goal_difference == actual_goal_difference)):
                 add_user_points(user, ans, 1)
 
