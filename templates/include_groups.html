@@ -6,6 +6,7 @@
     <thead class="group-table-header thead-light">
         <tr class="table-head-row">
             <th scope="col">Country</th>
+            <th>P</th>
             {% if not short %}
                 <th>W</th><th>D</th><th>L</th>
             {% endif %}
@@ -20,6 +21,9 @@
             <td>
                 <img src="{% static team.flag.url %}" class="flag mr-1" alt="{{team.name}}"/>
                 {{ team.name }}
+            </td>
+            <td>
+                {{ team|getGroupGamesPlayed }}
             </td>
             {% if not short %}
                 <td>{{ team.games_won }}</td>

@@ -27,6 +27,11 @@ def getTeamTwo(list, i):
 def getMatchDate(list, i):
     return list[i].match_date
 
+# Return date in the list. Used in template to predict scores.
+@register.filter(name='getGroupGamesPlayed')
+def getGroupGamesPlayed(team):
+    return (team.games_won + team.games_drawn + team.games_lost)
+
 # Returns distinct set of teams for the queryset of fixtures passed in
 @register.filter(name="getDistinctTeamsOrderedByPoints")
 def getDistinctTeamsOrderedByPoints(fixtures):
