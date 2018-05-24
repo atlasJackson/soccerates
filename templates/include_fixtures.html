@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+<table class ="table">
+    <tbody>
+        {% if fixtures %}
+            {% for fixture in fixtures %}
+                <tr>
+                    <td>
+                        <small>{{ fixture.match_date }}</small>
+                    </td>
+                    <td class="text-right pr-0">
+                        {{fixture.team1.name}}
+                    </td>
+                    <td class="text-left ml-0">
+                        {% if fixture.team1.flag %}                                
+                            <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
+                        {% endif %}
+
+                        {% if fixture.status %}
+                            {{ fixture.team1_goals }} - {{ fixture.team2_goals }}
+                        {% else %}
+                             vs 
+                        {% endif %}
+
+                        {% if fixture.team2.flag %}
+                            <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
+                        {% endif %}
+                        {{ fixture.team2.name }}
+                    </td>
+                    <td>
+                        {{ fixture.get_stage_display }}     
+                        {% if fixture.stage == 1 %}
+                            {{ fixture.team1.group }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td class="text-center">
+                    No matches found.
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>

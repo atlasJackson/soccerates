@@ -3,16 +3,61 @@
 
 {% block body_block %}
     <div class="container mt-4">
-        
-        <div class="mb-5">
-            {% if user.is_authenticated %}
-                <h2>Welcome, {{ user.username }}</h2>
-            {% else %}
-                <p>Welcome.</p>
-                    <a href="{% url 'login' %}">Click here</a> to sign in, or 
-                    <a href="{% url 'register' %}">click here</a> to register
+
+        <div class="row pb-5 mb-5 border-bottom border-info">
+            <div class="col-12 col-lg-8 mb-3">
+                {% if user.is_authenticated %}
+                    <h2>Welcome, {{ user.username }}</h2>
+                {% else %}
+                    <p>Welcome.</p>
+                        <a href="{% url 'login' %}">Click here</a> to sign in, or 
+                        <a href="{% url 'register' %}">click here</a> to register
+                    </p>
+                {% endif %}
+                <p>
+                    Big long welcome message goes here. Maybe some links to the about page, information on points, notifcation 
+                    when points and leaderboards have been updated. 
+                </p> 
+                <p>
+                    For now, this will be a massive block of text that says nothing interesting
+                    but serves only to give a better indication of how the index will look when it has some meaningful content.
                 </p>
-            {% endif %}
+            </div>
+
+            <div class="col-12 col-sm-4 border"> <!-- User Summary -->
+                <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h5>
+                <strong>Points:</strong> {{ request.user.profile.points }}
+
+            </div>
+        </div>
+
+        <div class="row">
+        
+            <div class="col-12 col-lg-8 mb-5">
+
+                <div class="card mb-3"> <!-- Display upcoming fixtures -->
+                    <h5 class="card-header text-center text-uppercase">Upcoming Fixtures</h5>
+                    {% include 'include_fixtures.html' with fixtures=upcoming_fixtures %} 
+                </div>
+                <div class="card mb-3"> <!-- Display recent results -->
+                    <h5 class="card-header text-center text-uppercase">Results</h5>
+                    {% include 'include_fixtures.html' with fixtures=past_fixtures %} 
+                </div>
+
+            </div>
+
+            <div class="col-12 col-sm-4 border-left border-info">
+                <div>
+                    <h4 class="card-header text-center text-uppercase mb-3">Current Standings</h4>
+                    {% for group, fixture_list in fixtures.items %}
+                    <div class="">
+                        {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+            </div>
+
         </div>
     </div>
 {% endblock %} 
