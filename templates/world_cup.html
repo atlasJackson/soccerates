@@ -14,33 +14,7 @@
         <main class="d-flex flex-wrap mt-5">
             {% for group, fixture_list in fixtures.items %}
             <div class="group-fixtures mb-5 text-center col-10 border-right">
-                <h4 class="m-2 text-left">Group {{group}}</h4>
-                <table class="table table-striped table-hover mb-3 world-cup-group border-bottom">
-                    <thead class="group-table-header thead-light">
-                        <tr class="table-head-row">
-                            <th scope="col">Country</th>
-                            <th>W</th><th>D</th><th>L</th>
-                            <th>GD</th>
-                            <th>Pts</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- table -->
-                        {% for team in fixture_list|getDistinctTeamsOrderedByPoints %}
-                        <tr>
-                            <td>
-                                <img src="{% static team.flag.url %}" class="flag mr-1" alt="{{team.name}}"/>
-                                {{ team.name }}
-                            </td>
-                            <td>{{ team.games_won }}</td>
-                            <td>{{ team.games_drawn }}</td>
-                            <td>{{ team.games_lost }}</td>
-                            <td>{{ team.goal_difference }}</td>
-                            <td>{{ team.points }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                {% include 'include_groups.html' with group=group fixture_list=fixture_list short=False %}
             
                 <table class="table table-sm table-hover mx-auto group-fixture-list">
                     <tbody>
