@@ -13,7 +13,15 @@ from .models import Fixture, Answer, Team
 
 
 def index(request):
-    return render(request, "index.html")
+    upcoming_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
+    past_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
+
+    context = {
+        'upcoming_fixtures' : upcoming_fixtures,
+        'past_fixtures': past_fixtures,
+    }
+
+    return render(request, "index.html", context)
 
 # Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
 def world_cup_schedule(request):
