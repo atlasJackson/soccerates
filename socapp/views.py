@@ -241,7 +241,7 @@ class RegistrationView(SuccessMessageMixin, CreateView):
 # Returns a dictionary whose keys are the groups and whose values are a queryset of the fixtures in that group. 
 def group_fixtures_dictionary():
     fixtures = {}
-    f = Fixture.objects.select_related('team1', 'team2').order_by('team1__group')
+    f = Fixture.objects.select_related('team1', 'team2').order_by('team1__group', 'match_date')
     for group in Team.group_names:
         fixtures[group] = f.filter(team1__group=group)
 
