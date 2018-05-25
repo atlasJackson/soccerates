@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, F, When, Case, Value, Sum
 
 
 class Team(models.Model):
@@ -18,11 +18,21 @@ class Team(models.Model):
     games_lost = models.IntegerField(default=0)
     goals_for = models.IntegerField(default=0)
     goals_against = models.IntegerField(default=0)
+    #group_points = models.IntegerField(default=0)
 
+    # Potentially create fields on the model for group-stage data like points, goal diff, etc. 
+    # May have performance benefits rather than performing extra queries to calculate the points for every team, especially as we're showing all the groups on some pages
     @property
     def points(self):
-        return (3 * self.games_won) + self.games_drawn
-    
+        #return (3 * self.games_won) + self.games_drawn
+        points = self.fixtures_by_stage(Fixture.GROUP).annotate(points=Case(
+            When(Q(team1=self) & Q(team1_goals__gt=F('team2_goals')), then=Value(3)), 
+            When(Q(team2=self) & Q(team2_goals__gt=F('team1_goals')), then=Value(3)),
+            When(team1_goals=F('team2_goals'), then=Value(1)),
+            default=Value(0),
+            output_field = models.IntegerField())).aggregate(total_points=Sum('points'))
+        return points['total_points']
+
     @property
     def goal_difference(self):
         return self.goals_for - self.goals_against
@@ -48,8 +58,11 @@ class Team(models.Model):
 
     # Returns the team instance's fixtures
     def get_fixtures(self):
-        return Fixture.objects.select_related('team1', 'team2').filter(Q(team1=self.id) | Q(team2=self.id))
+        return Fixture.objects.select_related('team1', 'team2').filter(Q(team1=self) | Q(team2=self))
         #return self.team1_set.all() | self.team2_set.all()
+
+    def fixtures_by_stage(self, stage):
+        return self.get_fixtures().filter(stage=stage)
 
 
 ################################################################################
@@ -181,7 +194,6 @@ class Fixture(models.Model):
     
     class Meta:
         ordering = ['match_date']
-
 
 ################################################################################
 

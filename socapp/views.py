@@ -34,8 +34,10 @@ def test(request):
 def index(request):
 
     fixtures = group_fixtures_dictionary()
-    upcoming_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
-    past_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
+    upcoming_fixtures = Fixture.objects.select_related('team1', 'team2') \
+        .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
+    past_fixtures = Fixture.objects.select_related('team1', 'team2') \
+        .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
     context = {
         'fixtures': fixtures,
