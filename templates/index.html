@@ -5,7 +5,7 @@
     <div class="container mt-4">
 
         <div class="row pb-5 mb-5 border-bottom border-info">
-            <div class="col-12 col-lg-8 mb-3">
+            <div class="col-lg-8 col-12 mb-3">
                 {% if user.is_authenticated %}
                     <h2>Welcome, {{ user.username }}</h2>
                 {% else %}
@@ -22,9 +22,11 @@
                     For now, this will be a massive block of text that says nothing interesting
                     but serves only to give a better indication of how the index will look when it has some meaningful content.
                 </p>
+                <a href="{% url 'test' %}">Test page.</a>
+
             </div>
 
-            <div class="col-12 col-sm-4 border"> <!-- User Summary -->
+            <div class="col-sm-4 col-12 border"> <!-- User Summary -->
                 <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h5>
                 <strong>Points:</strong> {{ request.user.profile.points }}
 
@@ -33,7 +35,11 @@
 
         <div class="row">
         
-            <div class="col-12 col-lg-8 mb-5">
+            <div class="col-lg-8 col-12 mb-5">
+
+                <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase mb-5">
+                    Enter Predictions
+                </a>
 
                 <div class="card mb-3"> <!-- Display upcoming fixtures -->
                     <h5 class="card-header text-center text-uppercase">Upcoming Fixtures</h5>
@@ -46,7 +52,7 @@
 
             </div>
 
-            <div class="col-12 col-sm-4 border-left border-info">
+            <div class="col-sm-4 col-12 border-left border-info">
                 <div>
                     <h4 class="card-header text-center text-uppercase mb-3">Current Standings</h4>
                     {% for group, fixture_list in fixtures.items %}

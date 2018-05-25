@@ -11,6 +11,23 @@ from .forms import RegistrationForm, AnswerForm
 
 from .models import Fixture, Answer, Team
 
+def test(request):
+
+    fixtures = group_fixtures_dictionary()
+    upcoming_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
+    past_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
+
+    context = {
+        'fixtures': fixtures,
+        'upcoming_fixtures' : upcoming_fixtures,
+        'past_fixtures': past_fixtures,
+    }
+
+    return render(request, "test.html", context)
+
+
+
+
 
 def index(request):
 
