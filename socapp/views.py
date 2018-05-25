@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
@@ -10,6 +11,7 @@ from django.forms import formset_factory
 from .forms import RegistrationForm, AnswerForm
 
 from .models import Fixture, Answer, Team
+from . import utils
 
 def test(request):
 
@@ -56,9 +58,14 @@ def world_cup_schedule(request):
 @login_required
 def user_profile(request):
     answers = request.user.profile.get_predictions()
+    ranking = utils.get_user_ranking(request.user)
+    usercount = get_user_model().objects.count()
 
     context = {
-        'answers': answers
+        'answers': answers,
+        'ranking': ranking,
+        'usercount': usercount
+
     }
     return render(request, "user_profile.html", context)
 

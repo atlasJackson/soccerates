@@ -105,3 +105,10 @@ nav > a {
   margin: 0 8px;
   text-align: left;
 }
+
+.toggle-show-stats {
+  cursor: pointer;
+  max-width:20px;
+  max-height:20px;
+  color: red;
+}

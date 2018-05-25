@@ -5,11 +5,13 @@ from django.dispatch import receiver
 from .models import UserProfile, Team
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_or_save_user_profile(sender, instance, created, **kwargs):
     """ Creates a UserProfile instance whenever a new User is created """
     if created:
         # The instance arg is the User instance that triggered the signal
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance)#
+    else:
+        instance.profile.save()
 
 @receiver(post_save, sender=Team)
 def generate_flag_path(sender, instance, created, **kwargs):
