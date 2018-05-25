@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+<div class="container mt-4">
+    <p>
+        This is a test page for fucking about with. Successful ventures shall be incorporated into the other templates.
+    </p>
+    <p>
+        Remind me: Discuss naming of templates and web apps for future use in other similar areas (champs league, generalising
+        the wrestling scorecards for any event, etc.). Mainly to do with naming conventions.
+    </p>
+    
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="group-info-tab" data-toggle="tab" href="#group-info" role="tab" aria-controls="group-info" aria-selected="true">
+                Group Stage:
+            </a>
+        </li>
+        {% for group, fixture_list in fixtures.items %}
+        <li class="nav-item">
+            <a class="nav-link" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="false">
+                {{ group }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="group-info" role="tabpanel" aria-labelledby="group-info-tab">
+            <p class=m-5>
+                Some information on the group stage, possibly qualification route for each team, form, link to
+                national team website.
+            </p>
+            <p class=m-5>
+                Need to fix columns for each tab - want table and fixtures side-by-side.
+            </p>
+        </div>
+        {% for group, fixture_list in fixtures.items %}
+        <div class="tab-pane fade" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
+            <div class="col-">
+                {% include 'include_groups.html' with group=group fixture_list=fixture_list short=False %}
+            </div>
+            <div class="col-">
+                {% include 'include_fixtures.html' with fixtures=fixture_list %}
+            </div>
+        </div>
+        {% endfor %}
+    </div> 
+
+</div>  
+{% endblock %} 
