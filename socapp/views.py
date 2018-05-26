@@ -16,14 +16,23 @@ from . import utils
 def test(request):
 
     fixtures = group_fixtures_dictionary()
+    fixtures2 = Fixture.objects.order_by('match_date')
     upcoming_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
     past_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
+    AnswerFormSet = formset_factory(AnswerForm, extra=len(fixtures), max_num=len(fixtures))
+    answer_formset = AnswerFormSet()
+
     context = {
         'fixtures': fixtures,
+        'fixtures2': fixtures2,
         'upcoming_fixtures' : upcoming_fixtures,
         'past_fixtures': past_fixtures,
+        'answer_formset': answer_formset,
     }
+
+    if request.method == 'POST':
+        answer_formset = AnswerFormSet(request.POST)
 
     return render(request, "test.html", context)
 
@@ -73,7 +82,7 @@ def user_profile(request):
 
 def answer_form(request):
     
-    context_dict = {}
+    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"]}
 
     # Create as many formsets as there are fixtures whose scores are to be predicted.
     group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
