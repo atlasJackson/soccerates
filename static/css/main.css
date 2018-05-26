@@ -112,3 +112,29 @@ nav > a {
   max-height:20px;
   color: red;
 }
+
+/* FORMS */
+.team-name-cell {
+  width:25%;
+}
+
+.team-flag-cell {
+  width:10%;
+}
+
+.team-name-cell {
+  width:25%;
+}
+
+.dash-versus-cell {
+  width:6%;
+}
+
+.goal-input-cell {
+  width:12%;
+}
+
+.goal-input-widget {
+  text-align: center;
+  background-color: #ffffff;
+}
