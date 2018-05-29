@@ -8,7 +8,7 @@ def generate_team(name, country_code, group):
     team.save()
     return team
 
-def generate_fixture(team1, team2, match_date, stage=1):
+def generate_fixture(team1, team2, match_date, stage=Fixture.GROUP):
     fixture = Fixture.objects.get_or_create(team1=team1, team2=team2, match_date=match_date, stage=stage)[0]
     return fixture
 
@@ -22,11 +22,6 @@ def generate_user(username="test", password="password"):
 
 # Simulates the changes to the Fixture model upon the match being played
 def play_match(fixture, team1_goals, team2_goals):
-    fixture.status = Fixture.MATCH_STATUS_PLAYED
     fixture.team1_goals = team1_goals
     fixture.team2_goals = team2_goals
     fixture.save()
-
-# def generate_group(name):
-#     group = Group.objects.get_or_create(name=name)[0]
-#     return group

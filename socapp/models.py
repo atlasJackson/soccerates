@@ -13,6 +13,7 @@ class Team(models.Model):
     group = models.CharField(max_length=1, choices=CHOICES)
     flag = models.ImageField(blank=True)
     
+    games_played = models.IntegerField(default=0)
     games_won = models.IntegerField(default=0)
     games_drawn = models.IntegerField(default=0)
     games_lost = models.IntegerField(default=0)
@@ -63,6 +64,9 @@ class Team(models.Model):
 
     def fixtures_by_stage(self, stage):
         return self.get_fixtures().filter(stage=stage)
+
+    def get_completed_fixtures(self):
+        return self.get_fixtures().filter(status=Fixture.MATCH_STATUS_FINISHED)
 
 
 ################################################################################
@@ -138,6 +142,13 @@ class Fixture(models.Model):
         else:
             return None
 
+    def get_loser(self):
+        if self.result_available():
+            if self.is_draw():
+                return None
+            return self.team1 if self.team1_goals < self.team2_goals else self.team2
+        return None
+
     #################################
     ### STATIC METHODS
     #################################
@@ -167,13 +178,24 @@ class Fixture(models.Model):
     #################################
 
     def save(self, *args, **kwargs):
+        self.full_clean()
+        # Update status field based on whether or not there are goals for each team in the fixture
+        if self.team1_goals is not None and self.team2_goals is not None:
+            self.status = Fixture.MATCH_STATUS_PLAYED        
+        if self.team1_goals is None or self.team2_goals is None:
+            self.status = Fixture.MATCH_STATUS_NOT_PLAYED
+        super().save(*args, **kwargs)
+
+    def clean(self):
         # Prevent the same team being assigned to team1 and team2 (example: Brazil vs Brazil)
         if self.team1 == self.team2:
             raise ValidationError("Error assigning teams to this fixture. Teams must be distinct")
         # For group stage fixturres, ensure both teams are in the same group.
         if self.stage == self.GROUP and not self.team1.group == self.team2.group:
             raise ValidationError("Cannot add a group-stage match if both teams are not in the same group")
-        super().save(*args, **kwargs)
+
+        if (self.team1_goals is not None and self.team2_goals is None) or (self.team1_goals is None and self.team2_goals is not None):
+            raise ValidationError("Goals must be added for both teams in the fixture")
 
     # Returns valid string representation of the fixture
     def __str__(self):

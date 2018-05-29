@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError, connection
+from django.db import IntegrityError
 from django.db.models import Q, Count
 from django.test import TestCase
-from django.test.utils import override_settings
 from django.utils import timezone
 import socapp.tests.test_helpers as helpers
 
@@ -94,11 +93,23 @@ class FixtureTests(TestCase):
         self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_NOT_PLAYED)
         self.assertFalse(self.fixture.status)
     
-    # Test the status after changing: potentially, this may work by comparing the current date to the match-date in future
-    def test_match_status(self):
-        self.fixture.status = Fixture.MATCH_STATUS_PLAYED
+    def test_cannot_enter_goals_for_only_one_team_in_fixture(self):
+        with self.assertRaises(ValidationError):
+            self.fixture.team1_goals = 2
+            self.fixture.team2_goals = None
+            self.fixture.save()
+    
+    def test_can_renullify_both_teams_goals_fields(self):
+        helpers.play_match(self.fixture, 1,1)
+        self.fixture.team1_goals = None
+        self.fixture.team2_goals = None
+        self.fixture.save()
+    
+    # Tests the auto-updating of the status field after the result is entered, via the model's save method
+    def test_match_status_changes_when_both_teams_have_goals(self):
+        self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_NOT_PLAYED)
+        helpers.play_match(self.fixture, 2, 0)
         self.assertEquals(self.fixture.status, Fixture.MATCH_STATUS_PLAYED)
-        self.assertTrue(self.fixture.status)
 
     # Tests the get_group method returns the correct value
     def test_get_group(self):
@@ -112,7 +123,7 @@ class FixtureTests(TestCase):
     # Test to ensure the same team cannot be added as both team1 and team2
     def test_prevent_duplicate_teams(self):
         with self.assertRaises(ValidationError):
-            f = helpers.generate_fixture(self.team1, self.team1, timezone.now())
+            helpers.generate_fixture(self.team1, self.team1, timezone.now())
     
     # Tests the logic behind the is_draw method
     def test_is_draw(self):
@@ -142,7 +153,7 @@ class FixtureTests(TestCase):
         helpers.play_match(self.fixture, 3, 2)
         self.assertTrue(self.fixture.result_available())
 
-    # Tests get_winner method.
+    # Tests logic behind get_winner method.
     def test_get_winner(self):
         self.assertIsNone(self.fixture.get_winner()) # Should be None by default, as the match has not happened yet.
         helpers.play_match(self.fixture, 3,2) # team1 wins 3-2
@@ -152,6 +163,14 @@ class FixtureTests(TestCase):
 
         helpers.play_match(self.fixture, 1,1) # Fixture ends in a draw: should return None
         self.assertIsNone(self.fixture.get_winner())
+
+    # Tests logic behind get_loser method.
+    def test_get_loser(self):
+        self.assertIsNone(self.fixture.get_loser())
+        helpers.play_match(self.fixture, 3,2) # team1 wins 3-2
+        self.assertEquals(self.team2, self.fixture.get_loser())
+        self.fixture.team2_goals = 4
+        self.assertEquals(self.team1, self.fixture.get_loser())
 
     # Tests the static method on the Fixture model which returns all fixtures in order of their match-date
     def test_all_fixtures_by_date(self):
@@ -190,7 +209,7 @@ class FixtureTests(TestCase):
 
     # Tests the method that gets all the WC fixtures that have been played thus far
     def test_all_completed_fixtures(self):
-        """ By default, no games are completed. Here, we set 2 games to completed, and test the method. """
+        # By default, no games are completed. Here, we set 2 games to completed, and test the method.
         Fixture.objects.filter(pk__in=[1,2]).update(status=Fixture.MATCH_STATUS_PLAYED)
         
         completed_fixtures = Fixture.all_completed_fixtures()
@@ -215,6 +234,69 @@ class FixtureTests(TestCase):
         # Check that if an invalid group is passed as a parameter, a ValidationError is raised
         with self.assertRaises(ValidationError):
             fixtures = Fixture.all_fixtures_by_group("X")
+        
+    # Big test: ensures that when a result is entered, the changes in the Fixture model propagate to the Team model.
+    # For example: entering a value for team1_goals in the Fixture should automatically increment the associated team's goals_for field.
+    def test_fixture_changes_correctly_update_team_model(self):
+        self.assertIsNone(self.fixture.team1_goals)
+        self.assertIsNone(self.fixture.team1_goals)
+        TEAM1_GOALS, TEAM2_GOALS = 2, 1
+        helpers.play_match(self.fixture, TEAM1_GOALS, TEAM2_GOALS) # Team1 wins 2-1
+        # Now we check that updating the fixture with a result has the correct knock-on effect to the Team models
+        self.assertEquals(self.fixture.team1.games_played, 1)
+        self.assertEquals(self.fixture.team1.goals_for, 2)
+        self.assertEquals(self.fixture.team1.goals_against, 1)
+        self.assertEquals(self.fixture.team2.goals_for, 1)
+        self.assertEquals(self.fixture.team2.goals_against, 2)
+        self.assertEquals(self.fixture.team1.games_won, 1)
+        self.assertEquals(self.fixture.team2.games_lost,1)
+        self.assertEquals(self.fixture.team1.games_drawn, 0)
+        self.assertEquals(self.fixture.team2.games_drawn, 0)
+
+        # Edit the fixture and check the changes correctly propagate to the Team models
+        TEAM1_GOALS, TEAM2_GOALS = 3, 0
+        helpers.play_match(self.fixture, TEAM1_GOALS, TEAM2_GOALS) # Team1 wins 3-0
+        self.assertEquals(self.fixture.team1.games_played, 1)
+        self.assertEquals(self.fixture.team1.goals_for, 3)
+        self.assertEquals(self.fixture.team1.goals_against, 0)
+        self.assertEquals(self.fixture.team2.goals_for, 0)
+        self.assertEquals(self.fixture.team2.goals_against, 3)
+        self.assertEquals(self.fixture.team1.games_won, 1)
+        self.assertEquals(self.fixture.team2.games_lost,1)
+        self.assertEquals(self.fixture.team1.games_drawn, 0)
+        self.assertEquals(self.fixture.team2.games_drawn, 0)
+
+        # Check that the result changing correctly affects all fields
+        TEAM1_GOALS, TEAM2_GOALS = 1, 1
+        helpers.play_match(self.fixture, TEAM1_GOALS, TEAM2_GOALS) # 1-1
+        self.assertEquals(self.fixture.team1.games_played, 1)
+        self.assertEquals(self.fixture.team1.goals_for, 1)
+        self.assertEquals(self.fixture.team1.goals_against, 1)
+        self.assertEquals(self.fixture.team2.goals_for, 1)
+        self.assertEquals(self.fixture.team2.goals_against, 1)
+        self.assertEquals(self.fixture.team1.games_won, 0)
+        self.assertEquals(self.fixture.team2.games_lost,0)
+        self.assertEquals(self.fixture.team1.games_drawn, 1)
+        self.assertEquals(self.fixture.team2.games_drawn, 1)
+
+    def test_removing_result_propagates_to_related_teams(self):
+        TEAM1_GOALS, TEAM2_GOALS = 2,2
+        helpers.play_match(self.fixture, TEAM1_GOALS, TEAM2_GOALS)
+        self.assertIsNotNone(self.fixture.team1_goals)
+        # Reset the goals fields to None and save
+        self.fixture.team1_goals = None
+        self.fixture.team2_goals = None
+        self.fixture.save()
+        # Check to ensure the Team model fields are all reset to 0
+        self.assertEquals(self.fixture.team1.games_played, 0)
+        self.assertEquals(self.fixture.team1.goals_for, 0)
+        self.assertEquals(self.fixture.team1.goals_against, 0)
+        self.assertEquals(self.fixture.team2.goals_for, 0)
+        self.assertEquals(self.fixture.team2.goals_against, 0)
+        self.assertEquals(self.fixture.team1.games_won, 0)
+        self.assertEquals(self.fixture.team2.games_lost,0)
+        self.assertEquals(self.fixture.team1.games_drawn, 0)
+        self.assertEquals(self.fixture.team2.games_drawn, 0)
 
 class UserProfileTests(TestCase):
     def setUp(self):
