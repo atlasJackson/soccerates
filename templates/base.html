@@ -18,7 +18,9 @@
             <div class="wrapper">
                 <div class="header-top">
                     <h1>
-                        <a href="{% url 'index' %}">Soccerates</a>
+                        <a href="{% url 'index' %}">
+                            <img src="{% static 'img/soccerates.png' %}" class="logo" alt="Soccerates"/>
+                        </a>
                     </h1>
                     <div class="header-auth">
                         {% if user.is_authenticated %}
