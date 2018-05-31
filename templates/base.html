@@ -11,30 +11,45 @@
         <link rel="stylesheet" href="{% static 'css/normalize.css' %}" />
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
         <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+        <!-- Favicon to display in the browser's tab for this website. -->
+        <link rel="shortcut icon" type="image/png" href="{% static 'img/soccerates.png' %}"/>
     </head>
     <body>
 
         <header>
-            <div class="wrapper">
-                <div class="header-top">
-                    <h1>
-                        <a href="{% url 'index' %}">
-                            <img src="{% static 'img/soccerates.png' %}" class="logo" alt="Soccerates"/>
-                        </a>
-                    </h1>
-                    <div class="header-auth">
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'logout' %}">Logout</a>
-                        {% else %}
-                            <a href="{% url 'login' %}">Sign In</a>
-                            <a href="{% url 'register' %}">Register</a>
-                        {% endif %}
+            <div class="wrapper" id="wrapper-top">
+                <div class="container">                    
+                    <div class="row">
+    
+                        <div class="col-8" id="header-logo">
+                            <h1>
+                                <a href="{% url 'index' %}">
+                                    <img src="{% static 'img/soccerates-text.png' %}" id="logo-text" alt="Soccerates"/>
+                                </a>
+                            </h1>
+                        </div>
+
+                        <div class="col-4 header-auth">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'profile' %}">{{ request.user.username }}</a> | 
+                                <a href="{% url 'logout' %}">Logout</a>
+                            {% else %}
+                                <a href="{% url 'login' %}">Sign In</a>
+                                <a href="{% url 'register' %}">Register</a>
+                            {% endif %}
+                        </div>
+    
                     </div>
                 </div>
-                <div class="header-bottom">
+            </div>
+
+            <div class="wrapper pb-2 pt-2 border-top border-white" id="wrapper-bottom">
+                <div class="container header-navs pl-0">
                     <nav>
                         <a href="{% url 'index' %}">Home</a>
                         <a href="{% url 'profile' %}">Profile</a>
+                        <a href="{% url 'answer_form' %}">Score-Predictions</a>
+                        
                         <a href="{% url 'wc_schedule' %}">World Cup</a>
                         <a href="#">Leaderboards</a>
                         <a href="#">Forums</a>
@@ -42,13 +57,40 @@
                 </div>
             </div>
         </header>
-        
-        {% block body_block %}
 
+        {% block body_block %}
         {% endblock %}
 
-        <footer>
-            
+        <footer class="pt-3 mt-3">
+
+            <div class="container text-center mt-3 mb-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{% static 'img/soccerates.png' %}" id="logo" alt="Soccerates"/>
+                    </div>
+                    <div class="col-md-3 offset-md-1 text-left">
+                        <h6 class="text-uppercase font-weight-bold">User Links</h6>
+                        <hr />
+
+                        <a href="{% url 'profile' %}">Profile</a><br />
+                        <a href="{% url 'answer_form' %}">Submit Predictions</a><br />                      
+                        <a href="#">Leaderboards</a>
+                    </div>
+                    <div class="col-md-3 offset-md-1 text-left">
+                        <h6 class="text-uppercase font-weight-bold">General Links</h6>
+                        <hr />
+
+                        <a href="{% url 'wc_schedule' %}">World Cup Schedule</a><br />
+                        <a href="#">Forums</a><br />
+                        <a href="#">About</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright text-center p-3">
+                    Soccerates &copy; 2018
+            </div>
+
         </footer>
     
         <script src="{% static 'js/main.js' %}" /></script>
