@@ -58,12 +58,14 @@
             </div>
         </header>
 
-        {% block body_block %}
-        {% endblock %}
+        <div class="center-content" id="wrapper-body">
+            {% block body_block %}
+            {% endblock %}        
+        </div>
 
-        <footer class="pt-3 mt-3">
+        <footer>
 
-            <div class="container text-center mt-3 mb-5">
+            <div class="container text-center mt-3">
                 <div class="row">
                     <div class="col-md-4">
                         <img src="{% static 'img/soccerates.png' %}" id="logo" alt="Soccerates"/>

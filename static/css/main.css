@@ -3,7 +3,8 @@ html, body {
 }
 
 body {
-  margin:0
+  margin:0;
+  height: 100%;
 }
 
 a {
@@ -84,13 +85,28 @@ nav > a {
   color: #fff;
 }
 
+/* BODY STYLES */
+
+#wrapper-body {
+  min-height: calc(100vh - 388px);
+}
+
 
 /* FOOTER STYLES */
 
 footer {
   color: #fff;
   background-color: #222;
-  max-width: 100%;
+
+  max-width: 100%; 
+  position: relative;
+
+  padding-top: 10px;
+  
+  margin-top: 20px;
+  /* negative value of footer height */
+  height:200px;
+  clear: both;
 }
 
 footer a {
@@ -102,13 +118,9 @@ footer hr {
   text-align: left;
 }
 
-.footer-head {
-  background-color: #292;
-}
-
 #logo {
-  max-height: 150px;
-  max-width: 150px;
+  max-height: 90%;
+  max-width: 50%;
 }
 
 .copyright {  
