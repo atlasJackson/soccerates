@@ -209,6 +209,11 @@ class Fixture(models.Model):
                     # Result already exists, so this save represents an update. Gather previous fixture data, and find differences
                     utils.update_team_data(prev_fixture, self, self.team1)
                     utils.update_team_data(prev_fixture, self, self.team2)
+        else:
+            if self.has_result():
+                    utils.add_team_data(self, self.team1)
+                    utils.add_team_data(self, self.team2)
+                    utils.update_user_pts(self)
         super().save(*args, **kwargs)
 
     def clean(self):

@@ -81,6 +81,7 @@ def user_profile(request):
     }
     return render(request, "user_profile.html", context)
 
+@login_required
 def answer_form(request):
     
     context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"]}
