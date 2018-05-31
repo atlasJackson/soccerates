@@ -45,7 +45,10 @@
                     </table>
                     </div>
                 {% else %}
-                    No answers
+                    <div class="mb-2">
+                        <p class="mt-2">You've currently made no predictions.</p>
+                        <a href="{% url 'answer_form' %}">Make predictions</a>
+                    </div>
                 {% endif %}
                 </div>
             </div>

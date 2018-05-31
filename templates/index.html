@@ -36,10 +36,16 @@
         <div class="row">
         
             <div class="col-lg-8 col-12 mb-5">
-
-                <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase mb-5">
-                    Enter Predictions
-                </a>
+                
+                <div class="mb-5">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase">
+                        Enter Predictions
+                    </a>
+                    {% else %}
+                    <a href="{% url 'login' %}">Click here</a> to login and make predictions
+                    {% endif %}
+                </div>
 
                 <div class="card mb-3"> <!-- Display upcoming fixtures -->
                     <h5 class="card-header text-center text-uppercase">Upcoming Fixtures</h5>

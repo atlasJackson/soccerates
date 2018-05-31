@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q, F, When, Case, Value, Sum
 
+import socapp.utils as utils
+
 
 class Team(models.Model):
     group_names = ["A","B","C","D","E","F","G","H"]
@@ -149,6 +151,9 @@ class Fixture(models.Model):
             return self.team1 if self.team1_goals < self.team2_goals else self.team2
         return None
 
+    def has_result(self):
+        return self.team1_goals is not None and self.team2_goals is not None
+
     #################################
     ### STATIC METHODS
     #################################
@@ -180,10 +185,30 @@ class Fixture(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         # Update status field based on whether or not there are goals for each team in the fixture
-        if self.team1_goals is not None and self.team2_goals is not None:
+        if self.has_result():
             self.status = Fixture.MATCH_STATUS_PLAYED        
-        if self.team1_goals is None or self.team2_goals is None:
+        if not self.has_result():
             self.status = Fixture.MATCH_STATUS_NOT_PLAYED
+
+        # Update Team, User and Answer models based on the contents of the save.
+        if self.pk is not None:
+            prev_fixture = Fixture.objects.get(pk=self.pk)
+            if not prev_fixture.has_result() and not self.has_result():
+                pass
+            else:
+                if prev_fixture.has_result() and not self.has_result():
+                    # Previously there was a result, now there's none: so remove the team/user data for the previous result
+                    utils.remove_team_data(prev_fixture, self.team1)
+                    utils.remove_team_data(prev_fixture, self.team2)
+                elif not prev_fixture.has_result():
+                    # Simply add the team data, since previously there was no result.
+                    utils.add_team_data(self, self.team1)
+                    utils.add_team_data(self, self.team2)
+                    utils.update_user_pts(self)
+                else:
+                    # Result already exists, so this save represents an update. Gather previous fixture data, and find differences
+                    utils.update_team_data(prev_fixture, self, self.team1)
+                    utils.update_team_data(prev_fixture, self, self.team2)
         super().save(*args, **kwargs)
 
     def clean(self):
@@ -193,7 +218,7 @@ class Fixture(models.Model):
         # For group stage fixturres, ensure both teams are in the same group.
         if self.stage == self.GROUP and not self.team1.group == self.team2.group:
             raise ValidationError("Cannot add a group-stage match if both teams are not in the same group")
-
+        # Ensure that the goals field cannot be set for one team, and None for the other
         if (self.team1_goals is not None and self.team2_goals is None) or (self.team1_goals is None and self.team2_goals is not None):
             raise ValidationError("Goals must be added for both teams in the fixture")
 
@@ -217,26 +242,11 @@ class Fixture(models.Model):
     class Meta:
         ordering = ['match_date']
 
-################################################################################
 
-# Models for questions/answers
 
-# class TextQuestion(models.Model):
-#     # SCORELINE = 1
-#     # USER_INPUT = 2
-
-#     # QUESTION_TYPES = (
-#     #     (SCORELINE, "Scoreline"),
-#     #     (USER_INPUT, "User Input")
-#     # )
-
-#     text = models.CharField(max_length=64, default="Choose a result")
-#     # type
-
-#     def __str__(self):
-#         return self.text
-
-""" Models for users, their answers, and leaderboards """
+######################################################
+#  Models for users, their answers, and leaderboards
+######################################################
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
@@ -249,7 +259,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
         
-
 class Answer(models.Model):
     POINTS_NOT_ADDED = 0
     POINTS_ADDED = 1
@@ -352,3 +361,22 @@ class Leaderboard(models.Model):
     
 #     def get_teams(self):
 #         return Team.objects.filter(group=self.id)
+
+################################################################################
+
+# Models for questions/answers
+
+# class TextQuestion(models.Model):
+#     # SCORELINE = 1
+#     # USER_INPUT = 2
+
+#     # QUESTION_TYPES = (
+#     #     (SCORELINE, "Scoreline"),
+#     #     (USER_INPUT, "User Input")
+#     # )
+
+#     text = models.CharField(max_length=64, default="Choose a result")
+#     # type
+
+#     def __str__(self):
+#         return self.text

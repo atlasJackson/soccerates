@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import F
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -153,76 +154,6 @@ def answer_form(request):
         context_dict['management_form'] = management_form
 
     return render(request, 'answer_form.html', context_dict)
-
-
-
-###############################
-### USER POINTS CALCULATION
-###############################
-
-# Calculates the user's points for games that have already been played, but ahve not yet been added to the user's points total.
-def calculate_user_points(user):
-    
-    # Get completed fixtures.
-    fixtures = Fixture.all_completed_fixtures()
-    
-    for fixture in fixtures:
-        # Get user's answer for each completed fixture. If no answer exists then continue to the next fixture.
-        try:
-            ans = Answer.objects.select_related('fixture','user') \
-                    .filter(fixture=fixture, user=user)[0] 
-
-        except Answer.DoesNotExist:
-            continue
-
-        # Skip fixture if points have been added.
-        if (ans.POINTS_ADDED):
-            continue
-
-        # Get actual and predicted goals scored for each team in the fixture
-        user_team1_goals = ans.team1_goals
-        user_team2_goals = ans.team2_goals
-        actual_team1_goals = fixture.team1_goals
-        actual_team2_goals = fixture.team2_goals
-
-        # First check if result is correct, i.e. prediction of goals scored for each time match.
-        team1_accuracy = user_team1_goals - actual_team1_goals
-        team2_accuracy = user_team2_goals - actual_team2_goals
-
-        if (team1_accuracy == team2_accuracy == 0):
-            add_user_points(user, ans, 5)
-
-        # If not, then check for other conditions to get points. 
-        else:
-
-            # Get actual/predicted total goals, and actual/predicted goal difference.
-            user_total_goals = user_team1_goals + user_team2_goals
-            actual_total_goals = actual_team1_goals + actual_team2_goals
-            user_goal_difference = user_team1_goals - user_team2_goals
-            actual_goal_difference = actual_team1_goals - actual_team2_goals
-
-            # Check the result is correct
-            if ((user_goal_difference > 0 and actual_goal_difference > 0) or
-                (user_goal_difference < 0 and actual_goal_difference < 0) or
-                (user_goal_difference == actual_goal_difference == 0)): 
-                
-                add_user_points(user, ans, 2)
-
-            # Check the total goals scored or the goal difference is correct (can't have both, or the prediction would be correct).
-            elif ((user_total_goals == actual_total_goals) or (user_goal_difference == actual_goal_difference)):
-                add_user_points(user, ans, 1)
-
-
-# Helper method to add to user's total points.
-def add_user_points(user, answer, pts):
-
-    # Add points to user's total.
-    user.points += pts
-    user.save()
-    
-    # Update answer entry so points for this fixture aren't given to the user in the future.
-    answer.points_added = answer.POINTS_ADDED
-    answer.save()
 
 
 #################
