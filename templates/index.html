@@ -4,7 +4,7 @@
 {% block body_block %}
     <div class="container mt-4">
 
-        <div class="row pb-5 mb-5 border-bottom border-info">
+        <div class="row mb-5">
             <div class="col-lg-8 col-12 mb-3">
                 {% if user.is_authenticated %}
                     <h2>Welcome, {{ user.username }}</h2>
@@ -24,28 +24,25 @@
                 </p>
                 <a href="{% url 'test' %}">Test page.</a>
 
+
             </div>
 
             <div class="col-sm-4 col-12 border"> <!-- User Summary -->
-                <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h5>
+                <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
                 <strong>Points:</strong> {{ request.user.profile.points }}
 
             </div>
         </div>
 
+        <div class="row mb-5 border-bottom border-info">
+            <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase mb-5">
+                Enter Predictions
+            </a>
+        </div>
+
         <div class="row">
         
-            <div class="col-lg-8 col-12 mb-5">
-                
-                <div class="mb-5">
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase">
-                        Enter Predictions
-                    </a>
-                    {% else %}
-                    <a href="{% url 'login' %}">Click here</a> to login and make predictions
-                    {% endif %}
-                </div>
+            <div class="col-lg-7 col-12 mb-5">
 
                 <div class="card mb-3"> <!-- Display upcoming fixtures -->
                     <h5 class="card-header text-center text-uppercase">Upcoming Fixtures</h5>
@@ -58,18 +55,58 @@
 
             </div>
 
-            <div class="col-sm-4 col-12 border-left border-info">
+            <div class="col-lg-5 col-12 border-left border-info">
                 <div>
                     <h4 class="card-header text-center text-uppercase mb-3">Current Standings</h4>
-                    {% for group, fixture_list in fixtures.items %}
-                    <div class="">
-                        {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
-                    </div>
-                    {% endfor %}
-                </div>
-                
-            </div>
 
+                    <div>
+                        <!-- Nav tabs for each group -->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                            <li class="nav-item text-uppercase">
+                            <a class="nav-link disabled" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="true">
+                                Group:
+                            </a>
+                        </li>
+
+                            {% for group,_ in fixtures.items %}
+                                {% if forloop.first %} 
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="true">
+                                            {{ group }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="false">
+                                            {{ group }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+
+                    <div class="tab-content" id="myTabContent">
+                        {% for group, fixture_list in fixtures.items %}
+
+                            <!-- Display management form on the first iteration, and create first group's table -->
+                            {% if forloop.first %}
+                                <div class="tab-pane fade show active" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
+                                    {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
+                                </div>
+                            {% else %}
+                                <div class="tab-pane fade5" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
+                                    {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+            
+                </div>
+
+            </div>
         </div>
     </div>
 {% endblock %} 
