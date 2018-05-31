@@ -49,13 +49,13 @@
             </div>
         </div>
 
-        {% if user.is_authenticated %}
         <div class="row mb-5 border-bottom border-info">
+        {% if user.is_authenticated %}
             <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase mb-5">
                 Enter Predictions
             </a>
-        </div>
         {% endif %}
+        </div>
 
         <div class="row">
         
