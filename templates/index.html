@@ -4,6 +4,15 @@
 {% block body_block %}
     <div class="container mt-4">
 
+        <div class="row mb-3">
+            <div class="col-12">
+                <a href="{% url 'wc_schedule' %}">
+                    <img src="{% static 'img/world-cup-2018-banner.png' %}" id="wc-banner" alt="Russia 2018 World Cup"/>
+                </a>
+            </div>
+        </div>
+
+
         <div class="row mb-5">
             <div class="col-lg-8 col-12 mb-3">
                 {% if user.is_authenticated %}
@@ -27,10 +36,16 @@
 
             </div>
 
-            <div class="col-sm-4 col-12 border"> <!-- User Summary -->
-                <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
-                <strong>Points:</strong> {{ request.user.profile.points }}
+            <div class="col-sm-4 col-12 border-left center-block"> <!-- User Summary -->
+                {% if user.is_authenticated %}
+                    <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
+                    <strong>Points:</strong> {{ request.user.profile.points }}
+                {% else %}
+                    <div class="col-md-12">
+                        <img src="{% static 'img/soccerates.png' %}" id="index-logo" alt="Soccerates"/>
+                    </div>                    
 
+                {% endif %}
             </div>
         </div>
 

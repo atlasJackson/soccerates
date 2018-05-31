@@ -109,16 +109,23 @@ footer hr {
 #logo {
   max-height: 150px;
   max-width: 150px;
-
 }
-
 
 .copyright {  
   background-color: #444;
 }
 
 
+/* INDEX */
 
+#wc-banner {
+  width: 100%;
+}
+
+#index-logo {
+  height: 100%;
+  width: 100%;
+}
 
 
 
