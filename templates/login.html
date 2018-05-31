@@ -13,13 +13,13 @@
             <h2 class="my-4 text-success">{{user.username}}, you're already logged in!</h2>
             <a href="{% url 'index' %}">Click here</a> to return to the homepage.
         {% else %}
-        <div class="card mt-5">
+        <div class="card mt-4">
         <div class="card-header">
             <h3 class="mb-0">Sign In</h3>
         </div>
         <form action="/login/" method="POST" autocomplete="off">
             {% csrf_token %}
-            <div class="card-body m-2">
+            <div class="card-body p-2">
                 <div class="form-group">
                     {{ form.username.label_tag}}
                     {{ form.username|add_class:"form-control" }}
