@@ -8,9 +8,12 @@
                     <td>
                         <small>{{ fixture.match_date }}</small>
                     </td>
+
+                    {% if not short %}
                     <td class="text-right pr-0">
                         {{fixture.team1.name}}
                     </td>
+                    {% endif %}
                     <td class="text-left ml-0">
                         {% if fixture.team1.flag %}                                
                             <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
@@ -25,7 +28,9 @@
                         {% if fixture.team2.flag %}
                             <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
                         {% endif %}
+                    {% if not short %}
                         {{ fixture.team2.name }}
+                    {% endif %}
                     </td>
                     <td>
                         {{ fixture.get_stage_display }}     
