@@ -64,9 +64,13 @@ class ResultEnteredTests(TestCase):
         egypt_goals = self.total_goals_scored(self.egypt_fixtures, self.egypt)
         uruguay_goals = self.total_goals_scored(self.uruguay_fixtures, self.uruguay)
         self.assertEquals(russia_goals, self.russia.goals_for)
+        self.assertEquals(russia_goals, self.russia.group_goals_for)
         self.assertEquals(saudi_goals, self.saudi.goals_for)
+        self.assertEquals(saudi_goals, self.saudi.group_goals_for)
         self.assertEquals(egypt_goals, self.egypt.goals_for)
+        self.assertEquals(egypt_goals, self.egypt.group_goals_for)
         self.assertEquals(uruguay_goals, self.uruguay.goals_for)
+        self.assertEquals(uruguay_goals, self.uruguay.group_goals_for)
 
     # Tests that values on the Team model's goals_against field are correct after adding Fixture results
     def test_team_goals_against_field(self):
@@ -75,9 +79,13 @@ class ResultEnteredTests(TestCase):
         egypt_conceded = self.total_goals_conceded(self.egypt_fixtures, self.egypt)
         uruguay_conceded = self.total_goals_conceded(self.uruguay_fixtures, self.uruguay)
         self.assertEquals(russia_conceded, self.russia.goals_against)
+        self.assertEquals(russia_conceded, self.russia.group_goals_against)
         self.assertEquals(saudi_conceded, self.saudi.goals_against)
+        self.assertEquals(saudi_conceded, self.saudi.group_goals_against)
         self.assertEquals(egypt_conceded, self.egypt.goals_against)
+        self.assertEquals(egypt_conceded, self.egypt.group_goals_against)
         self.assertEquals(uruguay_conceded, self.uruguay.goals_against)
+        self.assertEquals(uruguay_conceded, self.uruguay.group_goals_against)
 
     # Tests that values on the Team model's games_won field are correct after adding Fixture results
     def test_team_games_won_field(self):
@@ -86,9 +94,13 @@ class ResultEnteredTests(TestCase):
         egypt_won = self.total_games_won(self.egypt_fixtures, self.egypt)
         uruguay_won = self.total_games_won(self.uruguay_fixtures, self.uruguay)
         self.assertEquals(russia_won, self.russia.games_won)
+        self.assertEquals(russia_won, self.russia.group_won)
         self.assertEquals(saudi_won, self.saudi.games_won)
-        self.assertEquals(egypt_won, self.egypt.games_won) 
+        self.assertEquals(saudi_won, self.saudi.group_won)
+        self.assertEquals(egypt_won, self.egypt.games_won)
+        self.assertEquals(egypt_won, self.egypt.group_won) 
         self.assertEquals(uruguay_won, self.uruguay.games_won)
+        self.assertEquals(uruguay_won, self.uruguay.group_won)
 
     # Tests that values on the Team model's games_drawn field are correct after adding Fixture results
     def test_team_games_drawn_field(self):
@@ -97,9 +109,13 @@ class ResultEnteredTests(TestCase):
         egypt_drawn = self.total_games_drawn(self.egypt_fixtures, self.egypt)
         uruguay_drawn = self.total_games_drawn(self.uruguay_fixtures, self.uruguay)
         self.assertEquals(russia_drawn, self.russia.games_drawn)
+        self.assertEquals(russia_drawn, self.russia.group_drawn)
         self.assertEquals(saudi_drawn, self.saudi.games_drawn)
+        self.assertEquals(saudi_drawn, self.saudi.group_drawn)
         self.assertEquals(egypt_drawn, self.egypt.games_drawn)
+        self.assertEquals(egypt_drawn, self.egypt.group_drawn)
         self.assertEquals(uruguay_drawn, self.uruguay.games_drawn)
+        self.assertEquals(uruguay_drawn, self.uruguay.group_drawn)
 
     # Tests that values on the Team model's games_lost field are correct after adding Fixture results
     def test_team_games_lost_field(self):
@@ -108,9 +124,13 @@ class ResultEnteredTests(TestCase):
         egypt_lost = self.total_games_lost(self.egypt_fixtures, self.egypt)
         uruguay_lost = self.total_games_lost(self.uruguay_fixtures, self.uruguay)
         self.assertEquals(russia_lost, self.russia.games_lost)
+        self.assertEquals(russia_lost, self.russia.group_lost)
         self.assertEquals(saudi_lost, self.saudi.games_lost)
+        self.assertEquals(saudi_lost, self.saudi.group_lost)
         self.assertEquals(egypt_lost, self.egypt.games_lost)
+        self.assertEquals(egypt_lost, self.egypt.group_lost)
         self.assertEquals(uruguay_lost, self.uruguay.games_lost)
+        self.assertEquals(uruguay_lost, self.uruguay.group_lost)
 
     # Tests that values on the Team model's points field are correct after adding Fixture results    
     def test_team_points_field(self):

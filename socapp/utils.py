@@ -81,7 +81,7 @@ def add_team_data(fixture, team):
 
     if fixture.get_winner() == team:
         team.games_won = F('games_won') + 1
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_won = F('group_won') + 1
         else:
             team.group_won = F('group_won')
@@ -91,7 +91,7 @@ def add_team_data(fixture, team):
 
     if fixture.get_loser() == team:
         team.games_lost = F('games_lost') + 1
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_lost = F('group_lost') + 1
         else:
             team.group_lost = F('group_lost')
@@ -101,7 +101,7 @@ def add_team_data(fixture, team):
 
     if fixture.is_draw():
         team.games_drawn = F('games_drawn') + 1
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_drawn = F('group_drawn') + 1
         else:
             team.group_drawn = F('group_drawn')
@@ -113,7 +113,7 @@ def add_team_data(fixture, team):
     if fixture.team1 == team:
         team.goals_for = F('goals_for') + fixture.team1_goals
         team.goals_against = F('goals_against') + fixture.team2_goals
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_goals_for = F('group_goals_for') + fixture.team1_goals
             team.group_goals_against = F('group_goals_against') + fixture.team2_goals
         else:
@@ -122,7 +122,7 @@ def add_team_data(fixture, team):
     else:
         team.goals_for = F('goals_for') + fixture.team2_goals
         team.goals_against = F('goals_against') + fixture.team1_goals
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_goals_for = F('group_goals_for') + fixture.team2_goals
             team.group_goals_against = F('group_goals_against') + fixture.team1_goals
         else:
@@ -140,7 +140,7 @@ def remove_team_data(fixture, team):
 
     if fixture.get_winner() == team:
         team.games_won = F('games_won') - 1
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_won = F('group_won') - 1
         else:
             team.group_won = F('group_won')
@@ -150,7 +150,7 @@ def remove_team_data(fixture, team):
 
     if fixture.get_loser() == team:
         team.games_lost = F('games_lost') - 1
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_lost = F('group_lost') - 1
         else:
             team.group_lost = F('group_lost')
@@ -160,7 +160,7 @@ def remove_team_data(fixture, team):
     
     if fixture.is_draw():
         team.games_drawn = F('games_drawn') - 1
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_drawn = F('group_drawn') - 1
         else:
             team.group_drawn = F('group_drawn')
@@ -171,7 +171,7 @@ def remove_team_data(fixture, team):
     if fixture.team1 == team:
         team.goals_for = F('goals_for') - fixture.team1_goals
         team.goals_against = F('goals_against') - fixture.team2_goals
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_goals_for = F('group_goals_for') - fixture.team1_goals
             team.group_goals_against = F('group_goals_against') - fixture.team2_goals
         else:
@@ -181,7 +181,7 @@ def remove_team_data(fixture, team):
     elif fixture.team2 == team:
         team.goals_for = F('goals_for') - fixture.team2_goals
         team.goals_against = F('goals_against') - fixture.team1_goals
-        if fixture.stage == Fixture.Group:
+        if fixture.stage == Fixture.GROUP:
             team.group_goals_for = F('group_goals_for') - fixture.team2_goals
             team.group_goals_against = F('group_goals_against') - fixture.team1_goals
         else:
@@ -200,30 +200,61 @@ def update_team_data(previous_fixture, updated_fixture, team):
 
 # Updates the games_won, games_drawn, games_lost fields in the Team model passed in
 def update_result_fields(previous_fixture, updated_fixture, team):
+    from socapp.models import Fixture
+
     if previous_fixture.is_draw() and not updated_fixture.is_draw():
         team.games_drawn = F('games_drawn') - 1
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_drawn = F('group_drawn') - 1
+        else:
+            team.group_drawn = F('group_drawn')
+
     elif not previous_fixture.is_draw() and updated_fixture.is_draw():
         team.games_drawn = F('games_drawn') + 1
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_drawn = F('group_drawn') + 1
+        else:
+            team.group_drawn = F('group_drawn')
     else:
         team.games_drawn = F('games_drawn')
+        team.group_drawn = F('group_drawn')
 
     if previous_fixture.get_winner() == team and not updated_fixture.get_winner() == team:
         team.games_won = F('games_won') - 1
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_won = F('group_won') - 1
+        else:
+            team.group_won = F('group_won')
     elif not previous_fixture.get_winner() == team and updated_fixture.get_winner() == team:
         team.games_won = F('games_won') + 1
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_won = F('group_won') + 1
+        else:
+            team.group_won = F('group_won')
     else:
         team.games_won = F('games_won')
+        team.group_won = F('group_won')
 
     if previous_fixture.get_loser() == team and not updated_fixture.get_loser() == team:
         team.games_lost = F('games_lost') - 1
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_lost = F('group_lost') - 1
+        else:
+            team.group_lost = F('group_lost')
     elif not previous_fixture.get_loser() == team and updated_fixture.get_loser() == team:
         team.games_lost = F('games_lost') + 1
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_lost = F('group_lost') + 1
+        else:
+            team.group_lost = F('group_lost')
     else:
         team.games_lost = F('games_lost')
-    return team
+        team.group_lost = F('group_lost')
 
 # Updates the goals_for, goals_against fields in the Team model passed in
 def update_goals_fields(previous_fixture, updated_fixture, team):
+    from socapp.models import Fixture
+
     if team == previous_fixture.team1:
         gf_diff = previous_fixture.team1_goals - updated_fixture.team1_goals
         ga_diff = previous_fixture.team2_goals - updated_fixture.team2_goals
@@ -237,17 +268,35 @@ def update_goals_fields(previous_fixture, updated_fixture, team):
     # In this case, take the extra goals from the initial fixture away from the updated fixture.
     if gf_diff < 0:
         team.goals_for = F('goals_for') + abs(gf_diff)
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_goals_for = F('group_goals_for') + abs(gf_diff)
+        else:
+            team.group_goals_for = F('group_goals_for')        
     elif gf_diff > 0:
         team.goals_for = F('goals_for') - gf_diff
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_goals_for = F('group_goals_for') - gf_diff
+        else:
+            team.group_goals_for = F('group_goals_for') 
     else:
         team.goals_for = F('goals_for')
+        team.group_goals_for = F('group_goals_for')
     
     if ga_diff < 0:
         team.goals_against = F('goals_against') + abs(ga_diff)
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_goals_against = F('group_goals_against') + abs(ga_diff)
+        else:
+            team.group_goals_against = F('group_goals_against')  
     elif ga_diff > 0:
         team.goals_against = F('goals_against') - ga_diff
+        if previous_fixture.stage == Fixture.GROUP:
+            team.group_goals_against = F('group_goals_against') - ga_diff
+        else:
+            team.group_goals_against = F('group_goals_against')  
     else:
         team.goals_against = F('goals_against')
+        team.group_goals_against = F('group_goals_against') 
 
 ###############################
 ### USER POINTS CALCULATION
