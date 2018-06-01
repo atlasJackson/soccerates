@@ -134,29 +134,59 @@ def add_team_data(fixture, team):
 
 # Removes the result data from the team model's fields, either directly (goals for, goals against) or by inference (games won/drawn/lost)
 def remove_team_data(fixture, team):
+    from socapp.models import Fixture
+
     team.games_played = F('games_played') - 1
 
     if fixture.get_winner() == team:
         team.games_won = F('games_won') - 1
+        if fixture.stage == Fixture.Group:
+            team.group_won = F('group_won') - 1
+        else:
+            team.group_won = F('group_won')
     else:
         team.games_won = F('games_won')
+        team.group_won = F('group_won')
 
     if fixture.get_loser() == team:
         team.games_lost = F('games_lost') - 1
+        if fixture.stage == Fixture.Group:
+            team.group_lost = F('group_lost') - 1
+        else:
+            team.group_lost = F('group_lost')
     else:
         team.games_lost = F('games_lost')
+        team.group_lost = F('group_lost')
     
     if fixture.is_draw():
         team.games_drawn = F('games_drawn') - 1
+        if fixture.stage == Fixture.Group:
+            team.group_drawn = F('group_drawn') - 1
+        else:
+            team.group_drawn = F('group_drawn')
     else:
         team.games_drawn = F('games_drawn')
+        team.group_drawn = F('group_drawn')
 
     if fixture.team1 == team:
         team.goals_for = F('goals_for') - fixture.team1_goals
         team.goals_against = F('goals_against') - fixture.team2_goals
+        if fixture.stage == Fixture.Group:
+            team.group_goals_for = F('group_goals_for') - fixture.team1_goals
+            team.group_goals_against = F('group_goals_against') - fixture.team2_goals
+        else:
+            team.group_goals_for = F('group_goals_for')
+            team.group_goals_against = F('group_goals_against')
+
     elif fixture.team2 == team:
         team.goals_for = F('goals_for') - fixture.team2_goals
         team.goals_against = F('goals_against') - fixture.team1_goals
+        if fixture.stage == Fixture.Group:
+            team.group_goals_for = F('group_goals_for') - fixture.team2_goals
+            team.group_goals_against = F('group_goals_against') - fixture.team1_goals
+        else:
+            team.group_goals_for = F('group_goals_for')
+            team.group_goals_against = F('group_goals_against')
     
     team.save()
     team.refresh_from_db()
