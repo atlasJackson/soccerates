@@ -205,6 +205,71 @@ footer hr {
   color: red;
 }
 
+
+/* GROUP TABLES */
+.team-group-name-cell {
+  width:50%;
+}
+
+.team-group-stats-cell {
+  width:8%;
+}
+
+.team-group-points-cell {
+  width:10%;
+}
+
+.short-team-group-name-cell {
+  width:60%;
+}
+
+.short-team-group-stats-cell {
+  width:10%;
+}
+
+.short-team-group-points-cell {
+  width:20%;
+}
+
+
+/* FIXTURES */
+.fx-game-date-cell {
+  width:30%;
+}
+
+.fx-team-name-cell {
+  width:20%;
+}
+
+.fx-team-flag-cell {
+  width:2.5%;
+}
+
+.fx-goals-versus-cell {
+  width:12.5%;
+}
+
+.fx-game-stage-cell {
+  width:12.5%;
+}
+
+.short-fx-game-date-cell {
+  width:45%;
+}
+
+.short-fx-team-flag-cell {
+  width:5%;
+}
+
+.short-fx-goals-versus-cell {
+  width:20%;
+}
+
+.short-fx-game-stage-cell {
+  width:25%;
+}
+
+
 /* FORMS */
 .team-name-cell {
   width:25%;
@@ -212,10 +277,6 @@ footer hr {
 
 .team-flag-cell {
   width:10%;
-}
-
-.team-name-cell {
-  width:25%;
 }
 
 .dash-versus-cell {

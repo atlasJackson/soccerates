@@ -265,7 +265,7 @@ def calculate_user_points(user, fixture=None):
                 add_user_points(user, ans, 2)
 
             # Check the total goals scored or the goal difference is correct (can't have both, or the prediction would be correct).
-            elif ((user_total_goals == actual_total_goals) or (user_goal_difference == actual_goal_difference)):
+            if ((user_total_goals == actual_total_goals) or (user_goal_difference == actual_goal_difference)):
                 add_user_points(user, ans, 1)
 
 

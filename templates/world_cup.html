@@ -7,33 +7,36 @@
 {% endblock %}
 
 {% block body_block %}
-    <div class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center ml-2">
-            <h3>Groups and Fixtures</h3>
-        </div>
-        <main class="d-flex flex-wrap mt-5">
-            {% for group, fixture_list in fixtures.items %}
-            <div class="group-fixtures mb-5 text-center col-10 border-right">
-                {% include 'include_groups.html' with group=group fixture_list=fixture_list short=False %}
+    <div class="container mt-0">
+
+        <div class="row border-bottom border-primary">
+            <div class="col-12 px-0">
+                <a href="{% url 'wc_schedule' %}">
+                    <img src="{% static 'img/world-cup-2018-banner.png' %}" id="wc-banner" alt="Russia 2018 World Cup"/>
+                </a>
+                <hr />
+            </div>
             
-                <table class="table table-sm table-hover mx-auto group-fixture-list">
-                    <tbody>
-                        {% for fixture in fixture_list %}
-                        <tr class="mb-3">                            
-                            <td class="pb-3">
-                                <p>{{ fixture.match_date }}</p>
-                                {% if fixture.team1.flag %}                                
-                                    <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
-                                {% endif %}
-                                {{fixture.team1.name}} vs {{ fixture.team2.name }}
-                                {% if fixture.team2.flag %}
-                                    <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="">
+                <h3>Russia 2018 FIFA World Cup: Group Stage</h3>
+            </div>
+        </div>
+
+
+        <main>
+            {% for group, fixture_list in fixtures.items %}
+            <div class="row mt-3">
+                <div class="col-7 pl-0">
+                    {% include 'include_groups.html' with group=group fixture_list=fixture_list short=False %}
+                </div>
+                <div class="col-5">
+                    
+                </div>
+            </div>
+            <div class="row mt-3 border-bottom border-primary">
+                <div class="col-12">
+                    {% include 'include_fixtures.html' with fixtures=fixture_list%}
+                </div>
             </div>
             {% endfor %}
         </main>

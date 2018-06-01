@@ -1,6 +1,25 @@
 {% load staticfiles %}
 
 <table class ="table">
+
+    <colgroup>
+    {% if short %}
+        <col class="short-fx-game-date-cell">
+        <col class="short-fx-team-flag-cell">
+        <col class="short-fx-goals-versus-cell">
+        <col class="short-fx-team-flag-cell">
+        <col class="short-fx-game-stage-cell">
+    {% else %}
+        <col class="fx-game-date-cell">
+        <col class="fx-team-name-cell">
+        <col class="fx-team-flag-cell">
+        <col class="fx-goals-versus-cell">
+        <col class="fx-team-flag-cell">
+        <col class="fx-team-name-cell">
+        <col class="fx-game-stage-cell">
+    {% endif %}
+    </colgroup>
+
     <tbody>
         {% if fixtures %}
             {% for fixture in fixtures %}
@@ -14,29 +33,35 @@
                         {{fixture.team1.name}}
                     </td>
                     {% endif %}
-                    <td class="text-left ml-0">
+                    <td class="text-left mx-0">
                         {% if fixture.team1.flag %}                                
                             <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
                         {% endif %}
-
+                    </td>
+                    <td class="text-center px-0 mx-0">
                         {% if fixture.status %}
                             {{ fixture.team1_goals }} - {{ fixture.team2_goals }}
                         {% else %}
                              vs 
                         {% endif %}
-
+                    </td>
+                    <td class="text-right mx-0">
                         {% if fixture.team2.flag %}
                             <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
                         {% endif %}
-                    {% if not short %}
-                        {{ fixture.team2.name }}
-                    {% endif %}
                     </td>
+                    {% if not short %}
                     <td>
+                        {{ fixture.team2.name }}
+                    </td>
+                    {% endif %}
+                    <td class="text-right">
+                        <small>
                         {{ fixture.get_stage_display }}     
                         {% if fixture.stage == 1 %}
                             {{ fixture.team1.group }}
                         {% endif %}
+                        </small>
                     </td>
                 </tr>
             {% endfor %}
