@@ -15,30 +15,30 @@ class Team(models.Model):
     group = models.CharField(max_length=1, choices=CHOICES)
     flag = models.ImageField(blank=True)
     
+    # For all games (group + knockout)
     games_played = models.IntegerField(default=0)
     games_won = models.IntegerField(default=0)
     games_drawn = models.IntegerField(default=0)
     games_lost = models.IntegerField(default=0)
     goals_for = models.IntegerField(default=0)
     goals_against = models.IntegerField(default=0)
-    #group_points = models.IntegerField(default=0)
+    
+    # For group games only
+    group_won = models.IntegerField(default=0)
+    group_drawn = models.IntegerField(default=0)
+    group_lost = models.IntegerField(default=0)
+    group_goals_for = models.IntegerField(default=0)
+    group_goals_against = models.IntegerField(default=0)
 
     # Potentially create fields on the model for group-stage data like points, goal diff, etc. 
     # May have performance benefits rather than performing extra queries to calculate the points for every team, especially as we're showing all the groups on some pages
     @property
     def points(self):
-        #return (3 * self.games_won) + self.games_drawn
-        points = self.fixtures_by_stage(Fixture.GROUP).annotate(points=Case(
-            When(Q(team1=self) & Q(team1_goals__gt=F('team2_goals')), then=Value(3)), 
-            When(Q(team2=self) & Q(team2_goals__gt=F('team1_goals')), then=Value(3)),
-            When(team1_goals=F('team2_goals'), then=Value(1)),
-            default=Value(0),
-            output_field = models.IntegerField())).aggregate(total_points=Sum('points'))
-        return points['total_points']
+        return (3 * self.group_won) + self.group_drawn
 
     @property
     def goal_difference(self):
-        return self.goals_for - self.goals_against
+        return self.group_goals_for - self.group_goals_against
     
     #################################
     ### MODEL METHODS

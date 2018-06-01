@@ -35,6 +35,7 @@ def getGroupGamesPlayed(team):
 # Returns distinct set of teams for the queryset of fixtures passed in
 @register.filter(name="getDistinctTeamsOrderedByPoints")
 def getDistinctTeamsOrderedByPoints(fixtures):
+    print(fixtures)
     teams = []
     while len(teams) < 4:
         for fixture in fixtures:

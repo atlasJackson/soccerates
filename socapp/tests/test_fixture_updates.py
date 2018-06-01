@@ -193,6 +193,18 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(self.egypt.games_played, 3)
         self.assertEquals(self.uruguay.games_played, 3)
 
+    # Tests teams when all matches are set to 0-0
+    def test_all_nil_nil(self):
+        self.update_fixtures_to_nil_nil()
+        for team in Team.objects.filter(group="A"):
+            self.assertEquals(team.games_played, 3)
+            self.assertEquals(team.games_won, 0)
+            self.assertEquals(team.games_drawn, 3)
+            self.assertEquals(team.games_lost, 0)
+            self.assertEquals(team.goals_for, 0)
+            self.assertEquals(team.goals_against, 0)
+            self.assertEquals(team.points, 3)
+
     # Test for removing all results: does the Team model revert to its initial state (all 0s)?
     def test_team_model_after_results_are_removed(self):
         self.remove_all_results()
@@ -265,6 +277,17 @@ class ResultEnteredTests(TestCase):
         for fixture, result in zip(fixtures, self.updated_results):          
             fixture.team1_goals = result['team1_goals']
             fixture.team2_goals = result['team2_goals']
+            fixture.save()
+        self.russia.refresh_from_db()
+        self.saudi.refresh_from_db()
+        self.egypt.refresh_from_db()
+        self.uruguay.refresh_from_db()
+
+    # Sets all matches to 0-0
+    def update_fixtures_to_nil_nil(self):
+        for fixture in Fixture.all_fixtures_by_group("A"):
+            fixture.team1_goals = 0
+            fixture.team2_goals = 0
             fixture.save()
         self.russia.refresh_from_db()
         self.saudi.refresh_from_db()
