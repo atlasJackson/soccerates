@@ -69,6 +69,11 @@
                     <h5 class="card-header text-center text-uppercase">Results</h5>
                     {% include 'include_fixtures.html' with fixtures=past_fixtures %} 
                 </div>
+                <div class="mb-3">
+                    <a href="{% url 'wc_schedule' %}" class="btn btn-outline-secondary btn-sm btn-block text-uppercase">
+                        Full schedule...                    
+                    </a>
+                </div>
 
             </div>
 
