@@ -140,34 +140,6 @@ footer hr {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* SCHEDULE */
 
 .fixture-list {
@@ -296,3 +268,12 @@ footer hr {
 .points-system {
   background-color: #023d4d;
 }
+
+.list-star-bullets {
+  list-style-image: url("../img/star.png");
+}
+
+.list-star-bullets li {
+  margin: 10px 0px;
+}
+

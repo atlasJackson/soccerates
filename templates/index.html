@@ -69,6 +69,11 @@
                     <h5 class="card-header text-center text-uppercase">Results</h5>
                     {% include 'include_fixtures.html' with fixtures=past_fixtures %} 
                 </div>
+                <div class="mb-3">
+                    <a href="{% url 'wc_schedule' %}" class="btn btn-outline-secondary btn-sm btn-block text-uppercase">
+                        Full schedule...                    
+                    </a>
+                </div>
 
             </div>
 
@@ -115,7 +120,7 @@
                                     {% include 'include_fixtures.html' with fixtures=fixture_list short=True %}
                                 </div>
                             {% else %}
-                                <div class="tab-pane fade5" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
+                                <div class="tab-pane fade" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
                                     {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
                                     {% include 'include_fixtures.html' with fixtures=fixture_list short=True %}
                                 </div>
