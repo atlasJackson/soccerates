@@ -143,8 +143,12 @@
 
                             {% endfor %}
                         </div>
-
-                        <input class="btn btn-primary col-md-4 offset-md-4" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
+                        <div class="submit-form">
+                            <input class="btn btn-primary col-md-4 offset-md-4" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
+                            <span id="form-disabled-error" class="mt-2 text-danger d-none text-center">
+                                <small>You must select a score for both teams in each fixture</small>
+                            </span>
+                        </div>
                     </form>
                 </div>
             </div>

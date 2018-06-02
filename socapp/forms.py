@@ -52,8 +52,8 @@ class RegistrationForm(forms.ModelForm):
 class AnswerForm(forms.ModelForm):
     # fixture - hidden field that ties the answer to a fixture
     fixture = forms.ModelChoiceField(queryset=Fixture.objects.all(), widget=forms.HiddenInput())
-    team1_goals = forms.IntegerField(min_value=0, max_value=10, initial=0, widget=forms.NumberInput())
-    team2_goals = forms.IntegerField(min_value=0, max_value=10, initial=0, widget=forms.NumberInput())
+    team1_goals = forms.IntegerField(min_value=0, max_value=10, widget=forms.NumberInput())
+    team2_goals = forms.IntegerField(min_value=0, max_value=10, widget=forms.NumberInput())
 
     class Meta:
         model = Answer
