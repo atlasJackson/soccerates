@@ -157,9 +157,13 @@ class ResultEnteredTests(TestCase):
         egypt_goals = self.total_goals_scored(self.egypt_fixtures, self.egypt, apply_update=True)
         uruguay_goals = self.total_goals_scored(self.uruguay_fixtures, self.uruguay, apply_update=True)
         self.assertEquals(russia_goals, self.russia.goals_for)
+        self.assertEquals(russia_goals, self.russia.group_goals_for)
         self.assertEquals(saudi_goals, self.saudi.goals_for)
+        self.assertEquals(saudi_goals, self.saudi.group_goals_for)
         self.assertEquals(egypt_goals, self.egypt.goals_for)
+        self.assertEquals(egypt_goals, self.egypt.group_goals_for)
         self.assertEquals(uruguay_goals, self.uruguay.goals_for)
+        self.assertEquals(uruguay_goals, self.uruguay.group_goals_for)
 
     # Tests that updated values on the Team model's goals_against field are correct after applying Fixture update
     def test_updated_goals_against_field(self):
@@ -168,9 +172,13 @@ class ResultEnteredTests(TestCase):
         egypt_conceded = self.total_goals_conceded(self.egypt_fixtures, self.egypt, apply_update=True)
         uruguay_conceded = self.total_goals_conceded(self.uruguay_fixtures, self.uruguay, apply_update=True)
         self.assertEquals(russia_conceded, self.russia.goals_against)
+        self.assertEquals(russia_conceded, self.russia.group_goals_against)
         self.assertEquals(saudi_conceded, self.saudi.goals_against)
+        self.assertEquals(saudi_conceded, self.saudi.group_goals_against)
         self.assertEquals(egypt_conceded, self.egypt.goals_against)
+        self.assertEquals(egypt_conceded, self.egypt.group_goals_against)
         self.assertEquals(uruguay_conceded, self.uruguay.goals_against)
+        self.assertEquals(uruguay_conceded, self.uruguay.group_goals_against)
 
     # Tests that updated values on the Team model's games_won field are correct after applying Fixture update
     def test_updated_games_won_field(self):
@@ -179,9 +187,13 @@ class ResultEnteredTests(TestCase):
         egypt_won = self.total_games_won(self.egypt_fixtures, self.egypt, apply_update=True)
         uruguay_won = self.total_games_won(self.uruguay_fixtures, self.uruguay, apply_update=True)
         self.assertEquals(russia_won, self.russia.games_won)
+        self.assertEquals(russia_won, self.russia.group_won)
         self.assertEquals(saudi_won, self.saudi.games_won)
+        self.assertEquals(saudi_won, self.saudi.group_won)
         self.assertEquals(egypt_won, self.egypt.games_won)
+        self.assertEquals(egypt_won, self.egypt.group_won)
         self.assertEquals(uruguay_won, self.uruguay.games_won)
+        self.assertEquals(uruguay_won, self.uruguay.group_won)
 
     # Tests that updated values on the Team model's games_drawn field are correct after applying Fixture update    
     def test_updated_games_drawn_field(self):
@@ -190,9 +202,13 @@ class ResultEnteredTests(TestCase):
         egypt_drawn = self.total_games_drawn(self.egypt_fixtures, self.egypt, apply_update=True)
         uruguay_drawn = self.total_games_drawn(self.uruguay_fixtures, self.uruguay, apply_update=True)
         self.assertEquals(russia_drawn, self.russia.games_drawn)
+        self.assertEquals(russia_drawn, self.russia.group_drawn)
         self.assertEquals(saudi_drawn, self.saudi.games_drawn)
+        self.assertEquals(saudi_drawn, self.saudi.group_drawn)
         self.assertEquals(egypt_drawn, self.egypt.games_drawn)
+        self.assertEquals(egypt_drawn, self.egypt.group_drawn)
         self.assertEquals(uruguay_drawn, self.uruguay.games_drawn)
+        self.assertEquals(uruguay_drawn, self.uruguay.group_drawn)
 
     # Tests that updated values on the Team model's games_lost field are correct after applying Fixture update
     def test_updated_games_lost_field(self):
@@ -201,9 +217,13 @@ class ResultEnteredTests(TestCase):
         egypt_lost = self.total_games_lost(self.egypt_fixtures, self.egypt, apply_update=True)
         uruguay_lost = self.total_games_lost(self.uruguay_fixtures, self.uruguay, apply_update=True)
         self.assertEquals(russia_lost, self.russia.games_lost)
+        self.assertEquals(russia_lost, self.russia.group_lost)
         self.assertEquals(saudi_lost, self.saudi.games_lost)
+        self.assertEquals(saudi_lost, self.saudi.group_lost)
         self.assertEquals(egypt_lost, self.egypt.games_lost)
+        self.assertEquals(egypt_lost, self.egypt.group_lost)
         self.assertEquals(uruguay_lost, self.uruguay.games_lost)
+        self.assertEquals(uruguay_lost, self.uruguay.group_lost)
 
     # Ensures that on update, extra games are not added to the team's games_played field
     def test_updated_games_played(self):
@@ -223,6 +243,11 @@ class ResultEnteredTests(TestCase):
             self.assertEquals(team.games_lost, 0)
             self.assertEquals(team.goals_for, 0)
             self.assertEquals(team.goals_against, 0)
+            self.assertEquals(team.group_goals_for, 0)
+            self.assertEquals(team.group_goals_against, 0)
+            self.assertEquals(team.group_won, 0)
+            self.assertEquals(team.group_drawn, 3)
+            self.assertEquals(team.group_lost, 0)
             self.assertEquals(team.points, 3)
 
     # Test for removing all results: does the Team model revert to its initial state (all 0s)?
@@ -236,6 +261,11 @@ class ResultEnteredTests(TestCase):
             self.assertEquals(team.games_lost, 0)
             self.assertEquals(team.goals_for, 0)
             self.assertEquals(team.goals_against, 0)
+            self.assertEquals(team.group_goals_for, 0)
+            self.assertEquals(team.group_goals_against, 0)
+            self.assertEquals(team.group_won, 0)
+            self.assertEquals(team.group_drawn, 0)
+            self.assertEquals(team.group_lost, 0)
             self.assertEquals(team.points, 0)
             self.assertEquals(team.goal_difference, 0)
 

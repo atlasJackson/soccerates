@@ -30,8 +30,6 @@ class Team(models.Model):
     group_goals_for = models.IntegerField(default=0)
     group_goals_against = models.IntegerField(default=0)
 
-    # Potentially create fields on the model for group-stage data like points, goal diff, etc. 
-    # May have performance benefits rather than performing extra queries to calculate the points for every team, especially as we're showing all the groups on some pages
     @property
     def points(self):
         return (3 * self.group_won) + self.group_drawn

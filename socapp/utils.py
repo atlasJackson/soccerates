@@ -78,6 +78,10 @@ def group_users_by_points(users_queryset=None):
 def add_team_data(fixture, team):
     from socapp.models import Fixture
     team.games_played = F('games_played') + 1
+    if fixture.stage == Fixture.GROUP:
+        team.group_played = F('group_played') + 1
+    else:
+        team.group_played = F('group_played')
 
     if fixture.get_winner() == team:
         team.games_won = F('games_won') + 1
@@ -137,6 +141,10 @@ def remove_team_data(fixture, team):
     from socapp.models import Fixture
 
     team.games_played = F('games_played') - 1
+    if fixture.stage == Fixture.GROUP:
+        team.group_played = F('group_played') - 1
+    else:
+        team.group_played = F('group_played')
 
     if fixture.get_winner() == team:
         team.games_won = F('games_won') - 1

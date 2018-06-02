@@ -45,9 +45,9 @@
                 {{ team|getGroupGamesPlayed }}
             </td>
             {% if not short %}
-                <td>{{ team.games_won }}</td>
-                <td>{{ team.games_drawn }}</td>
-                <td>{{ team.games_lost }}</td>
+                <td>{{ team.group_won }}</td>
+                <td>{{ team.group_drawn }}</td>
+                <td>{{ team.group_lost }}</td>
             {% endif %}
             <td class="text-right">{{ team.goal_difference }}</td>
             <td class="text-right">{{ team.points }}</td>

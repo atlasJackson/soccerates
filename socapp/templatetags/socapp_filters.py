@@ -30,7 +30,7 @@ def getMatchDate(list, i):
 # Return date in the list. Used in template to predict scores.
 @register.filter(name='getGroupGamesPlayed')
 def getGroupGamesPlayed(team):
-    return (team.games_won + team.games_drawn + team.games_lost)
+    return (team.group_won + team.group_drawn + team.group_lost)
 
 # Returns distinct set of teams for the queryset of fixtures passed in
 @register.filter(name="getDistinctTeamsOrderedByPoints")
@@ -43,4 +43,4 @@ def getDistinctTeamsOrderedByPoints(fixtures):
                 teams.append(fixture.team1)
             if fixture.team2 not in teams:
                 teams.append(fixture.team2)
-    return sorted(teams, key=lambda team: team.points, reverse=True)
+    return sorted(teams, key=lambda team: (team.points, team.goal_difference, team.group_goals_for), reverse=True)
