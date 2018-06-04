@@ -4,8 +4,10 @@ from django.db.models import F
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
+import logging
 from itertools import groupby
 
+logger = logging.getLogger(__name__)
 """
 Utility methods for common/complex tasks
 """
@@ -419,6 +421,27 @@ def calculate_points(fixture, answer):
             total_points += 1
 
     return total_points
+
+
+def sync_user_points():
+    """
+    This function (or something similar) can be run AFTER a fixture is played, in order to ensure there are no anomalies in the user points. 
+    It looks at all matches that've been played, and calculates the user's points for each, comparing them to the actual points in the database.
+    These fields should sync, and if not, an error should be logged.
+    Preferably execute this function periodically (ie - 20 mins after each match finishes) with Celery or Cron.
+    """
+    from .models import Answer, Fixture
+
+    fixtures = Fixture.all_completed_fixtures()
+    users = get_user_model().objects.all()
+    for user in users:
+        answers = Answer.objects.filter(user=user, fixture__in=fixtures)
+        total_points = 0
+        for answer in answers:
+            total_points += calculate_points(answer.fixture, answer)
+        if not total_points == user.profile.points:
+            logger.error("User {} has {} points, but should have {} points".format(user, user.profile.points, total_points))
+        assert total_points == user.profile.points
 
 # Helper that determines if the outcome of a fixture is the same as it was previously, or not
 def same_result(fixture1, fixture2):
