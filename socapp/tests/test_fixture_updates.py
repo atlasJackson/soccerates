@@ -30,19 +30,47 @@ class ResultEnteredTests(TestCase):
         { 'team1_goals': 1, 'team2_goals': 0 } # Should return 2 points
     ]
 
+    user2_predictions = [
+        { 'team1_goals': 2, 'team2_goals': 2 }, # Should return 0 points
+        { 'team1_goals': 2, 'team2_goals': 0 }, # Should return 0 points
+        { 'team1_goals': 2, 'team2_goals': 1 }, # Should return 3 points
+        { 'team1_goals': 1, 'team2_goals': 0 }, # Should return 0 points
+        { 'team1_goals': 1, 'team2_goals': 3 }, # Should return 5 points
+        { 'team1_goals': 6, 'team2_goals': 0 } # Should return 3 points
+    ]
+
+    user3_predictions = [
+        { 'team1_goals': 2, 'team2_goals': 1 },
+        { 'team1_goals': 0, 'team2_goals': 0 },
+        { 'team1_goals': 4, 'team2_goals': 3 },
+        { 'team1_goals': 2, 'team2_goals': 2 },
+        { 'team1_goals': 1, 'team2_goals': 3 },
+        { 'team1_goals': 5, 'team2_goals': 1 } 
+    ]
+
     updated_results = [
-        { 'team1_goals': 2, 'team2_goals': 0 }, # Russia vs Saudi Arabia
-        { 'team1_goals': 3, 'team2_goals': 2 }, # Egypt vs Uruguay
-        { 'team1_goals': 4, 'team2_goals': 5 }  # Russia vs Egypt
+        { 'team1_goals': 2, 'team2_goals': 0 }, # Russia vs Saudi Arabia (-3)
+        { 'team1_goals': 3, 'team2_goals': 2 }, # Egypt vs Uruguay (-5)
+        { 'team1_goals': 4, 'team2_goals': 5 }  # Russia vs Egypt (-5)
     ]
 
     USER1_TOTAL_POINTS = 14 # Based on the above predictions
-    USER1_UPDATED_TOTAL_POINTS = 9
+    USER1_UPDATED_TOTAL_POINTS = 10
+
+    USER2_TOTAL_POINTS = 11
+    USER2_UPDATED_TOTAL_POINTS = 10
+
+    USER3_TOTAL_POINTS = 30
+    USER3_UPDATED_TOTAL_POINTS = 17
 
     # Sets the test class up for each test method
     def setUp(self):
         self.user = helpers.generate_user(username="test", password="password")
-        self.add_predictions()
+        self.user2 = helpers.generate_user(username="test2", password="password")
+        self.user3 = helpers.generate_user(username="username", password="password")
+        self.add_predictions(self.user, self.user_predictions)
+        self.add_predictions(self.user2, self.user2_predictions)
+        self.add_predictions(self.user3, self.user3_predictions)
         self.add_results()
         self.russia = Team.objects.get(name="Russia")
         self.saudi = Team.objects.get(name="Saudi Arabia")
@@ -306,21 +334,56 @@ class ResultEnteredTests(TestCase):
     ##
     def test_user_points(self):
         self.assertEquals(self.user.profile.points, self.USER1_TOTAL_POINTS)
+        self.assertEquals(self.user2.profile.points, self.USER2_TOTAL_POINTS)
+        self.assertEquals(self.user3.profile.points, self.USER3_TOTAL_POINTS)
+        
+        # Check the points added flag is set to true for each answer
+        for answer in Answer.objects.all():
+            self.assertEquals(answer.points_added, Answer.POINTS_ADDED)
 
         # Test after fixtures update:
         self.update_fixtures()
         self.assertEquals(self.user.profile.points, self.USER1_UPDATED_TOTAL_POINTS)
+        self.assertEquals(self.user2.profile.points, self.USER2_UPDATED_TOTAL_POINTS)
+        self.assertEquals(self.user3.profile.points, self.USER3_UPDATED_TOTAL_POINTS)
+
+        # Random update: turns 0 points to 5
+        f = Fixture.objects.get(team1__name="Uruguay", team2__name="Saudi Arabia")
+        f.team1_goals, f.team2_goals = 1, 0
+        f.save()
+        self.user.refresh_from_db()
+        self.user2.refresh_from_db()
+        self.user3.refresh_from_db()
+        self.assertEquals(self.user.profile.points, self.USER1_UPDATED_TOTAL_POINTS - 1)
+        self.assertEquals(self.user2.profile.points, self.USER2_UPDATED_TOTAL_POINTS + 5)
+        self.assertEquals(self.user3.profile.points, self.USER3_UPDATED_TOTAL_POINTS - 5)
+
+    def test_user_points_after_removing_all_fixtures(self):
+        self.remove_all_results()
+        self.assertEquals(self.user.profile.points, 0)
+        self.assertEquals(self.user2.profile.points, 0)
+        # Check the points added flag is set to false for each answer
+        for answer in Answer.objects.all():
+            self.assertEquals(answer.points_added, Answer.POINTS_NOT_ADDED)
+
+    def test_user_points_after_removing_individual_fixture(self):
+        # Remove the fixture that got user1 five points:
+        f = Fixture.all_fixtures_by_group("A")[0]
+        assert f.team1.name == "Russia" and f.team2.name == "Saudi Arabia" # Ensure it's the same fixture
+        f.team1_goals = f.team2_goals = None # Invalidate the result
+        f.save()
+        self.assertEquals(self.user.profile.points, self.USER1_TOTAL_POINTS - 5) # Check the user's points have been reset by 5
 
     #############
     #  Helper methods for setting up tests, and acquiring values from the Team and Fixture models
     ##
 
     # Create an answer for each fixture, for the user generated in the setUp method.
-    def add_predictions(self):
+    def add_predictions(self, user, predictions):
         fixtures = Fixture.all_fixtures_by_group("A")
-        assert fixtures.count() == len(self.user_predictions)
-        for fixture, prediction in zip(fixtures, self.user_predictions):
-            a = Answer(fixture=fixture, user=self.user)
+        assert fixtures.count() == len(predictions)
+        for fixture, prediction in zip(fixtures, predictions):
+            a = Answer(fixture=fixture, user=user)
             a.team1_goals = prediction['team1_goals']
             a.team2_goals = prediction['team2_goals']
             a.save()
@@ -333,8 +396,9 @@ class ResultEnteredTests(TestCase):
             fixture.team1_goals = result['team1_goals']
             fixture.team2_goals = result['team2_goals']
             fixture.save()
-            self.user.refresh_from_db()
-            
+        self.user.refresh_from_db()
+        self.user2.refresh_from_db()            
+        self.user3.refresh_from_db()            
 
     # Sets all fixtures' team_goals fields to None
     def remove_all_results(self):
@@ -343,6 +407,9 @@ class ResultEnteredTests(TestCase):
             fixture.team1_goals = None
             fixture.team2_goals = None
             fixture.save()
+        self.user.refresh_from_db()
+        self.user2.refresh_from_db()            
+        self.user3.refresh_from_db()
 
     # Updates the first three fixtures' results and refreshes the local team instances from the database
     def update_fixtures(self):
@@ -355,6 +422,9 @@ class ResultEnteredTests(TestCase):
         self.saudi.refresh_from_db()
         self.egypt.refresh_from_db()
         self.uruguay.refresh_from_db()
+        self.user.refresh_from_db()
+        self.user2.refresh_from_db()
+        self.user3.refresh_from_db()
 
     # Sets all matches to 0-0
     def update_fixtures_to_nil_nil(self):

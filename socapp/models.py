@@ -198,20 +198,22 @@ class Fixture(models.Model):
                     # Previously there was a result, now there's none: so remove the team/user data for the previous result
                     utils.remove_team_data(prev_fixture, self.team1)
                     utils.remove_team_data(prev_fixture, self.team2)
+                    utils.update_user_pts(prev_fixture=prev_fixture, remove=True)
                 elif not prev_fixture.has_result():
                     # Simply add the team data, since previously there was no result.
                     utils.add_team_data(self, self.team1)
                     utils.add_team_data(self, self.team2)
-                    utils.update_user_pts(self)
+                    utils.update_user_pts(saved_fixture=self, add=True)
                 else:
                     # Result already exists, so this save represents an update. Gather previous fixture data, and find differences
                     utils.update_team_data(prev_fixture, self, self.team1)
                     utils.update_team_data(prev_fixture, self, self.team2)
+                    utils.update_user_pts(prev_fixture=prev_fixture, saved_fixture=self, update=True)
         else:
             if self.has_result():
                     utils.add_team_data(self, self.team1)
                     utils.add_team_data(self, self.team2)
-                    utils.update_user_pts(self)
+                    utils.update_user_pts(saved_fixture=self, add=True)
         super().save(*args, **kwargs)
 
     def clean(self):
