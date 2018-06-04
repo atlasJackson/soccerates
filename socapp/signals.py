@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db.models import F
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
 
 from .models import UserProfile, Team, Fixture
@@ -26,6 +26,13 @@ def generate_flag_path(sender, instance, created, **kwargs):
         team_name = instance.name.lower().replace(" ", "")
         instance.flag = "img/{}.png".format(team_name)
         instance.save()
+
+@receiver(pre_delete, sender=Fixture)
+def delete_fixture_actions(sender, instance, **kwargs):
+    if instance.has_result():
+        for team in [instance.team1, instance.team2]:
+            utils.remove_team_data(instance, team)
+        utils.update_user_pts(prev_fixture=instance, remove=True)
 
 # @receiver(pre_save, sender=Fixture, dispatch_uid="update_after_result")
 # def update_data_when_fixture_is_saved(sender, instance, **kwargs):
