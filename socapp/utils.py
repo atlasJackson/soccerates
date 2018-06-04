@@ -310,13 +310,12 @@ def update_user_pts(fixture=None):
 # Calculates the user's points for games that have already been played, but have not yet been added to the user's points total.
 def calculate_user_points(user, fixture=None):
     from .models import Answer, Fixture
-
     # Get completed fixtures.
     if fixture is not None:
         fixtures = [fixture]
     else:
         fixtures = Fixture.all_completed_fixtures()
-            
+      
     for fixture in fixtures:
         # Get user's answer for each completed fixture. If no answer exists then continue to the next fixture.
         try:
@@ -340,29 +339,31 @@ def calculate_user_points(user, fixture=None):
         team2_accuracy = user_team2_goals - actual_team2_goals
 
         if (team1_accuracy == team2_accuracy == 0):
-           # print("exact")
             add_user_points(user, ans, 5)
 
         # If not, then check for other conditions to get points. 
         else:
-           # print("not exact")
             # Get actual/predicted total goals, and actual/predicted goal difference.
             user_total_goals = user_team1_goals + user_team2_goals
             actual_total_goals = actual_team1_goals + actual_team2_goals
             user_goal_difference = user_team1_goals - user_team2_goals
             actual_goal_difference = actual_team1_goals - actual_team2_goals
+            correct_result = correct_goals = False
 
             # Check the result is correct
             if ((user_goal_difference > 0 and actual_goal_difference > 0) or
                 (user_goal_difference < 0 and actual_goal_difference < 0) or
                 (user_goal_difference == actual_goal_difference)): 
-                #print("result correct")
                 add_user_points(user, ans, 2)
+                correct_result = True
 
             # Check the total goals scored or the goal difference is correct (can't have both, or the prediction would be correct).
             if ((user_total_goals == actual_total_goals) or (user_goal_difference == actual_goal_difference)):
                 add_user_points(user, ans, 1)
+                correct_goals = True
 
+            if not correct_result or correct_goals:
+                add_user_points(user, ans, 0)
 
 # Helper method to add to user's total points.
 def add_user_points(user, answer, pts):
@@ -370,7 +371,7 @@ def add_user_points(user, answer, pts):
     user.profile.points = F('points') + pts
     user.save()
     user.refresh_from_db()
-    
+
     # Update answer entry so points for this fixture aren't given to the user in the future.
     answer.points_added = answer.POINTS_ADDED
     answer.save()

@@ -36,7 +36,8 @@ class ResultEnteredTests(TestCase):
         { 'team1_goals': 4, 'team2_goals': 5 }  # Russia vs Egypt
     ]
 
-    USER_TOTAL_POINTS = 14 # Based on the above predictions
+    USER1_TOTAL_POINTS = 14 # Based on the above predictions
+    USER1_UPDATED_TOTAL_POINTS = 9
 
     # Sets the test class up for each test method
     def setUp(self):
@@ -276,19 +277,39 @@ class ResultEnteredTests(TestCase):
         fixture.team2_goals = None
         fixture.save()
         self.assertEquals(fixture.team1.goals_for, 5)
+        self.assertEquals(fixture.team1.group_goals_for, 5)
         self.assertEquals(fixture.team2.goals_for, 3)
+        self.assertEquals(fixture.team2.group_goals_for, 3)
         self.assertEquals(fixture.team1.goals_against, 8)
+        self.assertEquals(fixture.team1.group_goals_against, 8)
         self.assertEquals(fixture.team2.goals_against, 5)
+        self.assertEquals(fixture.team2.group_goals_against, 5)
         self.assertEquals(fixture.team1.games_played, 2)
         self.assertEquals(fixture.team2.games_played, 2)
         self.assertEquals(fixture.team1.games_won, 1)
+        self.assertEquals(fixture.team1.group_won, 1)
         self.assertEquals(fixture.team2.games_won, 0)
+        self.assertEquals(fixture.team2.group_won, 0)
         self.assertEquals(fixture.team1.games_drawn, 0)
+        self.assertEquals(fixture.team1.group_drawn, 0)
         self.assertEquals(fixture.team2.games_drawn, 1)
+        self.assertEquals(fixture.team2.group_drawn, 1)
         self.assertEquals(fixture.team1.games_lost, 1)
+        self.assertEquals(fixture.team1.group_lost, 1)
         self.assertEquals(fixture.team2.games_lost, 1)
+        self.assertEquals(fixture.team2.group_lost, 1)
         self.assertEquals(fixture.team1.points, 3)
         self.assertEquals(fixture.team2.points, 1)
+    
+    #############
+    #  Tests for the user points
+    ##
+    def test_user_points(self):
+        self.assertEquals(self.user.profile.points, self.USER1_TOTAL_POINTS)
+
+        # Test after fixtures update:
+        self.update_fixtures()
+        self.assertEquals(self.user.profile.points, self.USER1_UPDATED_TOTAL_POINTS)
 
     #############
     #  Helper methods for setting up tests, and acquiring values from the Team and Fixture models
@@ -312,6 +333,8 @@ class ResultEnteredTests(TestCase):
             fixture.team1_goals = result['team1_goals']
             fixture.team2_goals = result['team2_goals']
             fixture.save()
+            self.user.refresh_from_db()
+            
 
     # Sets all fixtures' team_goals fields to None
     def remove_all_results(self):
