@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block body_block %}
-    <div class="container mt-3">
+    <div class="container mt-0">
 
         <div class="row mb-3">
             <div class="col-12 px-0">
@@ -12,17 +12,126 @@
                 </a>
             </div>
         </div>
+        
+        <div class="border-right border-left border-primary mx-0 px-0">
+            <div class="col-12 col-md-8 offset-md-2 ">
 
-        <div class="border-bottom border-primary mb-5">
-            Leaderboards information. Will need to discuss any constraints (max number os users in board, max boards per user). I have a picture of the layout on my phone. Can send if you want (very bare).
-        </div>
+                <!-- Leaderboards Information -->
+                <div class="mb-4" id="form-instructions">                    
+                    <h3 class="text-center font-weight-bold">Leaderboards for {{request.user.username}}</h3>
+                    <h5 class="text-center font-weight-light">Manage your leaderboards below.</h5>
+                    <hr />
 
-        <div class="border-bottom border-primary mb-5">
-            <h4>Public Leaderboards</h4>
-        </div>
+                    <div class="mb-3">
+                        Leaderboards information. Will need to discuss any constraints (max number of users per board, max boards per user). I have a picture of the layout on my phone. Can send if you want (very bare).
+                    </div>
 
-        <div class="border-bottom border-primary mb-5">
-            <h4>Private Leaderboards</h4>
+                    <div class="list-star-bullets m-5">
+                        <ul >
+                            <li>Info 1.</li>
+                            <li>Info 2.</li>
+                            <li>Info 3.</li>
+                            <li>
+                                To join a leaderboard, click the button below. A box will appear for you to enter the name of the leaderboard you wish to join. 
+                                If the leaderboard is private, an additional box will appear in which you must supply the board's password.
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="row justify-content-around mb-3">
+                        <div class="col-md-5">
+                            <input class="btn btn-dark btn-lg" value="Join Leaderboard"/>
+                        </div>
+                        <div class="col-md-5">
+                            <a href="{% url 'create_leaderboard' %}"><input class="btn btn-primary btn-lg" value="Create Leaderboard"/></a>
+                        </div>
+                    </div>
+                    <hr />
+
+                </div>                
+                
+
+                <!-- Public Leaderboards -->
+                <div class="pb-3 my-3">                    
+                    <div class="row mb-3">
+                        <div class="col-md-4 board-heading">Public Leaderboards</div>
+                        <div class="col-md-8 border-bottom border-secondary"></div>
+                    </div>   
+
+                    
+                    <table class="table">
+                        <colgroup>
+                            <col class="board-name-cell">
+                            <col class="current-rank-cell">
+                            <col class="previous-rank-cell">
+                        </colgroup>
+
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Leaderboard</th>
+                                <th>Current Rank</th>
+                                <th>Previous Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if public_lb %}
+                                {% for leaderboard in public_lb %}
+                                <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr class="text-center">
+                                    <td colspan="12">You're currently not a member of any public leaderboards.</td>
+                                </tr>               
+                            {% endif %}
+                        </tbody>
+                    </table>
+                              
+                </div>
+
+                <!-- Private Leaderboards -->
+                <div class="pb-3 my-3">                    
+                    <div class="row mb-3">
+                        <div class="col-md-4 board-heading">Private Leaderboards</div>
+                        <div class="col-md-8 border-bottom border-secondary"></div>
+                    </div>   
+
+                    
+                    <table class="table">
+                        <colgroup>
+                            <col class="board-name-cell">
+                            <col class="current-rank-cell">
+                            <col class="previous-rank-cell">
+                        </colgroup>
+
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Leaderboard</th>
+                                <th>Current Rank</th>
+                                <th>Previous Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if private_lb %}
+                                {% for leaderboard in private_lb %}
+                                <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr class="text-center">
+                                    <td colspan="12">You're currently not a member of any private leaderboards.</td>
+                                </tr>               
+                            {% endif %}
+                        </tbody>
+                    </table>
+                              
+                </div>
+
+            </div>
         </div>
 
     </div>

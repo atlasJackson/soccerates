@@ -264,6 +264,7 @@ footer hr {
   background-color: #ffffff;
 }
 
+
 /* GRAPHICS */
 .points-system {
   background-color: #023d4d;
@@ -277,3 +278,23 @@ footer hr {
   margin: 10px 0px;
 }
 
+
+/* LEADERBOARDS */
+.board-heading {
+  background-color: #000;
+  border-radius: 0px 50px 0px 0px;
+  color: #fff;
+  padding: 10px;
+}
+
+.board-name-cell {
+  width:60%;
+}
+
+.current-rank-cell {
+  width:20%;
+}
+
+.previous-rank-cell {
+  width:20%;
+}
