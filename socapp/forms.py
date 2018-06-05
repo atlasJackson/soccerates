@@ -3,10 +3,11 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django import forms
 
-from socapp.models import Answer, Fixture
+from socapp.models import Answer, Fixture, Leaderboard
 
 # For registering new users
 class RegistrationForm(forms.ModelForm):
+
     alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
     username = forms.CharField(min_length=4, max_length=50, validators=[alphanumeric], widget=forms.TextInput(attrs={'autofocus':'true'}))
@@ -57,4 +58,18 @@ class AnswerForm(forms.ModelForm):
 
     class Meta:
         model = Answer
-        fields = ('fixture','team1_goals', 'team2_goals')
+        fields = ('fixture', 'team1_goals', 'team2_goals')
+
+
+class LeaderboardForm(forms.ModelForm):
+
+    name = forms.CharField(max_length=128, label="Name")
+    capacity = forms.IntegerField(min_value=2, max_value=100, widget=forms.NumberInput(), label="Capacity (2-100):")
+    is_private = forms.BooleanField(widget=forms.CheckboxInput(), initial=False, required=False, \
+                                    label="Set to Private? (Requires password to join)")
+    #password = forms.CharField(widget=forms.PasswordInput(), label="Password")
+    #password_confirm = forms.CharField(widget=forms.PasswordInput(), label="Confirm password")
+
+    class Meta:
+        model = Leaderboard
+        fields = ('name', 'capacity', 'is_private')

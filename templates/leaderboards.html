@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+    <div class="container mt-3">
+
+        <div class="row mb-3">
+            <div class="col-12 px-0">
+                <a href="{% url 'leaderboards' %}">
+                    <img src="{% static 'img/world-cup-2018-banner.png' %}" id="wc-banner" alt="Russia 2018 World Cup"/>
+                    <!-- Replace this with a leaderboard image (greek thatre or something) -->
+                </a>
+            </div>
+        </div>
+
+        <div class="border-bottom border-primary mb-5">
+            Leaderboards information. Will need to discuss any constraints (max number os users in board, max boards per user). I have a picture of the layout on my phone. Can send if you want (very bare).
+        </div>
+
+        <div class="border-bottom border-primary mb-5">
+            <h4>Public Leaderboards</h4>
+        </div>
+
+        <div class="border-bottom border-primary mb-5">
+            <h4>Private Leaderboards</h4>
+        </div>
+
+    </div>
+{% endblock %}

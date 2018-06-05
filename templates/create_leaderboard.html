@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load socapp_filters %}
+
+{% block title_block %}
+    Create Leaderboard
+{% endblock %}
+
+{% block body_block %}
+<div class="container mt-0">
+
+    <!-- Banner -->
+    <div class="row mb-3">
+        <div class="col-12 px-0">
+            <a href="{% url 'leaderboards' %}">
+                <img src="{% static 'img/world-cup-2018-banner.png' %}" id="wc-banner" alt="Russia 2018 World Cup"/>
+                <!-- Replace this with a leaderboard image (greek thatre or something) -->
+            </a>
+        </div>
+    </div>
+    
+    <!-- Display Leaderboard Form -->
+    <div class="row mx-0 px-0">
+        <div class="col-12 col-md-8 offset-md-2">
+
+            <form class="mb-5" id="leaderboard_form" method="post" action="{% url 'create_leaderboard' %}">
+                {% csrf_token %}
+
+                {% if leaderboard_form.errors %}
+                    {% for field in leaderboard_form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in leaderboard_form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% for field in leaderboard_form %}
+                    <div class="form-group row">
+                        {{ field.label_tag}} 
+                        {{ field|add_class:"form-control" }}
+                    </div>
+                {% endfor %}
+
+                <input class="btn btn-primary col-md-6 offset-md-3" id="create-leaderboard" type="submit" name="submit" value="Create Leaderboard" />
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

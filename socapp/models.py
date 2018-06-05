@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.template.defaultfilters import slugify
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q, F, When, Case, Value, Sum
@@ -264,6 +266,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
         
+
 class Answer(models.Model):
     POINTS_NOT_ADDED = 0
     POINTS_ADDED = 1
@@ -299,17 +302,43 @@ class Answer(models.Model):
         # A user should only be able to submit one scoreline prediction per fixture
         unique_together = ('user', 'fixture')
 
+
 class Leaderboard(models.Model):
     IN_PROGRESS = 0
     FINISHED = 1
 
     name = models.CharField(max_length=64, unique=True)
+    slug = models.SlugField(unique=True)
     users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    capacity = models.PositiveIntegerField(default=10) # Max number of users allowed.
+    # Can possibly use capacity to find boards with X free spaces from a public board search.
+
+    is_private = models.BooleanField(default=0)
     is_finished = models.BooleanField(default=IN_PROGRESS) # Is the tournament finished: can calculate the leaderboard's winner if so
 
-    """ Model methods """
+    ### Include competition for future use.
+
+    WC_2018 = 0
+    CL_201819 = 1
+    
+    COMP_CHOICES = (
+        (WC_2018, "FIFA World Cup 2018"),
+        (CL_201819, "UEFA Champions League 2018-19"),
+    )
+
+    competition = models.IntegerField(choices=COMP_CHOICES, default=WC_2018)
+
+    #################################
+    ### MODEL METHODS
+    #################################
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Leaderboard, self).save(*args, **kwargs)
+
+
 
 ###############################
 # !!!IGNORE FOR NOW

@@ -9,9 +9,9 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView
 
 from django.forms import formset_factory
-from .forms import RegistrationForm, AnswerForm
+from .forms import RegistrationForm, AnswerForm, LeaderboardForm
 
-from .models import Fixture, Answer, Team
+from .models import Fixture, Answer, Team, Leaderboard
 from . import utils
 
 def test(request):
@@ -57,6 +57,7 @@ def index(request):
 
     return render(request, "index.html", context)
 
+
 # Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
 def world_cup_schedule(request):
     
@@ -66,6 +67,7 @@ def world_cup_schedule(request):
         'fixtures': fixtures
     }
     return render(request, "world_cup.html", context)
+
 
 @login_required
 def user_profile(request):
@@ -158,6 +160,69 @@ def answer_form(request):
             context_dict['management_form'] = management_form
 
     return render(request, 'answer_form.html', context_dict)
+
+
+
+
+###############################################
+# LEADERBOARD VIEWS
+###############################################
+
+def leaderboards(request):
+
+    context_dict = {}
+
+    # public_lb = Leaderboard.objects.filter
+    # I want to get leaderboards where the user is in the manytomanyfields. Q constructor?
+
+    return render(request, 'leaderboards.html', context_dict)
+
+
+@login_required
+def create_leaderboard(request):
+
+    # If there are errors, do not reinitialise the form.
+    leaderboard_form = LeaderboardForm(request.POST or None)
+    context_dict = {'leaderboard_form': leaderboard_form}
+
+    # Check if the request was HTTP POST.
+    if request.method == 'POST':
+
+        # Check if the provided form is valid.
+        if leaderboard_form.is_valid():
+
+            # Save the new leaderboard to the database, and add the current user as a member.
+            leaderboard = leaderboard_form.save()
+            leaderboard.users.add(request.user)
+            leaderboard.save()
+ 
+            # Display newly-created leaderboard.
+            return HttpResponseRedirect(reverse('show_leaderboard', kwargs={'leaderboard':leaderboard.slug}))
+
+    return render(request, 'create_leaderboard.html', context_dict)
+
+
+def show_leaderboard(request, leaderboard):
+
+    try:
+        # Get leaderboard with given slug.
+        leaderboard = Leaderboard.objects.get(slug=leaderboard)
+
+        # Get a list of all users who are members of the leaderboard.
+        members = leaderboard.users.all()
+        print (members)
+
+        # Add entities to the context dictionary
+        context_dict = {'leaderboard':leaderboard, 'members':members}
+
+    except Leaderboard.DoesNotExist:
+        # We get here if we couldn't find the specified game
+        context_dict = {'leaderboard':None, 'members':None}
+
+    return render(request, 'show_leaderboard.html', context_dict)
+
+
+
 
 
 #################
