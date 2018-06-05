@@ -447,11 +447,7 @@ def sync_user_points():
 def stage_is_finished(stage):
     """ Given a stage (ie, group, last 16, quarter final, etc), determines whether it has been finished or not """
     from socapp.models import Fixture
-    final_fixture = Fixture.all_fixtures_by_stage(stage).last()
-    if final_fixture is not None:
-        # If the current time is after the last-fixture's matchdate, then the stage is finished
-        return final_fixture.match_date < timezone.now()
-    return False # If no fixtures, return false
+    return stage_completion_date(stage) < timezone.now()
 
 def stage_completion_date(stage):
     """ Given a stage (ie, group, last 16, quarter final, etc), determines (roughly) the date and time of completion """
@@ -460,6 +456,7 @@ def stage_completion_date(stage):
     if final_fixture is not None:
         delta = datetime.timedelta(hours=2) # Probably change: currently set to 2 hours after the last match's kickoff
         return final_fixture.match_date + delta
+    return None
 
 # Helper that determines if the outcome of a fixture is the same as it was previously, or not
 def same_result(fixture1, fixture2):
