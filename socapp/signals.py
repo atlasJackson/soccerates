@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db.models import F
-from django.db.models.signals import post_save, pre_save, pre_delete
+from django.db.models.signals import post_save, pre_save, pre_delete, post_delete
 from django.dispatch import receiver
 
 from .models import UserProfile, Team, Fixture
@@ -33,6 +33,10 @@ def delete_fixture_actions(sender, instance, **kwargs):
         for team in [instance.team1, instance.team2]:
             utils.remove_team_data(instance, team)
         utils.update_user_pts(prev_fixture=instance, remove=True)
+
+@receiver(pre_delete, sender=settings.AUTH_USER_MODEL)
+def delete_userprofile(sender, instance, **kwargs):
+    UserProfile.objects.get(user_id=instance.pk).delete()
 
 # @receiver(pre_save, sender=Fixture, dispatch_uid="update_after_result")
 # def update_data_when_fixture_is_saved(sender, instance, **kwargs):
