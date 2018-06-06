@@ -44,3 +44,25 @@ def getDistinctTeamsOrderedByPoints(fixtures):
             if fixture.team2 not in teams:
                 teams.append(fixture.team2)
     return sorted(teams, key=lambda team: (team.points, team.goal_difference, team.group_goals_for), reverse=True)
+
+# Returns the rank of the user in the leaderboard.
+@register.filter(name="get_user_leaderboard_position")
+def get_user_leaderboard_position(leaderboard, user):
+
+    # Sort the leaderboard by users points in descending order.
+    users_in_leaderboard = [(user.profile.points, user) for user in leaderboard.users.all()]
+    sorted_leaderboard = sorted(users_in_leaderboard, key=lambda tup: (tup[0],tup[1]), reverse=True)
+
+    # Get the index (rank) of the user.
+    for index,u in enumerate(sorted_leaderboard):
+        if u[1].username == str(user):
+            return (index + 1)
+
+    # This should never be reached.
+    return "-"
+
+# Returns number of free spaces in the leaderboard.
+@register.filter(name="get_free_spaces")
+def get_free_spaces(leaderboard):
+
+    return leaderboard.capacity - leaderboard.users.count()

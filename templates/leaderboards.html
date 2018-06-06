@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load socapp_filters %}
 
 {% block body_block %}
     <div class="container mt-1">
@@ -69,7 +70,7 @@
                             <tr>
                                 <th>Leaderboard</th>
                                 <th>Current Rank</th>
-                                <th>Previous Rank</th>
+                                <th>Spaces</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,7 +80,8 @@
                                     <td> 
                                         <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
                                     </td>
-                                    <td> </td>
+                                    <td>{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                                    <td>{{ leaderboard|get_free_spaces }} </td>
                                 </tr>
                                 {% endfor %}
                             {% else %}
@@ -111,15 +113,18 @@
                             <tr>
                                 <th>Leaderboard</th>
                                 <th>Current Rank</th>
-                                <th>Previous Rank</th>
+                                <th>Spaces</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% if private_lb %}
                                 {% for leaderboard in private_lb %}
                                 <tr>
-                                    <td> </td>
-                                    <td> </td>
+                                    <td> 
+                                        <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
+                                    </td>
+                                    <td>{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                                    <td>{{ leaderboard|get_free_spaces }} </td>
                                 </tr>
                                 {% endfor %}
                             {% else %}
