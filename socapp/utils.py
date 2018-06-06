@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 import logging
+import datetime
 from itertools import groupby
 
 logger = logging.getLogger(__name__)
@@ -442,6 +443,20 @@ def sync_user_points():
         if not total_points == user.profile.points:
             logger.error("User {} has {} points, but should have {} points".format(user, user.profile.points, total_points))
         assert total_points == user.profile.points
+
+def stage_is_finished(stage):
+    """ Given a stage (ie, group, last 16, quarter final, etc), determines whether it has been finished or not """
+    from socapp.models import Fixture
+    return stage_completion_date(stage) < timezone.now()
+
+def stage_completion_date(stage):
+    """ Given a stage (ie, group, last 16, quarter final, etc), determines (roughly) the date and time of completion """
+    from socapp.models import Fixture
+    final_fixture = Fixture.all_fixtures_by_stage(stage).last()
+    if final_fixture is not None:
+        delta = datetime.timedelta(hours=2) # Probably change: currently set to 2 hours after the last match's kickoff
+        return final_fixture.match_date + delta
+    return None
 
 # Helper that determines if the outcome of a fixture is the same as it was previously, or not
 def same_result(fixture1, fixture2):
