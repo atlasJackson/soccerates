@@ -168,9 +168,11 @@ def answer_form(request):
 # LEADERBOARD VIEWS
 ###############################################
 
+@login_required
 def leaderboards(request):
     # public_lb = Leaderboard.objects.filter
     # I want to get leaderboards where the user is in the manytomanyfields. Q constructor?
+    
     user_lbs = Leaderboard.objects.filter(users__pk=request.user.pk)
     public_lb = user_lbs.filter(is_private=False)
     private_lb = user_lbs.filter(is_private=True)

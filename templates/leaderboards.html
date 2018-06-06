@@ -76,7 +76,9 @@
                             {% if public_lb %}
                                 {% for leaderboard in public_lb %}
                                 <tr>
-                                    <td> {{ leaderboard.name }}</td>
+                                    <td> 
+                                        <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
+                                    </td>
                                     <td> </td>
                                 </tr>
                                 {% endfor %}
