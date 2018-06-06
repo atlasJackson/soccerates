@@ -18,4 +18,6 @@ urlpatterns = [
     path('leaderboards/', views.leaderboards, name='leaderboards'),
     path('leaderboards/create_leaderboard/', views.create_leaderboard, name='create_leaderboard'),
     path('leaderboards/<slug:leaderboard>/', views.show_leaderboard, name='show_leaderboard'),
+
+    path('forums/', views.forums, name='forums')
 ]

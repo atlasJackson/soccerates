@@ -274,6 +274,10 @@ footer hr {
   background-color: #464646;  
 }
 
+.forums {
+  background-color: #464646;  
+}
+
 .list-star-bullets {
   list-style-image: url("../img/star.png");
 }

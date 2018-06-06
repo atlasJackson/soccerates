@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+    <div class="container mt-1">
+
+        <div class="forums row mb-5">
+            <div class="col-12 my-5 text-center">
+                <a href="{% url 'forums' %}">
+                    <img src="{% static 'img/soccerates-forums.png' %}" class="img-fluid" alt="Forums"/>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="border-right border-left border-primary mx-0 px-0">
+            <div class="text-center">
+                <img src="{% static 'img/soccerates-error.png' %}" class="img-fluid" alt="Soccerates Error Image"/>
+            </div>
+
+            <div class="col-12 col-md-8 offset-md-2 text-center">
+                <div class="alert alert-danger">
+                    <strong>Forums are not yet available. Please check in the future for updates.</strong>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

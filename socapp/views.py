@@ -222,7 +222,14 @@ def show_leaderboard(request, leaderboard):
     return render(request, 'show_leaderboard.html', context_dict)
 
 
+###############################################
+# FORUMS VIEWS
+###############################################
 
+def forums(request):
+
+    context_dict = {}
+    return render(request, 'forums.html', context_dict)
 
 
 #################

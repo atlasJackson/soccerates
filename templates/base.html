@@ -52,13 +52,13 @@
                         
                         <a href="{% url 'wc_schedule' %}">World Cup</a>
                         <a href="{% url 'leaderboards' %}">Leaderboards</a>
-                        <a href="#">Forums</a>
+                        <a href="{% url 'forums' %}">Forums</a>
                     </nav>
                 </div>
             </div>
         </header>
 
-        <div class="center-content" id="wrapper-body">
+        <div class="center-block" id="wrapper-body">
             {% block body_block %}
             {% endblock %}        
         </div>
@@ -75,15 +75,15 @@
                         <hr />
 
                         <a href="{% url 'profile' %}">Profile</a><br />
-                        <a href="{% url 'answer_form' %}">Submit Predictions</a><br />                      
-                        <a href="#">Leaderboards</a>
+                        <a href="{% url 'answer_form' %}">Submit Predictions</a><br />
+                        <a href="{% url 'leaderboards' %}">Leaderboards</a>
                     </div>
                     <div class="col-md-3 offset-md-1 text-left">
                         <h6 class="text-uppercase font-weight-bold">General Links</h6>
                         <hr />
 
                         <a href="{% url 'wc_schedule' %}">World Cup Schedule</a><br />
-                        <a href="#">Forums</a><br />
+                        <a href="{% url 'forums' %}">Forums</a><br />
                         <a href="#">About</a>
                     </div>
                 </div>
