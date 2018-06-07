@@ -91,6 +91,42 @@
                             {% endfor %}
                             </tbody>
                         </table>
+
+                        {% if answers.has_other_pages %}
+                            <ul class="pagination">
+                                {% if answers.has_previous %}
+                                    <li><a href="?page={{ answers.previous_page_number }}">&laquo;</a></li>
+                                {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                {% endif %}
+                                
+                                {% for i in answers.paginator.page_range %}
+                                    {% if answers.number == i %}
+                                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if answers.has_next %}
+                                    <li><a href="?page={{ answers.next_page_number }}">&raquo;</a></li>
+                                {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
                     {% else %}
                         <div class="mb-2">
                             <div class="text-center">
