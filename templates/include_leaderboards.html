@@ -1,0 +1,55 @@
+{% load staticfiles %}
+{% load socapp_filters %}
+
+<div class="row mb-3">
+    {% if private %}
+        <div class="col-md-4 board-heading">Private Leaderboards</div>
+    {% else %}
+        <div class="col-md-4 board-heading">Public Leaderboards</div>
+    {% endif %}
+    <div class="col-md-8 border-bottom border-secondary"></div>
+</div>   
+
+
+<table class="table">
+    <colgroup>
+        <col class="board-name-cell">
+        <col class="current-rank-cell">
+        {% if not short %}
+            <col class="previous-rank-cell">
+        {% endif %}
+    </colgroup>
+
+    <thead class="thead-dark">
+        <tr>
+            <th>Leaderboard</th>
+            <th>Current Rank</th>
+            {% if not short %}
+            <th>Spaces</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% if leaderboards %}
+            {% for leaderboard in leaderboards %}
+            <tr>
+                <td> 
+                    <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
+                </td>
+                <td>{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                {% if not short %}
+                <td>{{ leaderboard|get_free_spaces }} </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr class="text-center">
+            {% if private %}
+                <td colspan="12">You're currently not a member of any private leaderboards.</td>
+            {% else %}
+                <td colspan="12">You're currently not a member of any public leaderboards.</td>
+            {% endif %}
+            </tr>               
+        {% endif %}
+    </tbody>
+</table>

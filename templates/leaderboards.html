@@ -52,89 +52,13 @@
                 
 
                 <!-- Public Leaderboards -->
-                <div class="pb-3 my-3">                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 board-heading">Public Leaderboards</div>
-                        <div class="col-md-8 border-bottom border-secondary"></div>
-                    </div>   
-
-                    
-                    <table class="table">
-                        <colgroup>
-                            <col class="board-name-cell">
-                            <col class="current-rank-cell">
-                            <col class="previous-rank-cell">
-                        </colgroup>
-
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Leaderboard</th>
-                                <th>Current Rank</th>
-                                <th>Spaces</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if public_lb %}
-                                {% for leaderboard in public_lb %}
-                                <tr>
-                                    <td> 
-                                        <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
-                                    </td>
-                                    <td>{{ leaderboard|get_user_leaderboard_position:user }} </td>
-                                    <td>{{ leaderboard|get_free_spaces }} </td>
-                                </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr class="text-center">
-                                    <td colspan="12">You're currently not a member of any public leaderboards.</td>
-                                </tr>               
-                            {% endif %}
-                        </tbody>
-                    </table>
-                              
+                <div class="pb-3 my-3">
+                    {% include 'include_leaderboards.html' with leaderboards=public_lb %} 
                 </div>
 
-                <!-- Private Leaderboards -->
-                <div class="pb-3 my-3">                    
-                    <div class="row mb-3">
-                        <div class="col-md-4 board-heading">Private Leaderboards</div>
-                        <div class="col-md-8 border-bottom border-secondary"></div>
-                    </div>   
-
-                    
-                    <table class="table">
-                        <colgroup>
-                            <col class="board-name-cell">
-                            <col class="current-rank-cell">
-                            <col class="previous-rank-cell">
-                        </colgroup>
-
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Leaderboard</th>
-                                <th>Current Rank</th>
-                                <th>Spaces</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if private_lb %}
-                                {% for leaderboard in private_lb %}
-                                <tr>
-                                    <td> 
-                                        <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
-                                    </td>
-                                    <td>{{ leaderboard|get_user_leaderboard_position:user }} </td>
-                                    <td>{{ leaderboard|get_free_spaces }} </td>
-                                </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr class="text-center">
-                                    <td colspan="12">You're currently not a member of any private leaderboards.</td>
-                                </tr>               
-                            {% endif %}
-                        </tbody>
-                    </table>
-                              
+                <!-- Private Leaderboards -->                
+                <div class="pb-3 my-3">
+                    {% include 'include_leaderboards.html' with leaderboards=private_lb private=True %} 
                 </div>
 
             </div>
