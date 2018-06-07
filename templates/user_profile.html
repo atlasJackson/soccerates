@@ -65,7 +65,11 @@
 
                             <tbody>
                             {% for answer in answers %}
+                                {% if answer.points_added %}
+                                <tr class="bg-success">
+                                {% else %}
                                 <tr>
+                                {% endif %}
                                     <td class="text-right">
                                         {{ answer.fixture.team1.name }}
                                         <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
