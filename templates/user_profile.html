@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load socapp_filters %}
 
 {% block body_block %}
     <div class="container mt-1">
@@ -78,7 +79,7 @@
                                         {{ answer.fixture.team2.name }}
                                     </td>
                                     {% if answer.points_added %}
-                                    <td>GP</td>
+                                    <td>{{ answer|get_answer_points }}</td>
                                     {% else %}
                                     <td>-</td>
                                     {% endif %}
