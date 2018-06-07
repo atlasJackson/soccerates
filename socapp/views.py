@@ -74,12 +74,13 @@ def user_profile(request):
     answers = request.user.profile.get_predictions()
     ranking = utils.get_user_ranking(request.user)
     usercount = get_user_model().objects.count()
+    leaderboards = Leaderboard.objects.filter(users=request.user.pk)
 
     context = {
         'answers': answers,
         'ranking': ranking,
-        'usercount': usercount
-
+        'usercount': usercount,
+        'leaderboards': leaderboards
     }
     return render(request, "user_profile.html", context)
 
@@ -171,9 +172,9 @@ def answer_form(request):
 @login_required
 def leaderboards(request):
 
-    public_lb = Leaderboard.objects.filter(users=request.user, is_private=False)
-    private_lb = Leaderboard.objects.filter(users=request.user, is_private=True)
-        
+    public_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=False)
+    private_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=True)
+
     context_dict = {'public_lb': public_lb, 'private_lb': private_lb}
 
     return render(request, 'leaderboards.html', context_dict)

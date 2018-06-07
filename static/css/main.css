@@ -286,6 +286,11 @@ footer hr {
   margin: 10px 0px;
 }
 
+.icon {
+  max-width: 35px;
+  max-height: 35px;
+  margin-right: 10px;
+}
 
 /* LEADERBOARDS */
 .board-heading {

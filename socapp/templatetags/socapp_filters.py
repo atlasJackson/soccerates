@@ -51,7 +51,7 @@ def get_user_leaderboard_position(leaderboard, user):
 
     # Sort the leaderboard by users points in descending order.
     users_in_leaderboard = [(user.profile.points, user) for user in leaderboard.users.all()]
-    sorted_leaderboard = sorted(users_in_leaderboard, key=lambda tup: (tup[0],tup[1]), reverse=True)
+    sorted_leaderboard = sorted(users_in_leaderboard, key=lambda u: u[0], reverse=True)
 
     # Get the index (rank) of the user.
     for index,u in enumerate(sorted_leaderboard):

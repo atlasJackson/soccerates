@@ -52,10 +52,21 @@
                 {% endif %}
                 </div>
             </div>
-            <div class="leaderboards col-12 col-sm-6 text-center">
-                <h4 class="mb-3">Leaderboards</h4>
-                {% if leaderboards %}
-                    DUMMYDATA
+            <div class="leaderboards col-12 col-sm-6 text-center bg-white">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-center">
+                        <img src="{% static 'img/leaderboard.png' %}" class="icon"/>
+                        <h4 class="mb-3">Leaderboards</h4>
+                    </div>
+                    {% if leaderboards %}
+                    <div class="card-body">
+                        {% for board in leaderboards %}
+                            <li>
+                                <a href="{% url 'show_leaderboard' board.slug %}">{{ board.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </div>
+                </div>
                 {% else %}
                     <p>You are not currently a member of any leaderboards.</p>
                     <p>

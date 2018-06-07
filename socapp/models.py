@@ -290,7 +290,7 @@ class Answer(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return "{} predicts: {} {} - {} {}".format(
+        return "{}: {} {} - {} {}".format(
             self.user.username, 
             self.fixture.team1.name, 
             self.team1_goals, 

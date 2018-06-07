@@ -1,6 +1,0 @@
-To validate there are 4 teams in each group:
-    Team.objects.values('group').annotate(num=Count('group'))
-
-To validate that there are 6 fixtures per group (in group A for the second query, here)
-    Fixture.objects.values('team1__group').annotate(num = Count('team1__group'))
-    Fixture.objects.filter(Q(team1__group__name='A') & Q(team2__group__name='A')).count()
