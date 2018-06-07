@@ -225,10 +225,10 @@ def show_leaderboard(request, leaderboard):
 
     try:
         # Get leaderboard with given slug.
-        leaderboard = Leaderboard.objects.get(slug=leaderboard)
+        leaderboard = Leaderboard.objects.prefetch_related('users', 'users__profile').get(slug=leaderboard)
 
         # Get a list of all users who are members of the leaderboard.
-        members = leaderboard.users.all()
+        members = leaderboard.users.all().order_by('-profile__points')
         print (members)
 
         # Add entities to the context dictionary
