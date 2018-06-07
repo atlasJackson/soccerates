@@ -1,6 +1,6 @@
 from django.db.models.functions import Rank
 from django.db.models.expressions import Window
-from django.db.models import F
+from django.db.models import F, Sum
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
@@ -73,6 +73,14 @@ def group_users_by_points(users_queryset=None):
         users_grouped_by_points.append(list(v))
 
     return users_grouped_by_points
+
+def get_points_percentage(user):
+    from socapp.models import UserProfile
+    user_pts = user.profile.points
+    if user_pts == 0: return 0
+    total_pts = UserProfile.objects.aggregate(total=Sum('points'))['total']
+    percentage = round(user_pts / total_pts * 100, 2)
+    return percentage
 
 ######
 # Methods for updating the two associated Team model instances whenever a Fixture is updated with a result

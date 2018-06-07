@@ -88,6 +88,7 @@ def user_profile(request):
 
     ranking = utils.get_user_ranking(request.user)
     usercount = get_user_model().objects.count()
+    points_percentage = utils.get_points_percentage(request.user)
     public_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=False)
     private_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=True)
 
@@ -96,8 +97,8 @@ def user_profile(request):
         'ranking': ranking,
         'usercount': usercount,
         'public_lb': public_lb,
-        'private_lb': private_lb
-
+        'private_lb': private_lb,
+        'points_percentage': points_percentage,
     }
     return render(request, "user_profile.html", context)
 
