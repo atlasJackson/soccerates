@@ -63,11 +63,11 @@
             <div class="col-lg-7 col-12 mb-5">
 
                 <div class="card mb-3"> <!-- Display upcoming fixtures -->
-                    <h5 class="card-header text-center text-uppercase">Upcoming Fixtures</h5>
+                    <h5 class="card-header bg-dark text-white text-center text-uppercase">Upcoming Fixtures</h5>
                     {% include 'include_fixtures.html' with fixtures=upcoming_fixtures %} 
                 </div>
                 <div class="card mb-3"> <!-- Display recent results -->
-                    <h5 class="card-header text-center text-uppercase">Results</h5>
+                    <h5 class="card-header bg-dark text-white text-center text-uppercase">Results</h5>
                     {% include 'include_fixtures.html' with fixtures=past_fixtures %} 
                 </div>
                 <div class="mb-3">
@@ -80,7 +80,7 @@
 
             <div class="col-lg-5 col-12 border-left border-info">
                 <div>
-                    <h4 class="card-header text-center text-uppercase mb-3">Current Standings</h4>
+                    <h4 class="card-header bg-dark text-white text-center text-uppercase mb-3">Current Standings</h4>
 
                     <div>
                         <!-- Nav tabs for each group -->

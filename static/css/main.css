@@ -139,6 +139,24 @@ footer hr {
   width: 100%;
 }
 
+/* PROFILE */
+
+.predictions-fixture-team {
+  width:34%;
+}
+
+.predictions-fixture-goals {
+  width:10%;
+}
+
+.predictions-fixture-dash {
+  width:2%;
+}
+
+.predictions-points {
+  width:10%;
+}
+
 
 /* SCHEDULE */
 
@@ -270,6 +288,10 @@ footer hr {
   background-color: #023d4d;
 }
 
+.profile {
+  background-color: #464646;  
+}
+
 .leaderboards {
   background-color: #464646;  
 }
@@ -306,8 +328,10 @@ footer hr {
 
 .current-rank-cell {
   width:20%;
+  text-align: right;
 }
 
-.previous-rank-cell {
+.free-spaces-cell {
   width:20%;
+  text-align: right;
 }

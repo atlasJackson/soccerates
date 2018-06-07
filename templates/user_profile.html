@@ -2,81 +2,127 @@
 {% load staticfiles %}
 
 {% block body_block %}
-    <div class="container my-4">
-        
-        {% if user.is_authenticated %}
-        <div>
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="text-success">Welcome, {{ user.username }}</h3>
-                <button id="viewstats-link" class="btn btn-success d-none">View Statistics</a>
+    <div class="container mt-1">
+
+        <div class="profile row mb-5">
+            <div class="col-12 my-5 text-center">
+                <a href="{% url 'profile' %}">
+                    <img src="{% static 'img/soccerates-forums.png' %}" class="img-fluid" alt="Profile"/>
+                </a>
             </div>
         </div>
-        <hr/>
-
-        <h4>{{ user.username }}'s statistics</h4>
-        <ul>
-            <li class="p-1">You currently have <strong>{{ user.profile.points }} points.</strong></li>
-            <li class="p-1">You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-        </ul>
-        <div class="row mt-5">
-            <div class="user-predictions col-12 col-sm-6 text-center">
-                <div class="card">
-                    <h4 class="card-header">Predictions</h4>
-                    {% if answers %}
-                    <div class="card-body">
-                    <table class="table table-striped table-hover table-sm">
-                        <tbody>
-                        {% for answer in answers %}
-                            <tr>
-                                <td>
-                                    {{ answer.fixture.team1.name }}
-                                    <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
-                                </td>
-                                <td>{{ answer.team1_goals }}</td>
-                                <td> - </td>
-                                <td>{{ answer.team2_goals }}</td>
-                                <td>
-                                    <img class="flag mr-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">
-                                    {{ answer.fixture.team2.name }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    </div>
-                {% else %}
-                    <div class="mb-2">
-                        <p class="mt-2">You've currently made no predictions.</p>
-                        <a href="{% url 'answer_form' %}">Make predictions</a>
-                    </div>
-                {% endif %}
+        
+        <div class="row mb-5 border-bottom border-info">
+            {% if user.is_authenticated %}
+            <div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="text-success">Welcome, {{ user.username }}</h3>
+                    <button id="viewstats-link" class="btn btn-success d-none">View Statistics</a></button>
                 </div>
             </div>
-            <div class="leaderboards col-12 col-sm-6 text-center bg-white">
+            <hr/>
+
+            <h4>{{ user.username }}'s statistics</h4>
+            <ul>
+                <li class="p-1">You currently have <strong>{{ user.profile.points }} points.</strong></li>
+                <li class="p-1">You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+            </ul>
+        </div>
+
+        <div class="row mt-5">
+
+            <!-- User's predictions -->
+            <div class="user-predictions col-12 col-sm-6 text-center">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-center">
+                    <div class="card-header bg-dark text-white d-flex justify-content-center">
+                        <h4 class="mb-3">Predictions</h4>
+                    </div>
+                    
+                    <div class="card-body">
+                        <p>Your predictions are given below.</p>
+                        <p>To add to or change your predictions, visit <a href="{% url 'answer_form' %}">here</a>.</p>
+                    </div>
+                </div>
+
+                <div class="pb-3 m-3">
+                    {% if answers %}
+                        <table class="table table-striped table-dark table-hover table-sm">
+
+                            <colgroup>
+                                <col class="predictions-fixture-team">
+                                <col class="predictions-fixture-goals">
+                                <col class="predictions-fixture-dash">
+                                <col class="predictions-fixture-goals">
+                                <col class="predictions-fixture-team">
+                                <col class="predictions-points">
+                            </colgroup>
+
+                            <thead class="group-table-header thead-dark">
+                                <th colspan="5">Fixture</th>
+                                <th>Pts</th>
+                            </thead>
+
+                            <tbody>
+                            {% for answer in answers %}
+                                <tr>
+                                    <td class="text-right">
+                                        {{ answer.fixture.team1.name }}
+                                        <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
+                                        
+                                    </td>
+                                    <td>{{ answer.team1_goals }}</td>
+                                    <td> - </td>
+                                    <td>{{ answer.team2_goals }}</td>
+                                    <td class="text-left">
+                                        <img class="flag mr-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">
+                                        {{ answer.fixture.team2.name }}
+                                    </td>
+                                    {% if answer.points_added %}
+                                    <td>GP</td>
+                                    {% else %}
+                                    <td>-</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="mb-2">
+                            <div class="text-center">
+                                <img src="{% static 'img/soccerates-error.png' %}" class="img-fluid" alt="Soccerates Error Image"/>
+                            </div>
+
+                            <p class="mt-2">You've currently made no predictions.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- User's leaderboards -->
+            <div class="col-12 col-sm-6 border-left border-info">
+                <div class="card">
+                    <div class="card-header bg-dark text-white d-flex justify-content-center">
                         <img src="{% static 'img/leaderboard.png' %}" class="icon"/>
                         <h4 class="mb-3">Leaderboards</h4>
                     </div>
-                    {% if leaderboards %}
+
                     <div class="card-body">
-                        {% for board in leaderboards %}
-                            <li>
-                                <a href="{% url 'show_leaderboard' board.slug %}">{{ board.name }}</a>
-                            </li>
-                        {% endfor %}
+                        <p>The leaderboards you are currently subscribed to are given below.</p>
+                        <p>To create or join leaderboards, visit the leaderboards page <a href="{% url 'leaderboards' %}">here</a>.</p>
                     </div>
                 </div>
-                {% else %}
-                    <p>You are not currently a member of any leaderboards.</p>
-                    <p>
-                        <a href="#" class="my-2">Join a leaderboard</a>
-                    </p>
-                    <p>
-                        <a href="#" class="my-3">Create leaderboard</a>
-                    </p>
-                {% endif %}
-            </div>    
+
+                <!-- Public Leaderboards -->
+                <div class="pb-3 m-3">
+                    {% include 'include_leaderboards.html' with leaderboards=public_lb short=True %} 
+                </div>
+
+                <!-- Private Leaderboards -->                
+                <div class="pb-3 m-3">
+                    {% include 'include_leaderboards.html' with leaderboards=private_lb private=True short=True %} 
+                </div>
+            </div>
+
         </div>
 
         {% else %}

@@ -74,13 +74,16 @@ def user_profile(request):
     answers = request.user.profile.get_predictions()
     ranking = utils.get_user_ranking(request.user)
     usercount = get_user_model().objects.count()
-    leaderboards = Leaderboard.objects.filter(users=request.user.pk)
+    public_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=False)
+    private_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=True)
 
     context = {
         'answers': answers,
         'ranking': ranking,
         'usercount': usercount,
-        'leaderboards': leaderboards
+        'public_lb': public_lb,
+        'private_lb': private_lb
+
     }
     return render(request, "user_profile.html", context)
 

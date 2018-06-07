@@ -16,7 +16,7 @@
         <col class="board-name-cell">
         <col class="current-rank-cell">
         {% if not short %}
-            <col class="previous-rank-cell">
+            <col class="free-spaces-cell">
         {% endif %}
     </colgroup>
 
@@ -36,9 +36,9 @@
                 <td> 
                     <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
                 </td>
-                <td>{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                <td class="text-right">{{ leaderboard|get_user_leaderboard_position:user }} </td>
                 {% if not short %}
-                <td>{{ leaderboard|get_free_spaces }} </td>
+                <td class="text-right">{{ leaderboard|get_free_spaces }} </td>
                 {% endif %}
             </tr>
             {% endfor %}
