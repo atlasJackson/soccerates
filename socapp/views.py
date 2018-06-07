@@ -75,6 +75,7 @@ def world_cup_schedule(request):
 def user_profile(request):
     answers = request.user.profile.get_predictions()
 
+    # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
 
     paginator = Paginator(answers, 12)
@@ -84,8 +85,6 @@ def user_profile(request):
         answers_subset = paginator.page(1)
     except EmptyPage:
         answers_subset = paginator.page(paginator.num_pages)
-
-
 
     ranking = utils.get_user_ranking(request.user)
     usercount = get_user_model().objects.count()
