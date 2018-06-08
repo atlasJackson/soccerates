@@ -57,6 +57,20 @@ def index(request):
         'past_fixtures': past_fixtures,
     }
 
+    try:
+        ranking = utils.get_user_ranking(request.user)
+        usercount = get_user_model().objects.count()
+        points_percentage = utils.get_points_percentage(request.user)
+
+        context['ranking'] = ranking
+        context['usercount'] = usercount
+        context['points_percentage'] = points_percentage
+    
+    except AttributeError:
+        pass
+
+
+
     return render(request, "index.html", context)
 
 

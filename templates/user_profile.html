@@ -18,13 +18,13 @@
         <div class="row pb-3 mb-3 border-bottom border-info">
             
                 <div class="col-md-5 offset-md-2">
-                    <h3 class="text-success pl-4 ml-3">{{ user.username }}</h3>
+                    <h3 class="text-success pb-1 pl-4 ml-3 border-bottom border-secondary">{{ user.username }}</h3>
 
                     <div class="list-star-bullets mb-5">
                         <ul class="">
-                            <li class="">You currently have <strong>{{ user.profile.points }} points.</strong></li>
-                            <li class="">You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                            <li class="">You have scored <strong>{{ points_percentage }}%</strong> of the points in the system</li>
+                            <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
+                            <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                            <li>You have scored <strong>{{ points_percentage }}%</strong> of the points in the system</li>
                         </ul>
                     </div>                
                 </div>

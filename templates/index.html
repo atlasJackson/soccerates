@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load socapp_filters %}
 
 {% block body_block %}
     <div class="container mt-0">
@@ -13,39 +14,58 @@
         </div>
 
 
-        <div class="row mb-5">
-            <div class="col-lg-8 col-12 mb-3">
+        <div class="row mb-3">
+            <div class="col-lg-8 col-12 mb-3">                
+                <h2 class="text-center my-3">
+                    <img src="{% static 'img/soccerates-text.png' %}" height="55px" class="border-top border-bottom border-secondary py-2" alt="Soccerates"/>
+                </h2>
+
                 {% if user.is_authenticated %}
-                    <h2>Welcome, {{ user.username }}</h2>
+                    <h4 class="my-4">Welcome, {{ user.username }}, to Soccerates: the online football score-prediction app!</h4>
+                    <p>
+                        The 2018 FIFA World Cup will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
+                    </p>
                 {% else %}
-                    <p>Welcome.</p>
-                        <a href="{% url 'login' %}">Click here</a> to sign in, or 
-                        <a href="{% url 'register' %}">click here</a> to register
+                    <h4 class="my-4">Welcome to Soccerates: the online football score-prediction app!</h4>
+                    <p class="text-center">
+                        <a href="{% url 'login' %}">Click here</a> to sign in, or <a href="{% url 'register' %}">click here</a> to register.
                     </p>
                 {% endif %}
-                <p>
-                    Big long welcome message goes here. Maybe some links to the about page, information on points, notifcation 
-                    when points and leaderboards have been updated. 
-                </p> 
-                <p>
-                    For now, this will be a massive block of text that says nothing interesting
-                    but serves only to give a better indication of how the index will look when it has some meaningful content.
-                </p>
-                <a href="{% url 'test' %}">Test page.</a>
-                <a href="{% url 'create_leaderboard' %}">Create leaderboard.</a>
-
-
+                
+                {% comment %}<a href="{% url 'test' %}">Test page.</a>{% endcomment %}
             </div>
-
-            <div class="col-sm-4 col-12 border-left center-block"> <!-- User Summary -->
+            
+            <!-- User Summary -->
+            <div class="col-sm-4 col-12 border-left"> 
                 {% if user.is_authenticated %}
-                    <h4 class="text-right pr-1 pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
-                    <strong>Points:</strong> {{ request.user.profile.points }}
+                    <h4 class="text-right font-weight-bold pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="list-star-bullets">
+                                <ul>
+                                    <li><strong>{{ user.profile.points }} points.</strong></li>
+                                    <li><strong>#{{ ranking }}</strong>/{{ usercount }} users.</li>
+                                    <li><strong>{{ points_percentage }}%</strong> of pts in sys</li>
+                                </ul>
+                            </div>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
+                                View Profile
+                            </a>            
+                        </div>
+
+                        <div class="col-md-6">
+                            {% if user.profile.picture %}
+                                <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-image rounded img-fluid" alt="Profile" />
+                            {% else %}
+                                <img src="{% static 'img/soccerates-blank-profile.png' %}" class="profile-image rounded img-fluid" alt="Profile"/>
+                            {% endif %}
+                        </div>
+                    </div>
                 {% else %}
                     <div class="col-md-12">
                         <img src="{% static 'img/soccerates.png' %}" id="index-logo" alt="Soccerates"/>
-                    </div>                    
-
+                    </div>
                 {% endif %}
             </div>
         </div>
