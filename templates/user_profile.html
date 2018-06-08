@@ -77,7 +77,7 @@
                                 {% if answer.points_added %}
                                 <tr class="bg-success text-white" data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_result }}">
                                 {% else %}
-                                <tr>
+                                <tr data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_match_date }}">
                                 {% endif %}
                                     <td class="text-right">
                                         {{ answer.fixture.team1.name }}

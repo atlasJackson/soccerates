@@ -67,6 +67,12 @@ def get_free_spaces(leaderboard):
 
     return leaderboard.capacity - leaderboard.users.count()
 
+# Returns the result of the fixture associated with the given fixture.
 @register.filter(name="get_result")
 def get_result(answer):
     return "Result: {} {}-{} {}".format(answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)
+
+# Returns the match date of the fixture associated with the given answer.
+@register.filter(name="get_match_date")
+def get_match_date(answer):
+    return "Fixture will be played on {}".format(answer.fixture.match_date)
