@@ -373,6 +373,14 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(user2_total_pts, self.USER2_UPDATED_TOTAL_POINTS)
         self.assertEquals(user3_total_pts, self.USER3_UPDATED_TOTAL_POINTS)
 
+        self.remove_all_results()
+        user1_total_pts = Answer.objects.filter(user=self.user).aggregate(total=Sum('points'))['total']
+        user2_total_pts = Answer.objects.filter(user=self.user2).aggregate(total=Sum('points'))['total']
+        user3_total_pts = Answer.objects.filter(user=self.user3).aggregate(total=Sum('points'))['total']
+        self.assertIsNone(user1_total_pts)
+        self.assertIsNone(user2_total_pts)
+        self.assertIsNone(user3_total_pts)
+
     def test_user_points_after_removing_all_fixtures(self):
         self.remove_all_results()
         self.assertEquals(self.user.profile.points, 0)

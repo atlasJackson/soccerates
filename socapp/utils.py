@@ -79,9 +79,19 @@ def get_points_percentage(user):
     from socapp.models import UserProfile
     user_pts = user.profile.points
     if user_pts == 0: return 0
-    total_pts = UserProfile.objects.aggregate(total=Sum('points'))['total']
+    total_pts = UserProfile.objects.values_list('points',flat=True).aggregate(total=Sum('points'))['total']
     percentage = round(user_pts / total_pts * 100, 2)
     return percentage
+
+# Finds any fixtures for which the user has not made a prediction
+def get_fixtures_with_no_prediction(user, stage=None):
+    from socapp.models import Answer, Fixture
+    user_predictions = Answer.objects.select_related('user').filter(user=user).values('fixture')
+    if stage is not None:
+        fixtures = Fixture.objects.filter(stage=stage).exclude(pk__in=user_predictions)
+    else:
+        fixtures = Fixture.objects.exclude(pk__in=user_predictions)
+    return fixtures
 
 ######
 # Methods for updating the two associated Team model instances whenever a Fixture is updated with a result
