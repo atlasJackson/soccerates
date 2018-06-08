@@ -66,3 +66,7 @@ def get_user_leaderboard_position(leaderboard, user):
 def get_free_spaces(leaderboard):
 
     return leaderboard.capacity - leaderboard.users.count()
+
+@register.filter(name="get_result")
+def get_result(answer):
+    return "Result: {} {}-{} {}".format(answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)

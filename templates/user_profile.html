@@ -75,7 +75,7 @@
                             <tbody>
                             {% for answer in answers %}
                                 {% if answer.points_added %}
-                                <tr class="bg-success text-white">
+                                <tr class="bg-success text-white" data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_result }}">
                                 {% else %}
                                 <tr>
                                 {% endif %}

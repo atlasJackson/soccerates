@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
 
+    /* Initialize tooltips */
+    $('[data-toggle="tooltip"]').tooltip();
+
     /* This block disables the submit button when a result has only been partially entered: ie - one team's goals, but not the other */
     let numberfields = $("input[type='number']")
     let invalid_scores = []
