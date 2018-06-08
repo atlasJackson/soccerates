@@ -43,20 +43,20 @@
                     <h4 class="text-right font-weight-bold pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="list-star-bullets">
                                 <ul>
                                     <li><strong>{{ user.profile.points }} points.</strong></li>
                                     <li><strong>#{{ ranking }}</strong>/{{ usercount }} users.</li>
-                                    <li><strong>{{ points_percentage }}%</strong> of pts in sys</li>
+                                    <li><strong>{{ points_percentage }}%</strong> Pts/Fxt rate.</li>
                                 </ul>
                             </div>
-                            <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
+                            <a href="{% url 'profile' %}" class="col-10 offset-1 btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
                                 View Profile
                             </a>            
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             {% if user.profile.picture %}
                                 <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-image rounded img-fluid" alt="Profile" />
                             {% else %}
