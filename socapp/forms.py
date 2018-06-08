@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django import forms
 
-from socapp.models import Answer, Fixture, Leaderboard
+from socapp.models import UserProfile, Answer, Fixture, Leaderboard
 
 # For registering new users
 class RegistrationForm(forms.ModelForm):
@@ -48,6 +48,11 @@ class RegistrationForm(forms.ModelForm):
             self.cleaned_data['password']
         )
         return user
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('picture',)
 
 
 class AnswerForm(forms.ModelForm):

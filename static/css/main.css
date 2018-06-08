@@ -141,6 +141,12 @@ footer hr {
 
 /* PROFILE */
 
+.profile-image {
+  max-width: 200px;
+  width: 100px;
+  height: 150px;
+}
+
 .predictions-fixture-team {
   width:34%;
 }

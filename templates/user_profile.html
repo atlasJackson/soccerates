@@ -5,6 +5,7 @@
 {% block body_block %}
     <div class="container mt-1">
 
+        <!-- Profile Banner  -->
         <div class="profile row mb-5">
             <div class="col-12 my-5 text-center">
                 <a href="{% url 'profile' %}">
@@ -13,25 +14,32 @@
             </div>
         </div>
         
-        <div class="row mb-5 border-bottom border-info">
-            {% if user.is_authenticated %}
-            <div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="text-success">Welcome, {{ user.username }}</h3>
-                    <button id="viewstats-link" class="btn btn-success d-none">View Statistics</a></button>
+        <!-- User's profile details and stats -->
+        <div class="row pb-3 mb-3 border-bottom border-info">
+            
+                <div class="col-md-5 offset-md-2">
+                    <h3 class="text-success pl-4 ml-3">{{ user.username }}</h3>
+
+                    <div class="list-star-bullets mb-5">
+                        <ul class="">
+                            <li class="">You currently have <strong>{{ user.profile.points }} points.</strong></li>
+                            <li class="">You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                            <li class="">You have scored <strong>{{ points_percentage }}%</strong> of the points in the system</li>
+                        </ul>
+                    </div>                
                 </div>
-            </div>
-            <hr/>
-
-            <h4>{{ user.username }}'s statistics</h4>
-            <ul>
-                <li class="p-1">You currently have <strong>{{ user.profile.points }} points.</strong></li>
-                <li class="p-1">You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                <li class="p-1">You have scored <strong>{{ points_percentage }}%</strong> of the points in the system</li>
-            </ul>
+                
+                <div class="col-md-3">
+                    {% if user.profile.picture %}
+                        <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-image rounded img-fluid" alt="Profile" />
+                    {% else %}
+                        <img src="{% static 'img/soccerates-blank-profile.png' %}" class="profile-image rounded img-fluid" alt="Profile"/>
+                    {% endif %}
+                </div>
         </div>
-
-        <div class="row mt-5">
+        
+        <!-- User's Prections and Leaderboards columns -->
+        <div class="row mt-1">
 
             <!-- User's predictions -->
             <div class="user-predictions col-12 col-sm-6 text-center">
@@ -158,10 +166,5 @@
 
         </div>
 
-        {% else %}
-            <p>Welcome.</p>
-            <a href="{% url 'login' %}">Click here</a> to sign in, or 
-            <a href="{% url 'register' %}">click here</a> to register</p>
-        {% endif %}
     </div>
 {% endblock %}

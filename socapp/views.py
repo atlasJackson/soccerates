@@ -11,7 +11,7 @@ from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator
 
 from django.forms import formset_factory
-from .forms import RegistrationForm, AnswerForm, LeaderboardForm
+from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardForm
 
 from .models import Fixture, Answer, Team, Leaderboard
 from . import utils
@@ -101,6 +101,26 @@ def user_profile(request):
         'points_percentage': points_percentage,
     }
     return render(request, "user_profile.html", context)
+
+# Will probably change to carrying out an action rather than rendering a new template.
+@login_required
+def upload_picture(request):
+
+    profile_form = UserProfileForm()
+    context = {'profile_form': profile_form}
+
+    # Check if the request was HTTP POST.
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.POST, request.FILES)
+
+        # Check if the provided form is valid.
+        if profile_form.is_valid():
+            profile_form.save()
+            return HttpResponseRedirect(reverse('profile'))
+
+    return render(request, 'upload_profile_picture.html', context)
+
+
 
 @login_required
 def answer_form(request):
