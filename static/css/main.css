@@ -164,6 +164,17 @@ footer hr {
   width:10%;
 }
 
+.page-item {
+  padding:15px;
+}
+
+.page-item-active {
+  padding: 0px 8px;
+  margin: 14px 7px;
+  border:1px #080 solid;
+  border-radius: 15%;
+}
+
 
 /* SCHEDULE */
 

@@ -106,23 +106,31 @@
                         {% if answers.has_other_pages %}
                             <ul class="pagination justify-content-center">
                                 {% if answers.has_previous %}
-                                    <li class="page-item"><a href="?page={{ answers.previous_page_number }}">&laquo;</a></li>
+                                    <li class="page-item"><a href="?page={{ answers.previous_page_number }}">
+                                        <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+                                    </a></li>
                                 {% else %}
-                                    <li class="page-item disabled"><span>&laquo;</span></li>
+                                    <li class="page-item disabled"><span>
+                                        <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+                                    </span></li>
                                 {% endif %}
 
                                 {% for i in answers.paginator.page_range %}
                                     {% if answers.number == i %}
-                                        <li class="page-item active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                        <li class="page-item-active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                                     {% else %}
                                         <li class="page-item"><a href="?page={{ i }}">{{ i }}</a></li>
                                     {% endif %}
                                 {% endfor %}
 
                                 {% if answers.has_next %}
-                                    <li class="page-item"><a href="?page={{ answers.next_page_number }}">&raquo;</a></li>
+                                    <li class="page-item"><a href="?page={{ answers.next_page_number }}">
+                                        <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+                                    </a></li>
                                 {% else %}
-                                    <li class="page-item disabled"><span>&raquo;</span></li>
+                                    <li class="page-item disabled"><span>
+                                        <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+                                    </span></li>
                                 {% endif %}
                             </ul>
                         {% endif %}
