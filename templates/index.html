@@ -15,24 +15,26 @@
 
 
         <div class="row mb-3">
-            <div class="col-lg-8 col-12 mb-3">                
-                <h2 class="text-center my-3">
-                    <img src="{% static 'img/soccerates-text.png' %}" height="55px" class="border-top border-bottom border-secondary py-2" alt="Soccerates"/>
-                </h2>
+            <div class="col-lg-8 col-12 mb-3">
+                <div class="col-md-10 offset-md-1">
+                    <h2 class="text-center my-3">
+                        <img src="{% static 'img/soccerates-text.png' %}" height="55px" class="border-top border-bottom border-secondary py-2" alt="Soccerates"/>
+                    </h2>
 
-                {% if user.is_authenticated %}
-                    <h4 class="my-4">Welcome, {{ user.username }}, to Soccerates: the online football score-prediction app!</h4>
-                    <p>
-                        The 2018 FIFA World Cup will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
-                    </p>
-                {% else %}
-                    <h4 class="my-4">Welcome to Soccerates: the online football score-prediction app!</h4>
-                    <p class="text-center">
-                        <a href="{% url 'login' %}">Click here</a> to sign in, or <a href="{% url 'register' %}">click here</a> to register.
-                    </p>
-                {% endif %}
-                
-                {% comment %}<a href="{% url 'test' %}">Test page.</a>{% endcomment %}
+                    {% if user.is_authenticated %}
+                        <h4 class="my-4">Welcome, {{ user.username }}, to Soccerates: the online football score-prediction app!</h4>
+                        <p>
+                            The 2018 FIFA World Cup will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
+                        </p>
+                    {% else %}
+                        <h4 class="my-4">Welcome to Soccerates: the online football score-prediction app!</h4>
+                        <p class="text-center">
+                            <a href="{% url 'login' %}">Click here</a> to sign in, or <a href="{% url 'register' %}">click here</a> to register.
+                        </p>
+                    {% endif %}
+                    
+                    {% comment %}<a href="{% url 'test' %}">Test page.</a>{% endcomment %}
+                </div>
             </div>
             
             <!-- User Summary -->
