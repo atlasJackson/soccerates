@@ -80,7 +80,7 @@ def get_points_percentage(user):
     user_pts = user.profile.points
     if user_pts == 0: return 0
     total_pts = UserProfile.objects.values_list('points',flat=True).aggregate(total=Sum('points'))['total']
-    percentage = round(user_pts / total_pts * 100, 2)
+    percentage = round(user_pts / total_pts * 5, 2)
     return percentage
 
 # Finds any fixtures for which the user has not made a prediction
