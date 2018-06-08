@@ -74,6 +74,7 @@ def group_users_by_points(users_queryset=None):
 
     return users_grouped_by_points
 
+# Gets the provided users % share of all points in the system
 def get_points_percentage(user):
     from socapp.models import UserProfile
     user_pts = user.profile.points
@@ -350,7 +351,7 @@ def update_user_pts(saved_fixture=None, prev_fixture=None, add=False, update=Fal
                 if saved_fixture is not None:
                     new_points = calculate_points(saved_fixture, ans)
                     pointsdelta = new_points - total_points
-                    update_user_points(user, pointsdelta)
+                    update_user_points(user, ans, pointsdelta)
             elif remove:
                 # If the fixture is removed, remove the points given for the answer
                 rm_user_points(user, ans, total_points)
@@ -359,19 +360,18 @@ def add_user_points(user, answer, pts):
     """
     Adds points for the provided user, if the points_added flag is set to POINTS_NOT_ADDED
     """
-    # Add points to user's total.
+    # Add points to user's total. The if condition should always be evaluate to true.
     if not answer.points_added:
         user.profile.points = F('points') + pts
         user.save()
         user.refresh_from_db()
+        answer.points = pts
+        answer.points_added = answer.POINTS_ADDED
+        answer.save()
+        answer.refresh_from_db()
 
-    # Update answer entry so points for this fixture aren't given to the user in the future.
-    answer.points_added = answer.POINTS_ADDED
-    answer.save()
-    answer.refresh_from_db()
 
-
-def update_user_points(user, pts):
+def update_user_points(user, ans, pts):
     """ Updates the points already given out to a user based on an altered scoreline.
 
         user -> the user who provided the answer
@@ -380,6 +380,9 @@ def update_user_points(user, pts):
     user.profile.points = F('points') + pts
     user.save()
     user.refresh_from_db()
+    ans.points = F('points') + pts
+    ans.save()
+    ans.refresh_from_db()
 
 def rm_user_points(user, answer, pts):
     """ Removes a user's points for a given answer, and resets the points_added flag to False """
@@ -388,6 +391,7 @@ def rm_user_points(user, answer, pts):
         user.save()
         user.refresh_from_db()
         answer.points_added = answer.POINTS_NOT_ADDED
+        answer.points = None
         answer.save()
         answer.refresh_from_db()
 
@@ -445,10 +449,11 @@ def sync_user_points():
     users = get_user_model().objects.all()
     for user in users:
         answers = Answer.objects.filter(user=user, fixture__in=fixtures)
+        answers_points_field_total = answers.aggregate(total=Sum('points'))['total']
         total_points = 0
         for answer in answers:
             total_points += calculate_points(answer.fixture, answer)
-        if not total_points == user.profile.points:
+        if not total_points == user.profile.points == answers_points_field_total:
             logger.error("User {} has {} points, but should have {} points".format(user, user.profile.points, total_points))
         assert total_points == user.profile.points
 

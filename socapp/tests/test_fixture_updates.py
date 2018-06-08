@@ -358,6 +358,21 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(self.user2.profile.points, self.USER2_UPDATED_TOTAL_POINTS + 5)
         self.assertEquals(self.user3.profile.points, self.USER3_UPDATED_TOTAL_POINTS - 5)
 
+    def test_answer_points_field(self):
+        user1_total_pts = Answer.objects.filter(user=self.user).aggregate(total=Sum('points'))['total']
+        user2_total_pts = Answer.objects.filter(user=self.user2).aggregate(total=Sum('points'))['total']
+        user3_total_pts = Answer.objects.filter(user=self.user3).aggregate(total=Sum('points'))['total']
+        self.assertEquals(user1_total_pts, self.USER1_TOTAL_POINTS)
+        self.assertEquals(user2_total_pts, self.USER2_TOTAL_POINTS)
+        self.assertEquals(user3_total_pts, self.USER3_TOTAL_POINTS)
+        self.update_fixtures()
+        user1_total_pts = Answer.objects.filter(user=self.user).aggregate(total=Sum('points'))['total']
+        user2_total_pts = Answer.objects.filter(user=self.user2).aggregate(total=Sum('points'))['total']
+        user3_total_pts = Answer.objects.filter(user=self.user3).aggregate(total=Sum('points'))['total']
+        self.assertEquals(user1_total_pts, self.USER1_UPDATED_TOTAL_POINTS)
+        self.assertEquals(user2_total_pts, self.USER2_UPDATED_TOTAL_POINTS)
+        self.assertEquals(user3_total_pts, self.USER3_UPDATED_TOTAL_POINTS)
+
     def test_user_points_after_removing_all_fixtures(self):
         self.remove_all_results()
         self.assertEquals(self.user.profile.points, 0)

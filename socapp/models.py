@@ -277,10 +277,8 @@ class Answer(models.Model):
     team1_goals = models.PositiveIntegerField(default=0)
     team2_goals = models.PositiveIntegerField(default=0)
 
-    # For this answer, have the points been added to the user model?
-    # If not, and the game has been played, we should calculate the points accumulated for the game, and add them to the user model.
-    # Then set this attribute to True
     points_added = models.BooleanField(default=POINTS_NOT_ADDED)
+    points = models.IntegerField(blank=True, null=True)
 
 
     def save(self, *args, **kwargs):
