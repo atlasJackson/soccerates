@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
 
@@ -255,6 +255,7 @@ def create_leaderboard(request):
     return render(request, 'create_leaderboard.html', context_dict)
 
 
+@login_required
 def show_leaderboard(request, leaderboard):
 
     try:
@@ -273,6 +274,46 @@ def show_leaderboard(request, leaderboard):
         context_dict = {'leaderboard':None, 'members':None}
 
     return render(request, 'show_leaderboard.html', context_dict)
+
+
+@login_required
+def join_leaderboard(request, leaderboard):
+
+    board = request.POST.get('leaderboard')
+    leaderboard = Leaderboard.objects.get(name=board)
+    
+    user = request.user
+    user_added = False
+
+    # Will be used to check capacity and free spaces.
+    if board:
+        leaderboard.users.add(user)
+        leaderboard.save()
+        user_added = True
+
+    data = {'user_added': user_added}
+
+    return JsonResponse(data)
+
+
+@login_required
+def leave_leaderboard(request, leaderboard):
+
+    board = request.POST.get('leaderboard')
+    leaderboard = Leaderboard.objects.get(name=board)
+    
+    user = request.user
+    user_added = False
+
+    # Will be used to check capacity and free spaces.
+    if board:
+        leaderboard.users.remove(user)
+        leaderboard.save()
+        user_added = True
+
+    data = {'user_added': user_added}
+
+    return JsonResponse(data)
 
 
 ###############################################

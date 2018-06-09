@@ -53,4 +53,45 @@ document.addEventListener("DOMContentLoaded", function() {
         $("#profile-image-form").submit();
     });
 
+    /* LEADERBOARDS */
+    $(".board-content").on("click", "#join-button", function(e) {
+
+        e.preventDefault();
+        console.log($(this).data("leaderboard"));
+        buttonJoinLeave($(this), "join_leaderboard/");
+    });
+
+    $(".board-content").on("click", "#leave-button", function(e) {
+
+        e.preventDefault();
+        buttonJoinLeave($(this), "leave_leaderboard/");
+    });
+
 });
+
+/* Function that implements the joining and leaving of leaderboards using ajax. */
+function buttonJoinLeave(button, urlLink) {
+    $.ajax({
+        type: "POST",
+        url: urlLink,
+        data: {
+            "leaderboard": button.data("leaderboard"),
+            csrfmiddlewaretoken: button.data("csrf_token"),
+        },
+        dataType: "json",
+        success: function(data) {
+            if (data.user_added || data.user_removed) {
+
+                // Refresh player list and button options on success.
+                $(".leaderboard-table").load(" .leaderboard-table", function(){button.children().unwrap()});
+                $(".leaderboard-buttons").load(" .leaderboard-buttons", function(){button.children().unwrap()});
+
+            } else {
+                alert("Unable to process request. There may not be free spaces left for this leaderboard.");
+            }
+        },
+        error: function (rs, e) {
+            alert('Sorry, there was an error.');
+        }
+    });
+}

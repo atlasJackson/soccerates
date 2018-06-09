@@ -12,14 +12,14 @@
             </div>
         </div>
         
-        <div class="col-12 col-md-8 offset-md-2 ">
+        <div class="board-content col-12 col-md-8 offset-md-2 ">
 
             <div class="mb-4">
                 <h3 class="text-center font-weight-light">{{ leaderboard.name }}</h3>
                 <hr />
             </div>
 
-            <div>
+            <div class="leaderboard-table">
                 <table class="table table-striped table-bordered">
                     <colgroup>
                         <col class="current-rank-cell">
@@ -37,8 +37,8 @@
 
                     <tbody>
                         {% for member in members %}
-                            {% if member is user %}
-                                <tr class="bg-success">
+                            {% if member == user %}
+                                <tr class="bg-info">
                             {% else %}
                                 <tr>
                             {% endif %}
@@ -58,6 +58,21 @@
                 </table>
 
             </div>
+
+            <div class="leaderboard-buttons">
+                {% if user in members %}
+                    <button class="btn btn-danger" type="button" id="leave-button" data-leaderboard="{{ leaderboard.name }}"
+                    data-csrf_token="{{ csrf_token }}" >
+                        Leave Leaderboard
+                    </button>
+                {% else %}
+                    <button class="btn btn-success mt-5" type="button" id="join-button" data-leaderboard="{{ leaderboard.name }}"
+                    data-csrf_token="{{ csrf_token }}" >
+                        Join Leaderboard
+                    </button>
+                {% endif %}
+            </div>
+
         </div>
 
     </div>
