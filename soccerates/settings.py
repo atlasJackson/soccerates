@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'socapp',
     'django_extensions',
     'debug_toolbar',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [
