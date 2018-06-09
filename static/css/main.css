@@ -154,10 +154,10 @@ footer hr {
 }
 
 .profile-image {
-  max-width: 180px;
+  max-width: 150px;
   min-width: 130px;
   height: 150px;
-  float: left;
+  float: right;
 }
 /* Profile image. */
 
