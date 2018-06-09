@@ -45,4 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
     /* Function that determines whether an element is already present in an array or not */
     existsInArray = (element, array) => array.indexOf(element.attr('id')) >= 0
 
+    /* Function that changes the user profile. */
+    $(".user-profile").on("click", "#user-profile-image", function() {
+        $("#picture-upload").click();
+    });
+    $("#picture-upload").on("change", function() {
+        $("#profile-image-form").submit();
+    });
+
 });

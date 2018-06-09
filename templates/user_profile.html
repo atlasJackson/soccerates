@@ -17,7 +17,7 @@
         <!-- User's profile details and stats -->
         <div class="row pb-3 mb-3 border-bottom border-info">
             
-                <div class="col-md-5 offset-md-2">
+                <div class="col-md-4 offset-md-3">
                     <h3 class="text-success pb-1 pl-4 ml-3 border-bottom border-secondary">{{ user.username }}</h3>
 
                     <div class="list-star-bullets mb-5">
@@ -29,12 +29,23 @@
                     </div>                
                 </div>
                 
+                <!-- User profile image. On clicking, the user can change their display picture. -->
                 <div class="col-md-3">
-                    {% if user.profile.picture %}
-                        <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-image rounded img-fluid" alt="Profile" />
-                    {% else %}
-                        <img src="{% static 'img/soccerates-blank-profile.png' %}" class="profile-image rounded img-fluid" alt="Profile"/>
-                    {% endif %}
+                    <!-- Display the profile picture -->
+                    <div class="user-profile">
+                        {% if user.profile.picture %}
+                            <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" id="user-profile-image" class="profile-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                        {% else %}
+                            <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                        {% endif %}
+                    </div>
+                    <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
+                    <div class="profile-form">
+                        <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
+                            {% csrf_token %}
+                            {{ profile_form.picture|add_id:"picture-upload" }}
+                        </form>
+                    </div>
                 </div>
         </div>
         

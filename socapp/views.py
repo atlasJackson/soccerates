@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 from django.forms import formset_factory
 from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardForm
 
-from .models import Fixture, Answer, Team, Leaderboard
+from .models import UserProfile, Fixture, Answer, Team, Leaderboard
 from . import utils
 
 def test(request):
@@ -114,26 +114,25 @@ def user_profile(request):
         'private_lb': private_lb,
         'points_percentage': points_percentage,
     }
-    return render(request, "user_profile.html", context)
 
-# Will probably change to carrying out an action rather than rendering a new template.
-@login_required
-def upload_picture(request):
+    userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
+    profile_form = UserProfileForm({'picture': userprofile.picture})
+    context ['profile_form'] = profile_form
 
-    profile_form = UserProfileForm()
-    context = {'profile_form': profile_form}
-
+    # Handle submission of new profile picture.
     # Check if the request was HTTP POST.
     if request.method == 'POST':
-        profile_form = UserProfileForm(request.POST, request.FILES)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
 
         # Check if the provided form is valid.
         if profile_form.is_valid():
-            profile_form.save()
-            return HttpResponseRedirect(reverse('profile'))
+            profile_form.save(commit=True)
+            return HttpResponseRedirect(reverse("profile"))
 
-    return render(request, 'upload_profile_picture.html', context)
+        else:
+            print (profile_form.errors)
 
+    return render(request, "user_profile.html", context)
 
 
 @login_required

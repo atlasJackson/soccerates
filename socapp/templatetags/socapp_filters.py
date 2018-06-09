@@ -7,6 +7,11 @@ register = template.Library()
 def add_class(field, css):
     return field.as_widget(attrs={"class": css})
 
+# Filter for adding an id to a Form field.
+@register.filter(name="add_id")
+def add_id(field, name):
+    return field.as_widget(attrs={"id": name})
+
 # Return first team in the list. Used in template to predict scores.
 @register.filter(name='getGroup')
 def getGroup(list, i):
