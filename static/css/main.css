@@ -370,3 +370,9 @@ footer hr {
 .leaderboard-buttons {
   text-align: center;
 }
+
+#join-button {
+  margin-top: 52px;
+  height: 38px;
+  width: 160px;
+}
