@@ -285,7 +285,10 @@ def search_leaderboards(request):
         page = request.POST.get('page', 1)
 
         # Filter leaderboards by the search term
-        matched_lbs = Leaderboard.objects.filter(name__contains=search_term).order_by(Lower("name"))
+        if search_term == '' or search_term is None:
+            matched_lbs = Leaderboard.objects.order_by(Lower("name"))
+        else:
+            matched_lbs = Leaderboard.objects.filter(name__contains=search_term).order_by(Lower("name"))
         paginator = Paginator(matched_lbs, 5)
         try:
             matched_lb_subset = paginator.page(page)
