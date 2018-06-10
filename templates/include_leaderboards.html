@@ -2,12 +2,14 @@
 {% load socapp_filters %}
 
 <div class="row mb-3">
+{% if not all_boards %}
     {% if private %}
         <div class="col-md-4 board-heading">Private Leaderboards</div>
     {% else %}
         <div class="col-md-4 board-heading">Public Leaderboards</div>
     {% endif %}
     <div class="col-md-8 border-bottom border-secondary"></div>
+{% endif %}
 </div>   
 
 
@@ -23,7 +25,11 @@
     <thead class="thead-dark">
         <tr>
             <th>Leaderboard</th>
-            <th class="text-right">Current Rank</th>
+            {% if all_boards %}
+                <th class="text-right">Accessibility</th>
+            {% else %}
+                <th class="text-right">Current Rank</th>            
+            {% endif %}    
             {% if not short %}
             <th class="text-right">Spaces</th>
             {% endif %}
@@ -36,7 +42,11 @@
                 <td> 
                     <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
                 </td>
-                <td class="text-right">{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                {% if all_boards %}
+                    <td class="text-right">{{ leaderboard.get_is_private_display }} </td>
+                {% else %}
+                    <td class="text-right">{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                {% endif %}    
                 {% if not short %}
                 <td class="text-right">{{ leaderboard|get_free_spaces }} </td>
                 {% endif %}
@@ -53,3 +63,45 @@
         {% endif %}
     </tbody>
 </table>
+
+<!-- Require pagination when displaying all leaderboards. -->
+{% if all_boards %}
+    <!-- Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html -->
+
+    {% if leaderboards.has_other_pages %}
+        <ul class="pagination justify-content-center">
+            {% if leaderboards.has_previous %}
+                <li class="page-item"><a href="?page={{ leaderboards.previous_page_number }}">
+                    <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+                </a></li>
+            {% else %}
+                <li class="page-item disabled"><span>
+                    <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+                </span></li>
+            {% endif %}
+
+            {% for i in leaderboards.paginator.page_range %}
+                {% if leaderboards.number == i %}
+                    <li class="page-item-active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li class="page-item"><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if leaderboards.has_next %}
+                <li class="page-item"><a href="?page={{ leaderboards.next_page_number }}">
+                    <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+                </a></li>
+            {% else %}
+                <li class="page-item disabled"><span>
+                    <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+                </span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+    <div class="text-center mb-3">
+        Know what you're looking for?
+        <input id="" class="ml-1" type="text" name="search_box"  placeholder="Leaderboard name..." >        
+    </div>
+{% endif %}

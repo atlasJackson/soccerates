@@ -346,6 +346,9 @@ footer hr {
 }
 
 /* LEADERBOARDS */
+.all-boards {
+  display: none;
+}
 .board-heading {
   background-color: #000;
   border-radius: 0px 50px 0px 0px;

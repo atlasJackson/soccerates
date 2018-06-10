@@ -21,35 +21,43 @@
                     <h4 class="text-center font-weight-light">Manage your leaderboards below.</h4>
                     <hr />
 
-                    <div class="">
-                        Leaderboards information. Will need to discuss any constraints (max number of users per board, max boards per user). I have a picture of the layout on my phone. Can send if you want (very bare).
-                    </div>
-
-
                     <div class="list-star-bullets mb-5">
                         <ul >
-                            <li>Info 1.</li>
-                            <li>Info 2.</li>
-                            <li>Info 3.</li>
                             <li>
-                                To join a leaderboard, click the button below. A box will appear for you to enter the name of the leaderboard you wish to join. 
-                                If the leaderboard is private, an additional box will appear in which you must supply the board's password.
+                                To join a leaderboard, click the 'Show Leaderboards' button below. This will display a table of all the leaderboards in the system. Click on a leaderboard to be taken to its main page, where you will be able to join/leave the leaderboard in question.
+                            </li>
+                            <li>
+                                Private leaderboards will require a password for other users to view and join, so keep it handy for sharing in the future.
+                            </li>
+                            <li>
+                                To create a leaderboard, click the 'Create Leaderboard' button below. This will take you to a new page where you can fill in the details of your desired board.
                             </li>
                         </ul>
                     </div>
                     
-                    <div class="row justify-content-around mb-3">
+                    <div class="row justify-content-around text-center mb-3">
                         <div class="col-md-5">
-                            <input class="btn btn-dark btn-lg" value="Join Leaderboard"/>
+                            <button id="join-boards" class="btn btn-dark btn-lg" type="button">
+                                Show Leaderboards
+                            </button>
                         </div>
                         <div class="col-md-5">
-                            <a href="{% url 'create_leaderboard' %}"><input class="btn btn-primary btn-lg" value="Create Leaderboard"/></a>
+                            <a href="{% url 'create_leaderboard' %}">
+                                <button id="create-boards" class="btn btn-primary btn-lg" type="button">
+                                    Create Leaderboard
+                                </button>
+                            </a>
                         </div>
                     </div>
                     <hr />
 
-                </div>                
-                
+                </div>     
+
+                <!-- All Leaderboards -->
+                <div class="all-boards pb-3 my-3">
+                    {% include 'include_leaderboards.html' with leaderboards=all_lb_subset all_boards=True %} 
+                    <hr />
+                </div>
 
                 <!-- Public Leaderboards -->
                 <div class="pb-3 my-3">

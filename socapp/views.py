@@ -223,10 +223,22 @@ def answer_form(request):
 @login_required
 def leaderboards(request):
 
+    all_lb = Leaderboard.objects.all().order_by('name')
     public_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=False)
     private_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=True)
 
-    context_dict = {'public_lb': public_lb, 'private_lb': private_lb}
+    # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(all_lb, 5)
+    try:
+        all_lb_subset = paginator.page(page)
+    except PageNotAnInteger:
+        all_lb_subset = paginator.page(1)
+    except EmptyPage:
+        all_lb_subset = paginator.page(paginator.num_pages)
+
+    context_dict = {'all_lb_subset': all_lb_subset, 'public_lb': public_lb, 'private_lb': private_lb}
 
     return render(request, 'leaderboards.html', context_dict)
 

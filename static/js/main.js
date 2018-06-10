@@ -54,6 +54,17 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     /* LEADERBOARDS */
+    $("#join-boards"). on("click", function() {
+        var link = $(this);
+        $(".all-boards").slideToggle(300, function () {
+            if ($(this).is(':visible')) {
+                 link.text('Hide Leaderboards');                
+            } else {
+                 link.text('Show Leaderboards');                
+            }
+        });
+    });
+
     $(".board-content").on("click", "#join-button", function(e) {
 
         e.preventDefault();

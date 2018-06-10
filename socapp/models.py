@@ -306,13 +306,21 @@ class Leaderboard(models.Model):
     IN_PROGRESS = 0
     FINISHED = 1
 
+    PUBLIC = 0
+    PRIVATE = 1
+
+    ACCESS_CHOICES = (
+        (PUBLIC, "Public"),
+        (PRIVATE, "Private")
+    )
+
     name = models.CharField(max_length=64, unique=True)
     slug = models.SlugField(unique=True)
     users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     capacity = models.PositiveIntegerField(default=10) # Max number of users allowed.
     # Can possibly use capacity to find boards with X free spaces from a public board search.
 
-    is_private = models.BooleanField(default=0)
+    is_private = models.BooleanField(choices=ACCESS_CHOICES, default=PUBLIC)
     is_finished = models.BooleanField(default=IN_PROGRESS) # Is the tournament finished: can calculate the leaderboard's winner if so
 
     ### Include competition for future use.
