@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
 
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.forms import formset_factory
 from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardForm
