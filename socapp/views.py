@@ -143,12 +143,11 @@ def answer_form(request):
     # Create as many formsets as there are fixtures whose scores are to be predicted.
     group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
     AnswerFormSet = formset_factory(AnswerForm, extra=len(group_fixtures), max_num=len(group_fixtures))
-
+    initial_data = get_initial_data(group_fixtures, request.user)
+    
     # Check if the request was HTTP POST.
     if request.method == 'POST':
-        answer_formset = AnswerFormSet(request.POST, initial=[{'fixture': f.id} for f in group_fixtures])
-
-        # Check if the provided form is valid.
+        answer_formset = AnswerFormSet(request.POST, initial=[data for data in initial_data])
         if answer_formset.is_valid():
             # Get score predictions from corresponding form for each fixture.
             for answer_form in answer_formset:
@@ -173,7 +172,7 @@ def answer_form(request):
                                     team2_goals=answer_form.cleaned_data.get('team2_goals'))
 
             # Return to the index for now.
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(reverse('profile'))
         else:
             # Print problems to the terminal.
             print(answer_formset.errors)
@@ -181,30 +180,12 @@ def answer_form(request):
         
         # Check user is logged in, otherwise can't render the formset.
         if not request.user.is_anonymous:
-            # Not an HTTP POST, so we render our forms.
-            # These forms will be blank, ready for user input, unless the user has already submitted an answer.
-            # But first we check if the user has already submitted answers. If so, we populate the form with the existing answers.
+            # Not a POST, so all forms will be blank unless the user has already submitted an answer.
+            # If answers exist, populate the form with the existing answers.
 
-            user_answers = []
-            for fixture in group_fixtures:
-                ans = Answer.objects.select_related('fixture','user') \
-                    .filter(fixture=fixture, user=request.user) # Check if user has an answer for this fixture
-                if ans.count() > 0:
-                    user_answers.append(ans[0]) # If so add it to the answers list
-                else:
-                    user_answers.append(None) # If not, append None to the array so we can ignore it in the listcomp below when setting initial values
-            
-            # Set the formset, w/ initial values if an answer exists from the user for the fixture in question
-            formset = AnswerFormSet(initial=[{'team1_goals': a.team1_goals, "team2_goals": a.team2_goals} for a in user_answers if a is not None])
+            zipped_groups = [fixture.team1.group for fixture in group_fixtures]
+            formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
-
-            # The zip Python method takes two (or more) lists/iterables, and binds them together in tuples, based on their index in each list (so the lists should have the same len).
-            # So we're binding each form in the formset with a fixture, and setting the initial value of the form's hidden Fixture field to the associated/'zipped' fixture.
-            # We also create a zipped_groups list, so we can track each fixture/form iteration's group in the template
-            zipped_groups = []
-            for match, form in zip(group_fixtures, formset):
-                form.fields['fixture'].initial = match
-                zipped_groups.append(match.team1.group)
 
             # With the initial values set within the form, we add the zipped fixtures/forms/groups data structure to the template context. 
             # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
@@ -214,7 +195,24 @@ def answer_form(request):
     return render(request, 'answer_form.html', context_dict)
 
 
+# Determines initial data for an AnswerForm based on the fixtures and user passed in.
+# Returns list comprised of dictionaries with the initial data.
+def get_initial_data(fixtures, user):
+    initial_list = []
+    for fixture in fixtures:
+        this_initial = {}
+        this_initial['fixture'] = fixture.id
+        try:
+            ans = Answer.objects.select_related('fixture','user') \
+            .get(fixture=fixture, user=user) # Check if user has an answer for this fixture
 
+            this_initial['team1_goals'] = ans.team1_goals
+            this_initial['team2_goals'] = ans.team2_goals
+        except Answer.DoesNotExist:
+            continue
+        finally:
+            initial_list.append(this_initial)
+    return initial_list
 
 ###############################################
 # LEADERBOARD VIEWS

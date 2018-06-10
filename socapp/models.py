@@ -282,10 +282,8 @@ class Answer(models.Model):
 
 
     def save(self, *args, **kwargs):
-        if self.team1_goals is None:
-            self.team1_goals = 0
-        if self.team2_goals is None:
-            self.team2_goals = 0
+        if self.team1_goals is None or self.team2_goals is None:
+            return
         super().save(*args, **kwargs)
 
     def __str__(self):
