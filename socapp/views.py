@@ -302,7 +302,8 @@ def show_leaderboard(request, leaderboard):
     try:
         # Get leaderboard with given slug.
         leaderboard = Leaderboard.objects.prefetch_related('users', 'users__profile').get(slug=leaderboard)
-        if leaderboard.is_private:
+        print (request.user in leaderboard.users.all())
+        if leaderboard.is_private and not request.user in leaderboard.users.all():
             return render(request, 'private_leaderboard_login.html', {'leaderboard': leaderboard})
 
         # Get a list of all users who are members of the leaderboard.
@@ -367,12 +368,17 @@ def leave_leaderboard(request, leaderboard):
     leaderboard.users.remove(user)
     leaderboard.save()
     user_removed = True
+    left_private_board = False
+    print (leaderboard.is_private)
+
+    if leaderboard.is_private:
+        left_private_board = True
 
     if leaderboard.users.count() == 0:
         board_empty = True
         leaderboard.delete()
 
-    data = {'user_removed': user_removed, 'board_empty': board_empty}
+    data = {'user_removed': user_removed, 'board_empty': board_empty, 'left_private_board': left_private_board}
 
     return JsonResponse(data)
 
