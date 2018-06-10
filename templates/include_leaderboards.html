@@ -39,7 +39,7 @@
         {% if leaderboards %}
             {% for leaderboard in leaderboards %}
                 {% if leaderboard.name in user_leaderboard_set and all_boards%}
-                    <tr class="bg-dark text-white">
+                    <tr class="subscribed-board">
                 {% else %}
                     <tr >
                 {% endif %}

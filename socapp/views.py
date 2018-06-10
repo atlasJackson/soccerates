@@ -261,8 +261,15 @@ def paginate_leaderboards(request):
             all_lb_subset = paginator.page(1)
         except EmptyPage:
             all_lb_subset = paginator.page(paginator.num_pages)
+
+
+    user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
     
-    context_dict = { 'leaderboards': all_lb_subset, 'all_boards': True }
+    context_dict = { 
+        'leaderboards': all_lb_subset, 
+        'all_boards': True,
+        'user_leaderboard_set': user_leaderboard_set,
+        }
     return render(request, 'include_leaderboards.html', context_dict)
 
 @login_required
