@@ -110,8 +110,12 @@
         </ul>
     {% endif %}
 
-    <div class="text-center mb-3 form-inline">
-        <label>Know what you're looking for?</label>
-        <input id="board-searchbox" class="ml-2 form-control-sm" type="text" name="search_box" placeholder="Leaderboard name..." >        
+    <div class="text-center mb-3">
+        <label>Know what you're looking for?</label><br/>
+        <div class="d-flex justify-content-center align-items-center">
+            <input id="board-searchbox" class="ml-2 form-control-sm" type="text" name="search_box" placeholder="Leaderboard name..." >        
+            <button id="board-searchbtn" class="btn btn-primary btn-sm ml-1">Search</button>
+            <button id="clearsearch" class="btn btn-danger btn-sm ml-2">Clear search</button>
+        </div>
     </div>
 {% endif %}
