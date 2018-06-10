@@ -105,6 +105,9 @@ function buttonJoinLeave(button, urlLink) {
                 alert("As you were the last user in this board, the board will be deleted.");
                 window.location.replace("/");
 
+            } else if (data.left_private_board) {
+                window.location.replace("/");
+                
             } else if (data.board_full) {
                 alert("The leaderboard is full. Unable to join.");
 
