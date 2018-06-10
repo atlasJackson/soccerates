@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
 from django.db.models.functions import Lower
@@ -13,7 +14,7 @@ from django.views.generic.edit import CreateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.forms import formset_factory
-from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardForm
+from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardForm, PrivateAccessForm
 
 from .models import UserProfile, Fixture, Answer, Team, Leaderboard
 from . import utils
@@ -334,8 +335,29 @@ def show_leaderboard(request, leaderboard):
         # Get leaderboard with given slug.
         leaderboard = Leaderboard.objects.prefetch_related('users', 'users__profile').get(slug=leaderboard)
         print (request.user in leaderboard.users.all())
+
+        # If there are errors, do not reinitialise the form.
+        access_form = PrivateAccessForm(request.POST or None)
+        context_dict = {'access_form': access_form, 'leaderboard': leaderboard}
+        print (access_form)
+
+        # Check if the request was HTTP POST.
+        if request.method == 'POST':
+
+            # Check if the provided form is valid.
+            if access_form.is_valid():
+
+                given_password = access_form.cleaned_data['password']
+                hashed_password = make_password(given_password)
+
+                if check_password(given_password, leaderboard.password):
+                    leaderboard.users.add(request.user)
+                    leaderboard.save()
+                    return HttpResponseRedirect(reverse('show_leaderboard', kwargs={'leaderboard':leaderboard.slug}))
+     
+
         if leaderboard.is_private and not request.user in leaderboard.users.all():
-            return render(request, 'private_leaderboard_login.html', {'leaderboard': leaderboard})
+            return render(request, 'private_leaderboard_login.html', context_dict)
 
         # Get a list of all users who are members of the leaderboard.
         members = leaderboard.users.select_related('profile').order_by('-profile__points')
@@ -352,6 +374,7 @@ def show_leaderboard(request, leaderboard):
 
         # Add entities to the context dictionary
         context_dict = {
+            'access_form': access_form,
             'leaderboard':leaderboard, 
             'members':members, 
             'total_points': total_points,

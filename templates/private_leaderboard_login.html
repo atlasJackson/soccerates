@@ -18,7 +18,7 @@
     </div>
 
     <div class="row mb-5">
-        <div class="col-12 my-5 text-center">
+        <div class="col-12 my-1 text-center">
             <a href="{% url 'leaderboards' %}">
                 <img src="{% static 'img/soccerates-access-blocked.png' %}" class="img-fluid" alt="Leaderboards"/>
             </a>
@@ -31,37 +31,37 @@
         <div class="col-12 col-md-8 offset-md-2">
             <hr/>
             <h4 class="text-center mt-5">This is a private leaderboard.</h4>
-            <h5 class="text-center"> To view or join the board, please enter the password below.</h5>
+            <h5 class="text-center mb-5"> To join the board, please enter the password below.</h5>
+            
+            <div class="col-4 offset-4 col-md-6 offset-md-3">
 
-            <form class="mb-5" id="leaderboard_form" method="post" action="{% url 'show_leaderboard' leaderboard.slug %}">
-                {% csrf_token %}
+                <form class="mb-5" id="access_form" method="post" action="{% url 'show_leaderboard' leaderboard.slug %}">
+                    {% csrf_token %}
 
-            {% comment %} !!! Put the password field here. Currently copied from create_leaderboard.html
-                {% if leaderboard_form.errors %}
-                    {% for field in leaderboard_form %}
-                        {% for error in field.errors %}
+                    {% if access_form.errors %}
+                        {% for field in access_form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in access_form.non_field_errors %}
                             <div class="alert alert-danger">
                                 <strong>{{ error }}</strong>
                             </div>
                         {% endfor %}
-                    {% endfor %}
-                    {% for error in leaderboard_form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            <strong>{{ error }}</strong>
+                    {% endif %}
+
+                    {% for field in access_form %}
+                        <div class="form-group row">
+                            {{ field|add_class:"form-control" }}
                         </div>
                     {% endfor %}
-                {% endif %}
 
-                {% for field in leaderboard_form %}
-                    <div class="form-group row">
-                        {{ field.label_tag}} 
-                        {{ field|add_class:"form-control" }}
-                    </div>
-                {% endfor %}
-            {% endcomment %}
-
-                <input class="btn btn-primary col-md-6 offset-md-3" id="access-leaderboard" type="submit" name="submit" value="Submit Password" />
-            </form>
+                    <input class="btn btn-primary col-md-6 offset-md-3" id="access-leaderboard" type="submit" name="submit" value="Submit Password" />
+                </form>
+            </div>
 
         </div>
     </div>

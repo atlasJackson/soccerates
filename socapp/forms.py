@@ -113,3 +113,11 @@ class LeaderboardForm(forms.ModelForm):
             leaderboard.save()
     
         return leaderboard
+
+
+class PrivateAccessForm(forms.Form):
+
+    password = forms.CharField(widget=forms.PasswordInput(), label="Password", required=True)
+
+    class Meta:
+        fields = ('password',)
