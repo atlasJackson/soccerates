@@ -5,6 +5,8 @@
 <!-- Display Leaderboard Form -->
 <div class="row mx-0 px-0">
     <div class="col-12 col-md-8 offset-md-2">
+        <h5 class="text-center font-weight-light">Create your own leaderboard.</h5>
+        <hr />
 
         <form class="mb-3" id="leaderboard_form" method="post" action="{% url 'leaderboards' %}">
             {% csrf_token %}

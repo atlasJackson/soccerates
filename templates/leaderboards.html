@@ -2,6 +2,10 @@
 {% load staticfiles %}
 {% load socapp_filters %}
 
+{% block title_block %}
+    Leaderboards
+{% endblock %}
+
 {% block body_block %}
     <div class="container mt-1">
 
@@ -33,7 +37,7 @@
                                 Private leaderboards will require a password for other users to view and join, so keep it handy for sharing in the future.
                             </li>
                             <li>
-                                To create a leaderboard, click the 'Create Leaderboard' button below. This will take you to a new page where you can fill in the details of your desired board.
+                                To create a leaderboard, click the 'Create Leaderboard' button below. This will display a form for you to fill in the details of your desired board.
                             </li>
                         </ul>
                     </div>

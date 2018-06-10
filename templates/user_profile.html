@@ -2,6 +2,10 @@
 {% load staticfiles %}
 {% load socapp_filters %}
 
+{% block title_block %}
+    {{ user.username }}'s Profile
+{% endblock %}
+
 {% block body_block %}
     <div class="container mt-1">
 

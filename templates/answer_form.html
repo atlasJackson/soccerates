@@ -2,6 +2,10 @@
 {% load staticfiles %}
 {% load socapp_filters %}
 
+{% block title_block %}
+    {{ user.username }}'s Predictions
+{% endblock %}
+
 {% block body_block %}
     <div class="container mt-1">        
         {% if user.is_authenticated %}
