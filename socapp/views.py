@@ -203,8 +203,7 @@ def get_initial_data(fixtures, user):
         this_initial = {}
         this_initial['fixture'] = fixture.id
         try:
-            ans = Answer.objects.select_related('fixture','user') \
-            .get(fixture=fixture, user=user) # Check if user has an answer for this fixture
+            ans = Answer.objects.get(fixture=fixture, user=user) # Check if user has an answer for this fixture
 
             this_initial['team1_goals'] = ans.team1_goals
             this_initial['team2_goals'] = ans.team2_goals
@@ -275,7 +274,7 @@ def show_leaderboard(request, leaderboard):
             return render(request, 'private_leaderboard_login.html', {'leaderboard': leaderboard})
 
         # Get a list of all users who are members of the leaderboard.
-        members = leaderboard.users.all().order_by('-profile__points')
+        members = leaderboard.users.select_related('profile').order_by('-profile__points')
         print (members)
 
         # Get a collection of board statistics.
