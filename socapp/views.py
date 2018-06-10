@@ -246,6 +246,24 @@ def leaderboards(request):
         'user_leaderboard_set': user_leaderboard_set,
         }
 
+    # If there are errors, do not reinitialise the form.
+    leaderboard_form = LeaderboardForm(request.POST or None)
+    context_dict['leaderboard_form'] = leaderboard_form
+
+    # Check if the request was HTTP POST.
+    if request.method == 'POST':
+
+        # Check if the provided form is valid.
+        if leaderboard_form.is_valid():
+
+            # Save the new leaderboard to the database, and add the current user as a member.
+            leaderboard = leaderboard_form.save()
+            leaderboard.users.add(request.user)
+            leaderboard.save()
+ 
+            # Display newly-created leaderboard.
+            return HttpResponseRedirect(reverse('show_leaderboard', kwargs={'leaderboard':leaderboard.slug}))
+
     return render(request, 'leaderboards.html', context_dict)
 
 @login_required
@@ -271,30 +289,6 @@ def paginate_leaderboards(request):
         'user_leaderboard_set': user_leaderboard_set,
         }
     return render(request, 'include_leaderboards.html', context_dict)
-
-@login_required
-def create_leaderboard(request):
-
-    # If there are errors, do not reinitialise the form.
-    leaderboard_form = LeaderboardForm(request.POST or None)
-    context_dict = {'leaderboard_form': leaderboard_form}
-
-    # Check if the request was HTTP POST.
-    if request.method == 'POST':
-        print (leaderboard_form)
-
-        # Check if the provided form is valid.
-        if leaderboard_form.is_valid():
-
-            # Save the new leaderboard to the database, and add the current user as a member.
-            leaderboard = leaderboard_form.save()
-            leaderboard.users.add(request.user)
-            leaderboard.save()
- 
-            # Display newly-created leaderboard.
-            return HttpResponseRedirect(reverse('show_leaderboard', kwargs={'leaderboard':leaderboard.slug}))
-
-    return render(request, 'create_leaderboard.html', context_dict)
 
 
 @login_required

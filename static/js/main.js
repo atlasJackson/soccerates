@@ -66,6 +66,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     /* Displays password fields if private leadderboard is selected in the create_lb form */
+    $("#create-boards").on("click", function() {
+        $(".create-boards").slideToggle(300);
+    });
+
+    /* Displays password fields if private leadderboard is selected in the create_lb form */
     if ($(".create_private").is(':checked')) {
         $(".create-lb-pass").show();             
     } else {            

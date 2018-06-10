@@ -347,6 +347,10 @@ footer hr {
 }
 
 /* LEADERBOARDS */
+.create-boards {
+  display: none;
+}
+
 .all-boards {
   display: none;
 }
