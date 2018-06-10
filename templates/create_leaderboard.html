@@ -43,8 +43,16 @@
 
                 {% for field in leaderboard_form %}
                     <div class="form-group row">
-                        {{ field.label_tag}} 
-                        {{ field|add_class:"form-control" }}
+                        {% if field.name == 'password' or field.name == 'password_confirm' %}
+                            <label class="create-lb-pass" for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                            {{ field|add_class:"form-control create-lb-pass" }}
+                        {% elif field.name == 'is_private' %}
+                            {{ field.label_tag}}
+                            {{ field|add_class:"form-control create_private" }}
+                        {% else %}
+                            {{ field.label_tag}}
+                            {{ field|add_class:"form-control" }}
+                        {% endif %}
                     </div>
                 {% endfor %}
 

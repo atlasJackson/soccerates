@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     /* LEADERBOARDS */
-    $("#join-boards"). on("click", function() {
+    $("#join-boards").on("click", function() {
         var link = $(this);
         $(".all-boards").slideToggle(300, function () {
             if ($(this).is(':visible')) {
@@ -65,12 +65,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    /* Displays password fields if private leadderboard is selected in the create_lb form */
+    if ($(".create_private").is(':checked')) {
+        $(".create-lb-pass").show();             
+    } else {            
+        $(".create-lb-pass").hide();
+    } 
+    $(".create_private").on("click", function(e) {
+       
+        $(".create-lb-pass").slideToggle(200);
+    });
+
+    /* Buttons to join and leave leaderboards */
     $(".board-content").on("click", "#join-button", function(e) {
 
         e.preventDefault();
         buttonJoinLeave($(this), "join_leaderboard/");
     });
-
     $(".board-content").on("click", "#leave-button", function(e) {
 
         e.preventDefault();
@@ -119,7 +130,7 @@ function buttonJoinLeave(button, urlLink) {
 
             } else if (data.left_private_board) {
                 window.location.replace("/");
-                
+
             } else if (data.board_full) {
                 alert("The leaderboard is full. Unable to join.");
 
