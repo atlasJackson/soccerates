@@ -105,7 +105,7 @@ footer {
   
   margin-top: 20px;
   /* negative value of footer height */
-  height:200px;
+  height:220px;
   clear: both;
 }
 
@@ -125,6 +125,7 @@ footer hr {
 
 .copyright {  
   background-color: #464646;
+  margin-top: 8px;
 }
 
 

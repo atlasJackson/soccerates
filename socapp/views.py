@@ -273,6 +273,8 @@ def show_leaderboard(request, leaderboard):
     try:
         # Get leaderboard with given slug.
         leaderboard = Leaderboard.objects.prefetch_related('users', 'users__profile').get(slug=leaderboard)
+        if leaderboard.is_private:
+            return render(request, 'private_leaderboard_login.html', {'leaderboard': leaderboard})
 
         # Get a list of all users who are members of the leaderboard.
         members = leaderboard.users.all().order_by('-profile__points')
