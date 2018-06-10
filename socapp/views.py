@@ -221,6 +221,7 @@ def get_initial_data(fixtures, user):
 @login_required
 def leaderboards(request):
 
+    user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
     all_lb = Leaderboard.objects.all().order_by('name')
     public_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=False)
     private_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=True)
@@ -236,7 +237,12 @@ def leaderboards(request):
     except EmptyPage:
         all_lb_subset = paginator.page(paginator.num_pages)
 
-    context_dict = {'all_lb_subset': all_lb_subset, 'public_lb': public_lb, 'private_lb': private_lb}
+    context_dict = {
+        'all_lb_subset': all_lb_subset, 
+        'public_lb': public_lb, 
+        'private_lb': private_lb,
+        'user_leaderboard_set': user_leaderboard_set,
+        }
 
     return render(request, 'leaderboards.html', context_dict)
 

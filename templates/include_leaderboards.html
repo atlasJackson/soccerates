@@ -26,7 +26,7 @@
         <tr>
             <th>Leaderboard</th>
             {% if all_boards %}
-                <th class="text-right">Accessibility</th>
+                <th class="text-left">Accessibility</th>
             {% else %}
                 <th class="text-right">Current Rank</th>            
             {% endif %}    
@@ -38,12 +38,16 @@
     <tbody>
         {% if leaderboards %}
             {% for leaderboard in leaderboards %}
-            <tr>
+                {% if leaderboard.name in user_leaderboard_set and all_boards%}
+                    <tr class="bg-dark text-white">
+                {% else %}
+                    <tr >
+                {% endif %}
                 <td> 
                     <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
                 </td>
                 {% if all_boards %}
-                    <td class="text-right">{{ leaderboard.get_is_private_display }} </td>
+                    <td class="text-left">{{ leaderboard.get_is_private_display }} </td>
                 {% else %}
                     <td class="text-right">{{ leaderboard|get_user_leaderboard_position:user }} </td>
                 {% endif %}    
