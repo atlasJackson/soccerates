@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
     $(".board-content").on("click", "#join-button", function(e) {
 
         e.preventDefault();
-        console.log($(this).data("leaderboard"));
         buttonJoinLeave($(this), "join_leaderboard/");
     });
 
@@ -80,9 +79,17 @@ function buttonJoinLeave(button, urlLink) {
         },
         dataType: "json",
         success: function(data) {
-            if (data.user_added || data.user_removed) {
+            if (data.board_empty) {
+                alert("As you were the last user in this board, the board will be deleted.");
+                window.location.replace("/");
+
+            } else if (data.board_full) {
+                alert("The leaderboard is full. Unable to join.");
+
+            } else if (data.user_added || data.user_removed) {
 
                 // Refresh player list and button options on success.
+                $(".leaderboard-stats").load(" .leaderboard-stats", function(){button.children().unwrap()});
                 $(".leaderboard-table").load(" .leaderboard-table", function(){button.children().unwrap()});
                 $(".leaderboard-buttons").load(" .leaderboard-buttons", function(){button.children().unwrap()});
 

@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import F
+from django.db.models import F, Sum
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -266,8 +266,23 @@ def show_leaderboard(request, leaderboard):
         members = leaderboard.users.all().order_by('-profile__points')
         print (members)
 
+        # Get a collection of board statistics.
+        total_points = members.aggregate(tp=Sum('profile__points'))['tp']
+        if members:
+            average_points = total_points/(members.count())
+            percent_above_average = members.filter(profile__points__gte=average_points).count()*100/(members.count())
+        else:
+            average_points = 0
+            percent_above_average = 0
+
         # Add entities to the context dictionary
-        context_dict = {'leaderboard':leaderboard, 'members':members}
+        context_dict = {
+            'leaderboard':leaderboard, 
+            'members':members, 
+            'total_points': total_points,
+            'average_points': average_points,
+            'percent_above_average': percent_above_average,
+        }
 
     except Leaderboard.DoesNotExist:
         # We get here if we couldn't find the specified game
@@ -279,19 +294,21 @@ def show_leaderboard(request, leaderboard):
 @login_required
 def join_leaderboard(request, leaderboard):
 
-    board = request.POST.get('leaderboard')
-    leaderboard = Leaderboard.objects.get(name=board)
-    
+    leaderboard = Leaderboard.objects.get(slug=leaderboard)
     user = request.user
-    user_added = False
 
-    # Will be used to check capacity and free spaces.
-    if board:
+    # If board is full, prevent user from joining.
+    if leaderboard.users.count() == leaderboard.capacity:
+        user_added = False
+        board_full = True
+
+    else:    
         leaderboard.users.add(user)
         leaderboard.save()
         user_added = True
+        board_full = False
 
-    data = {'user_added': user_added}
+    data = {'user_added': user_added, 'board_full': board_full}
 
     return JsonResponse(data)
 
@@ -299,19 +316,20 @@ def join_leaderboard(request, leaderboard):
 @login_required
 def leave_leaderboard(request, leaderboard):
 
-    board = request.POST.get('leaderboard')
-    leaderboard = Leaderboard.objects.get(name=board)
+    leaderboard = Leaderboard.objects.get(slug=leaderboard)
+    board_empty = False
     
     user = request.user
-    user_added = False
 
-    # Will be used to check capacity and free spaces.
-    if board:
-        leaderboard.users.remove(user)
-        leaderboard.save()
-        user_added = True
+    leaderboard.users.remove(user)
+    leaderboard.save()
+    user_removed = True
 
-    data = {'user_added': user_added}
+    if leaderboard.users.count() == 0:
+        board_empty = True
+        leaderboard.delete()
+
+    data = {'user_removed': user_removed, 'board_empty': board_empty}
 
     return JsonResponse(data)
 

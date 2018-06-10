@@ -4,6 +4,7 @@
 {% block body_block %}
     <div class="container mt-1">
 
+        <!-- Banner image -->
         <div class="leaderboards row mb-5">
             <div class="col-12 my-5 text-center">
                 <a href="{% url 'leaderboards' %}">
@@ -12,13 +13,25 @@
             </div>
         </div>
         
+        <!-- Leaderboard main content -->
         <div class="board-content col-12 col-md-8 offset-md-2 ">
-
-            <div class="mb-4">
+            
+            <!-- Title and board statistics.  -->
+            <div class="leaderboard-stats mb-5">
                 <h3 class="text-center font-weight-light">{{ leaderboard.name }}</h3>
+                <hr />
+
+                <div class="list-star-bullets m-3">
+                    <ul >
+                        <li>The total points obtained by the members of this board is <strong>{{ total_points }}</strong>.</li>
+                        <li>That's an average of <strong>{{ average_points|floatformat:2 }}</strong> points per user.</li>
+                        <li><strong>{{ percent_above_average|floatformat:1 }}%</strong> of users are equal to or above that average score.</li>
+                    </ul>
+                </div>
                 <hr />
             </div>
 
+            <!-- Leaderboard table  -->
             <div class="leaderboard-table">
                 <table class="table table-striped table-bordered">
                     <colgroup>
@@ -38,14 +51,14 @@
                     <tbody>
                         {% for member in members %}
                             {% if member == user %}
-                                <tr class="bg-info">
+                                <tr class="bg-info text-white">
                             {% else %}
                                 <tr>
                             {% endif %}
                                 <td>{{ forloop.counter }}</td>
                                 <td>
                                     {% if member.profile.picture %}
-                                        <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
+                                        <img src="{{ MEDIA_URL }}{{ member.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
                                     {% else %}
                                         <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded mr-3" height="25" width="25" alt="Profile"/>
                                     {% endif %}
@@ -59,6 +72,7 @@
 
             </div>
 
+            <!-- Leaderboard buttons. Uses ajax to reload join/leave functionality. -->
             <div class="leaderboard-buttons">
                 {% if user in members %}
                     <button class="btn btn-danger" type="button" id="leave-button" data-leaderboard="{{ leaderboard.name }}"
