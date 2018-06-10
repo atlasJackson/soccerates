@@ -55,7 +55,11 @@
                 </div>
 
                 <!-- Create Leaderboards Form -->
+                {% if leaderboard_post %}
                 <div class="create-boards pb-3 my-3">
+                {% else %}
+                <div id="create-boards-non-post" class="create-boards pb-3 my-3">
+                {% endif %}
                     {% include 'create_leaderboard.html' %} 
                     <hr />
                 </div>   

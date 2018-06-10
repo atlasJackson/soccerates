@@ -347,7 +347,7 @@ footer hr {
 }
 
 /* LEADERBOARDS */
-.create-boards {
+#create-boards-non-post {
   display: none;
 }
 

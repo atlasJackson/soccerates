@@ -253,6 +253,8 @@ def leaderboards(request):
     # Check if the request was HTTP POST.
     if request.method == 'POST':
 
+        context_dict['leaderboard_post'] = True
+
         # Check if the provided form is valid.
         if leaderboard_form.is_valid():
 
