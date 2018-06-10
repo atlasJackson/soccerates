@@ -101,13 +101,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     })
 
-    $(".all-boards").on("keyup", "#board-searchbox", function(e) {
-        let searchTerm = $(this).val()
+    $(".all-boards").on("click", "#board-searchbtn", function(e) {
+        let searchTerm = $("#board-searchbox").val()
         var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})
         postRequest.done(function(data) {
             $(".all-boards").html(data)
             $("#board-searchbox").val(searchTerm)
             $("#board-searchbox").focus()
+        });
+    })
+
+    $(".all-boards").on("click", "#clearsearch", function(e) {
+        let searchTerm = ''
+        var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})
+        postRequest.done(function(data) {
+            $(".all-boards").html(data)
         });
     })
 
