@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
+from django.db.models.functions import Lower
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -221,8 +222,12 @@ def get_initial_data(fixtures, user):
 @login_required
 def leaderboards(request):
 
+<<<<<<< HEAD
     user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
-    all_lb = Leaderboard.objects.all().order_by('name')
+    all_lb = Leaderboard.objects.all().order_by(Lower('name'))
+    =======
+    
+>>>>>>> 061d79402524e260f0fca215d1e3acca2e546bb1
     public_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=False)
     private_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=True)
 
@@ -248,10 +253,10 @@ def leaderboards(request):
 
 @login_required
 @csrf_exempt
-def ajax_pagination(request):
+def paginate_leaderboards(request):
     if request.is_ajax():
         page = request.POST.get('page', 1)
-        all_lb = Leaderboard.objects.all().order_by('name')
+        all_lb = Leaderboard.objects.all().order_by(Lower('name'))
         paginator = Paginator(all_lb, 5)
         try:
             all_lb_subset = paginator.page(page)
