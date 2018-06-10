@@ -71,9 +71,11 @@
     {% if leaderboards.has_other_pages %}
         <ul class="pagination justify-content-center">
             {% if leaderboards.has_previous %}
-                <li class="page-item"><a href="?page={{ leaderboards.previous_page_number }}">
-                    <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
-                </a></li>
+                <li class="page-item">
+                    <a href="?page={{ leaderboards.previous_page_number }}" class="link-pagination">
+                        <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+                    </a>
+                </li>
             {% else %}
                 <li class="page-item disabled"><span>
                     <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
@@ -84,14 +86,18 @@
                 {% if leaderboards.number == i %}
                     <li class="page-item-active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                 {% else %}
-                    <li class="page-item"><a href="?page={{ i }}">{{ i }}</a></li>
+                    <li class="page-item">
+                        <a href="?page={{ i }}" class="link-pagination">{{ i }}</a>
+                    </li>
                 {% endif %}
             {% endfor %}
 
             {% if leaderboards.has_next %}
-                <li class="page-item"><a href="?page={{ leaderboards.next_page_number }}">
-                    <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
-                </a></li>
+                <li class="page-item">
+                    <a href="?page={{ leaderboards.next_page_number }}" class="link-pagination">
+                        <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+                    </a>
+                </li>
             {% else %}
                 <li class="page-item disabled"><span>
                     <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">

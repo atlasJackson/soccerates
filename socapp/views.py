@@ -6,6 +6,7 @@ from django.db.models import F, Sum
 from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
 
 from django.core.paginator import Paginator
@@ -239,6 +240,22 @@ def leaderboards(request):
 
     return render(request, 'leaderboards.html', context_dict)
 
+@login_required
+@csrf_exempt
+def ajax_pagination(request):
+    if request.is_ajax():
+        page = request.POST.get('page', 1)
+        all_lb = Leaderboard.objects.all().order_by('name')
+        paginator = Paginator(all_lb, 5)
+        try:
+            all_lb_subset = paginator.page(page)
+        except PageNotAnInteger:
+            all_lb_subset = paginator.page(1)
+        except EmptyPage:
+            all_lb_subset = paginator.page(paginator.num_pages)
+    
+    context_dict = { 'leaderboards': all_lb_subset, 'all_boards': True }
+    return render(request, 'include_leaderboards.html', context_dict)
 
 @login_required
 def create_leaderboard(request):

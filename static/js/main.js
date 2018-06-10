@@ -77,6 +77,17 @@ document.addEventListener("DOMContentLoaded", function() {
         buttonJoinLeave($(this), "leave_leaderboard/");
     });
 
+    /* Performs AJAX request to paginate the leaderboard options based on the page clicked */
+    $(".all-boards").on("click", ".link-pagination", function(e) {
+        e.preventDefault()
+        let page = $(this).attr("href")
+        page = page.substr(page.length - 1)
+        var postRequest = $.post("/leaderboards/get_page", {'page': page})
+        postRequest.done(function(data) {
+            $(".all-boards").html(data)
+        });
+    })
+
 });
 
 /* Function that implements the joining and leaving of leaderboards using ajax. */
