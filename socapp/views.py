@@ -248,12 +248,19 @@ def leaderboards(request):
 
     return render(request, 'leaderboards.html', context_dict)
 
+##### Leaderboard AJAX views ######
 @login_required
 @csrf_exempt
 def paginate_leaderboards(request):
     if request.is_ajax():
         page = request.POST.get('page', 1)
-        all_lb = Leaderboard.objects.all().order_by(Lower('name'))
+        search_term = request.POST.get('search_term', None)
+
+        if search_term == '' or search_term is None:
+            all_lb = Leaderboard.objects.all().order_by(Lower('name'))
+        else:
+            all_lb = Leaderboard.objects.filter(name__contains=search_term).order_by(Lower('name'))
+
         paginator = Paginator(all_lb, 5)
         try:
             all_lb_subset = paginator.page(page)
@@ -262,15 +269,39 @@ def paginate_leaderboards(request):
         except EmptyPage:
             all_lb_subset = paginator.page(paginator.num_pages)
 
-
-    user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
-    
-    context_dict = { 
-        'leaderboards': all_lb_subset, 
-        'all_boards': True,
-        'user_leaderboard_set': user_leaderboard_set,
+        user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))        
+        context_dict = { 
+            'leaderboards': all_lb_subset, 
+            'all_boards': True,
+            'user_leaderboard_set': user_leaderboard_set,
         }
-    return render(request, 'include_leaderboards.html', context_dict)
+        return render(request, 'include_leaderboards.html', context_dict)
+
+@login_required
+@csrf_exempt
+def search_leaderboards(request):
+    if request.is_ajax():
+        search_term = request.POST.get('search_term', None)
+        page = request.POST.get('page', 1)
+
+        # Filter leaderboards by the search term
+        matched_lbs = Leaderboard.objects.filter(name__contains=search_term).order_by(Lower("name"))
+        paginator = Paginator(matched_lbs, 5)
+        try:
+            matched_lb_subset = paginator.page(page)
+        except PageNotAnInteger:
+            matched_lb_subset = paginator.page(1)
+        except EmptyPage:
+            matched_lb_subset = paginator.page(paginator.num_pages)
+
+        user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
+        
+        context_dict = { 
+            'leaderboards': matched_lb_subset, 
+            'all_boards': True,
+            'user_leaderboard_set': user_leaderboard_set,
+        }
+        return render(request, 'include_leaderboards.html', context_dict)
 
 @login_required
 def create_leaderboard(request):

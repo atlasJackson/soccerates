@@ -82,9 +82,21 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault()
         let page = $(this).attr("href")
         page = page.substr(page.length - 1)
-        var postRequest = $.post("/leaderboards/get_page", {'page': page})
+        let searchTerm = $("#board-searchbox").val()
+        var postRequest = $.post("/ajax/leaderboards/get_page", {'page': page, 'search_term':searchTerm})
         postRequest.done(function(data) {
             $(".all-boards").html(data)
+            $("#board-searchbox").val(searchTerm)
+        });
+    })
+
+    $(".all-boards").on("keyup", "#board-searchbox", function(e) {
+        let searchTerm = $(this).val()
+        var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})
+        postRequest.done(function(data) {
+            $(".all-boards").html(data)
+            $("#board-searchbox").val(searchTerm)
+            $("#board-searchbox").focus()
         });
     })
 
