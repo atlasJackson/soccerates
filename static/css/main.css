@@ -351,6 +351,14 @@ footer hr {
   display: none;
 }
 
+.create-lb-pass {
+  display: none;  
+}
+
+.create-lb-pass-label {
+  display: none;  
+}
+
 .subscribed-board {
   background-color: #080;
   color: #fff;

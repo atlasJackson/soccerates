@@ -109,6 +109,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Password hashers for leaderboard passwords.
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = "/"
