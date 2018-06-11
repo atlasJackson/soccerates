@@ -58,11 +58,14 @@
             {% endfor %}
         {% else %}
             <tr class="text-center">
-            {% if private %}
-                <td colspan="12">You're currently not a member of any private leaderboards.</td>
+            {% if all_boards  %}
+                    <td colspan="12">No leaderboards found.</td>
             {% else %}
-                <td colspan="12">You're currently not a member of any public leaderboards.</td>
-            {% endif %}
+                {% if private %}
+                    <td colspan="12">You're currently not a member of any private leaderboards.</td>
+                {% else %}
+                    <td colspan="12">You're currently not a member of any public leaderboards.</td>
+                {% endif %}
             </tr>               
         {% endif %}
     </tbody>

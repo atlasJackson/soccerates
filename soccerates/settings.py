@@ -29,7 +29,7 @@ SECRET_KEY = 'up#h2*n@p6yi-jlkh534%g4r=(@djlyg%1m+dtty(^nk33k^7s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['soccerates.pythonanywhere.com']
 
 
 # Application definition
