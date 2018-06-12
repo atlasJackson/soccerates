@@ -254,44 +254,6 @@ footer hr {
 }
 
 
-/* FIXTURES */
-.fx-game-date-cell {
-  width:30%;
-}
-
-.fx-team-name-cell {
-  width:20%;
-}
-
-.fx-team-flag-cell {
-  width:2.5%;
-}
-
-.fx-goals-versus-cell {
-  width:12.5%;
-}
-
-.fx-game-stage-cell {
-  width:12.5%;
-}
-
-.short-fx-game-date-cell {
-  width:45%;
-}
-
-.short-fx-team-flag-cell {
-  width:5%;
-}
-
-.short-fx-goals-versus-cell {
-  width:20%;
-}
-
-.short-fx-game-stage-cell {
-  width:25%;
-}
-
-
 /* FORMS */
 .team-name-cell {
   width:25%;

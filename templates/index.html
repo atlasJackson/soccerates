@@ -4,7 +4,8 @@
 
 {% block body_block %}
     <div class="container mt-0">
-
+        
+        <!-- Banner -->
         <div class="row mb-3">
             <div class="col-12 px-0">
                 <a href="{% url 'wc_schedule' %}">
@@ -13,9 +14,9 @@
             </div>
         </div>
 
-
+        <!-- Opening Conotent -->
         <div class="row mb-3">
-            <div class="col-lg-8 col-12 mb-3">
+            <div class="col-lg-8 col-md-7 col-12 mb-3">
                 <div class="col-md-10 offset-md-1">
                     <h2 class="text-center my-3">
                         <img src="{% static 'img/soccerates-text.png' %}" height="55px" class="border-top border-bottom border-secondary py-2" alt="Soccerates"/>
@@ -38,25 +39,25 @@
             </div>
             
             <!-- User Summary -->
-            <div class="col-sm-4 col-12 border-left"> 
+            <div class="col-lg-4 col-md-5 col-12 border-left"> 
                 {% if user.is_authenticated %}
                     <h4 class="text-right font-weight-bold pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
 
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-lg-7 col-md-12 col-7">
                             <div class="list-star-bullets">
                                 <ul>
                                     <li><strong>{{ user.profile.points }} points.</strong></li>
                                     <li><strong>#{{ ranking }}</strong>/{{ usercount }} users.</li>
-                                    <li><strong>{{ points_percentage }}</strong> Pts/Fxt rate.</li>
+                                    <li><strong>{{ points_percentage }}</strong> Pts/Fxt.</li>
                                 </ul>
                             </div>
-                            <a href="{% url 'profile' %}" class="col-10 offset-1 btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
+                            <a href="{% url 'profile' %}" class="col-8 offset-1  btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
                                 View Profile
-                            </a>            
+                            </a>
                         </div>
 
-                        <div class="col-md-5">
+                        <div class="col-lg-5 col-md-12 col-5">
                             {% if user.profile.picture %}
                                 <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-image rounded img-fluid" alt="Profile" />
                             {% else %}
@@ -72,6 +73,7 @@
             </div>
         </div>
 
+        <!-- Button to request Predictions page -->
         <div class="row mb-5 border-bottom border-info">
         {% if user.is_authenticated %}
             <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase mb-5">
@@ -81,8 +83,9 @@
         </div>
 
         <div class="row">
-        
-            <div class="col-lg-7 col-12 mb-5">
+            
+            <!-- Upcoming Fixtures and Results block -->
+            <div class="col-12 col-lg-7 mb-5">
 
                 <div class="card mb-3"> <!-- Display upcoming fixtures -->
                     <h5 class="card-header bg-dark text-white text-center text-uppercase">Upcoming Fixtures</h5>
@@ -100,7 +103,8 @@
 
             </div>
 
-            <div class="col-lg-5 col-12 border-left border-info">
+            <!-- Current Standings block -->
+            <div class="col-12 col-lg-5 border-left border-info">
                 <div>
                     <h4 class="card-header bg-dark text-white text-center text-uppercase mb-3">Current Standings</h4>
 
