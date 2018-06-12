@@ -26,7 +26,7 @@
         <main>
             {% for group, fixture_list in fixtures.items %}
             <div class="row mt-3">
-                <div class="col-7 pl-0">
+                <div class="col-12 col-lg-10 col-xl-8 pl-0">
                     {% include 'include_groups.html' with group=group fixture_list=fixture_list short=False %}
                 </div>
                 <div class="col-5">
@@ -35,7 +35,7 @@
             </div>
             <div class="row mt-3 border-bottom border-primary">
                 <div class="col-12">
-                    {% include 'include_fixtures.html' with fixtures=fixture_list%}
+                    {% include 'include_fixtures.html' with fixtures=fixture_list %}
                 </div>
             </div>
             {% endfor %}

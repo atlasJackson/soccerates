@@ -228,52 +228,11 @@ footer hr {
 }
 
 
-/* GROUP TABLES */
-.team-group-name-cell {
-  width:50%;
-}
-
-.team-group-stats-cell {
-  width:8%;
-}
-
-.team-group-points-cell {
-  width:10%;
-}
-
-.short-team-group-name-cell {
-  width:60%;
-}
-
-.short-team-group-stats-cell {
-  width:10%;
-}
-
-.short-team-group-points-cell {
-  width:20%;
-}
-
-
 /* FORMS */
-.team-name-cell {
-  width:25%;
-}
-
-.team-flag-cell {
-  width:10%;
-}
-
-.dash-versus-cell {
-  width:6%;
-}
-
-.goal-input-cell {
-  width:12%;
-}
 
 .goal-input-widget {
   text-align: center;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 
 
