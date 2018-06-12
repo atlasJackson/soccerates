@@ -6,6 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
 from django.db.models.functions import Lower
 from django.urls import reverse
+from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -18,6 +19,8 @@ from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardFor
 
 from .models import UserProfile, Fixture, Answer, Team, Leaderboard
 from . import utils
+
+import datetime
 
 def test(request):
 
@@ -140,7 +143,7 @@ def user_profile(request):
 
 @login_required
 def answer_form(request):
-    
+
     context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"]}
 
     # Create as many formsets as there are fixtures whose scores are to be predicted.
@@ -158,10 +161,14 @@ def answer_form(request):
                 # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
                 if answer_form.has_changed():
                     fixt = answer_form.cleaned_data.get('fixture')
-                    # A check to see if the user has already provided an answer for this fixture.
-                    # If not, we create the Answer. Otherwise (in the else), we update.
-                    # In future, we'll need to block this off based on a cutoff date (or just not show the answer form)
+
+                    # Check if the answer can be edited.
+                    if not can_edit_answer(fixt):
+                        continue
+
+                    # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
                     if not Answer.objects.filter(user=request.user, fixture=fixt).exists():
+
                         Answer.objects.create(
                             user=request.user, 
                             fixture=fixt,
@@ -216,6 +223,13 @@ def get_initial_data(fixtures, user):
             initial_list.append(this_initial)
     return initial_list
 
+# Determines whether a fixture can edited (it can be edited up to 15 mins before its kickoff)
+# This returns true or false based on the fixture passed in.
+def can_edit_answer(fixture):
+    cutoff_time = fixture.match_date - datetime.timedelta(minutes=15)
+    return timezone.now() < cutoff_time
+
+    
 ###############################################
 # LEADERBOARD VIEWS
 ###############################################

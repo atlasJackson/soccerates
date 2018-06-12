@@ -135,9 +135,15 @@
                                                         <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>
                                                     </td>
                                                     <div class="form-group">
+                                                        {% if fixture|editable %}
                                                             <td>{{ answer_form.team1_goals|add_class:"form-control form-control-sm goal-input-widget" }}</td>
                                                             <td> - </td>    
                                                             <td>{{ answer_form.team2_goals|add_class:"form-control form-control-sm goal-input-widget" }} </td>
+                                                        {% else %}
+                                                            <td>{{ answer_form.team1_goals|disable_input }}</td>
+                                                            <td> - </td>    
+                                                            <td>{{ answer_form.team2_goals|disable_input }}                                                        
+                                                        {% endif %}
                                                     </div>
                                                     <td>
                                                         <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{fixture.team1.name}}"/>        

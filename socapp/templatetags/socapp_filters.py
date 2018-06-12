@@ -1,4 +1,6 @@
 from django import template
+from django.utils import timezone
+import datetime
 
 register = template.Library()
 
@@ -6,6 +8,17 @@ register = template.Library()
 @register.filter(name="add_class")
 def add_class(field, css):
     return field.as_widget(attrs={"class": css})
+
+#
+@register.filter(name="disable_input")
+def disable_input(field):
+    return field.as_widget(attrs={"disabled": True})
+
+@register.filter(name="editable")
+def editable(fixture):
+    # Allow a fixture to be edited up to 15 mins before kickoff
+    cutoff_time = fixture.match_date - datetime.timedelta(minutes=15)
+    return timezone.now() < cutoff_time
 
 # Filter for adding an id to a Form field.
 @register.filter(name="add_id")
