@@ -139,10 +139,10 @@ function buttonJoinLeave(button, urlLink) {
         success: function(data) {
             if (data.board_empty) {
                 alert("As you were the last user in this board, the board will be deleted.");
-                window.location.replace("/");
+                window.location.replace(data.url);
 
             } else if (data.left_private_board) {
-                window.location.replace("/");
+                window.location.replace(data.url);
 
             } else if (data.board_full) {
                 alert("The leaderboard is full. Unable to join.");

@@ -437,7 +437,6 @@ def leave_leaderboard(request, leaderboard):
     leaderboard.save()
     user_removed = True
     left_private_board = False
-    print (leaderboard.is_private)
 
     if leaderboard.is_private:
         left_private_board = True
@@ -446,7 +445,12 @@ def leave_leaderboard(request, leaderboard):
         board_empty = True
         leaderboard.delete()
 
-    data = {'user_removed': user_removed, 'board_empty': board_empty, 'left_private_board': left_private_board}
+    data = {
+        'user_removed': user_removed, 
+        'board_empty': board_empty, 
+        'left_private_board': left_private_board,
+        'url': reverse('leaderboards')
+    }
 
     return JsonResponse(data)
 
