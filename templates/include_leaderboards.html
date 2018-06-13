@@ -16,20 +16,20 @@
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th class="col-6 col-md-8">
+            <th class="board-name-cell">
                 Leaderboard
             </th>
             {% if all_boards %}
-            <th class="col-3 col-md-2 text-left">
+            <th class="board-data-cell text-left">
                 Access
             </th>
             {% else %}
-            <th class="col-3 col-md-2 text-right">
+            <th class="board-data-cell text-right">
                 Rank
             </th>            
             {% endif %}    
             {% if not short %}
-            <th class="col-3 col-md-2 text-right">
+            <th class="board-data-cell text-right">
                 Spaces
             </th>
             {% endif %}
