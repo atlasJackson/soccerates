@@ -18,7 +18,7 @@
         </div>
         
         <!-- Leaderboard main content -->
-        <div class="board-content col-12 col-md-8 offset-md-2 ">
+        <div class="board-content col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 ">
             
             <!-- Title and board statistics.  -->
             <div class="leaderboard-stats mb-5">
@@ -53,8 +53,8 @@
                             {% else %}
                                 <tr>
                             {% endif %}
-                                <td class="col-2">{{ forloop.counter }}</td>
-                                <td class="col-7 col-sm-8">
+                                <td class="board-data-cell">{{ forloop.counter }}</td>
+                                <td class="board-name-cell">
                                     {% if member.profile.picture %}
                                         <img src="{{ MEDIA_URL }}{{ member.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
                                     {% else %}
@@ -62,7 +62,7 @@
                                     {% endif %}
                                     <strong>{{ member.username }}</strong>
                                 </td>
-                                <td class="col-3 col-sm-2">{{ member.profile.points }}</td>
+                                <td class="board-data-cell">{{ member.profile.points }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

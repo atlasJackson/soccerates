@@ -406,6 +406,22 @@ footer hr {
 }
 /* */
 
+/* PROFILE */
+.profile-pred-name-cell {
+    width:35%;
+}
+
+.profile-pred-dash-cell {
+    width:5%;
+}
+
+.profile-pred-score-cell {
+    width:10%;
+}
+
+.profile-pred-points-cell {
+    width:5%;
+}
 
 /* GROUPS */
 
@@ -430,7 +446,34 @@ footer hr {
 /* */
 
 
+/* LEADERBOARDS */
 
+/* Group Data cell */
+.board-name-cell {
+    width:70%;
+}
+
+/* Group Points cell */
+.board-data-cell {
+    width:15%;
+}
+
+/* PREDICTIONS */
+
+/* Predictions Name cell */
+.predict-name-cell {
+    width:30%;
+}
+
+/* Predictions Flag cell */
+.predict-flag-cell {
+    width:5%;
+}
+
+/* Predictions Form cell */
+.predict-form-cell {
+    width:50px;
+}
 
 
 

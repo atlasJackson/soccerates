@@ -114,33 +114,33 @@
                                                 {{ answer_form.fixture }}
                                                 
                                                 <!-- Team 1 name and flag -->
-                                                <td class="col-3 col-md-4">
+                                                <td class="predict-name-cell text-right">
                                                     {{ fixture.team1.name }}
                                                     <img src="{% static fixture.team1.flag.url %}" class="flag text-right ml-2" alt="{{fixture.team1.name}}"/>
                                                 </td>
                                                 
                                                 <div class="form-group">
                                                     {% if fixture|editable %}
-                                                        <td class="col-3 col-md-2">
+                                                        <td class="predict-form-cell">
                                                             {{ answer_form.team1_goals|add_class:"form-control form-control-sm goal-input-widget" }}
                                                         </td>
-                                                        <td class="col-3 col-md-2">
+                                                        <td class="predict-form-cell">
                                                             {{ answer_form.team2_goals|add_class:"form-control form-control-sm goal-input-widget" }}
                                                         </td>
                                                     {% else %}
-                                                        <td class="col-3 col-md-2">
+                                                        <td class="predict-form-cell">
                                                             {{ answer_form.team1_goals|disable_input }}
                                                         </td>
-                                                        <td class="col-3 col-md-2">
+                                                        <td class="predict-form-cell">
                                                             {{ answer_form.team2_goals|disable_input }}
                                                         </td>                                           
                                                     {% endif %}
                                                 </div>
                                                 
                                                 <!-- Team 2 name and flag - switches order depending on screen size -->
-                                                <td class="col-3 col-md-4">
-                                                    {{ fixture.team2.name }}
+                                                <td class="predict-name-cell text-left">
                                                     <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>        
+                                                    {{ fixture.team2.name }}
                                                 </td>
                                             </tr>
                                             <tr>

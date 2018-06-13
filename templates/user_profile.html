@@ -86,25 +86,27 @@
                                 {% else %}
                                 <tr data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_match_date }}">
                                 {% endif %}
-                                    <td class="col-4 text-right">
+                                    <td class="profile-pred-name-cell text-right">
                                         {{ answer.fixture.team1.name }}
                                         <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
                                         
                                     </td>
-                                    <td class="col-1 text-right">
+                                    <td class="profile-pred-score-cell text-right">
                                         {{ answer.team1_goals }}
                                     </td>
-                                    <td class="col-1"> - </td>
-                                    <td class="col-1 text-left">{{ answer.team2_goals }}</td>
-                                    <td class="col-4 text-left">
+                                    <td class="profile-pred-dash-cell"> - </td>
+                                    <td class="profile-pred-score-cell text-left">{{ answer.team2_goals }}</td>
+                                    <td class="profile-pred-name-cell text-left">
                                         <img class="flag mr-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">
                                         {{ answer.fixture.team2.name }}
                                     </td>
+                                    <td class="profile-pred-points-cell">
                                     {% if answer.points_added %}
-                                    <td class="col-1">{{ answer.points }}</td>
+                                        {{ answer.points }}
                                     {% else %}
-                                    <td class="col-1">-</td>
+                                         - 
                                     {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
