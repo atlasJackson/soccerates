@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
 from django.db.models.functions import Lower
@@ -66,7 +67,7 @@ def index(request):
     try:
         ranking = utils.get_user_ranking(request.user)
         usercount = get_user_model().objects.count()
-        points_percentage = utils.get_points_percentage(request.user)
+        points_percentage = utils.points_per_fixture(request.user)
 
         context['ranking'] = ranking
         context['usercount'] = usercount
@@ -108,7 +109,7 @@ def user_profile(request):
 
     ranking = utils.get_user_ranking(request.user)
     usercount = get_user_model().objects.count()
-    points_percentage = utils.get_points_percentage(request.user)
+    points_percentage = utils.points_per_fixture(request.user)
     public_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=False)
     private_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=True)
 
@@ -353,7 +354,6 @@ def show_leaderboard(request, leaderboard):
         # If there are errors, do not reinitialise the form.
         access_form = PrivateAccessForm(request.POST or None)
         context_dict = {'access_form': access_form, 'leaderboard': leaderboard}
-        print (access_form)
 
         # Check if the request was HTTP POST.
         if request.method == 'POST':
@@ -396,6 +396,7 @@ def show_leaderboard(request, leaderboard):
 
     except Leaderboard.DoesNotExist:
         # We get here if we couldn't find the specified game
+        messages.error(request, "No leaderboard with name \'{}\' could be found".format(leaderboard))
         return HttpResponseRedirect(reverse('leaderboards'))
 
     return render(request, 'show_leaderboard.html', context_dict)

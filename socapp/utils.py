@@ -74,15 +74,14 @@ def group_users_by_points(users_queryset=None):
 
     return users_grouped_by_points
 
-# Gets the provided users % share of all points in the system
-def get_points_percentage(user):
-    from socapp.models import UserProfile
+# Gets the provided user's average points per fixture
+def points_per_fixture(user):
+    from socapp.models import Answer
     user_pts = user.profile.points
     if user_pts == 0: return 0
-    total_pts = UserProfile.objects.values_list('points',flat=True).aggregate(total=Sum('points'))['total']
-    print(user_pts, total_pts)
-    percentage = round((user_pts / total_pts) * 5, 2)
-    return percentage
+    num_results = Answer.objects.filter(user=user, points_added=True).count()
+    avg_points = round((user_pts / num_results), 2) # User's points divided by the number of results
+    return avg_points
 
 # Finds any fixtures for which the user has not made a prediction
 def get_fixtures_with_no_prediction(user, stage=None):
