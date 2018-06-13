@@ -1,25 +1,6 @@
 {% load staticfiles %}
 
 <table class="table fixtures-table">
-    {% comment %}
-    <colgroup>
-    {% if short %}
-        <col class="short-fx-game-date-cell">
-        <col class="short-fx-team-flag-cell">
-        <col class="short-fx-goals-versus-cell">
-        <col class="short-fx-team-flag-cell">
-        <col class="short-fx-game-stage-cell">
-    {% else %}
-        <col class="fx-game-date-cell">
-        <col class="fx-team-name-cell">
-        <col class="fx-team-flag-cell">
-        <col class="fx-goals-versus-cell">
-        <col class="fx-team-flag-cell">
-        <col class="fx-team-name-cell">
-        <col class="fx-game-stage-cell">
-    {% endif %}
-    </colgroup>
-    {% endcomment %}
 
     <tbody>
         {% if fixtures %}
@@ -84,7 +65,7 @@
                     <td class="fixture-team-flag-cell text-right mx-0">
                     {% endif %}
                         {% if fixture.team2.flag %}
-                            <img src="{% static fixture.team2.flag.url %}" class="flag" alt="{{ fixture.team2.name }}"/>
+                            <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
                         {% endif %}
                     </td>
 

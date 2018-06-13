@@ -318,11 +318,11 @@ footer hr {
 
 /* Date cell */
 .fixture-date-cell {
-    width:30%;
+    width:24%;
 }
 
 .fixture-date-cell-short {
-    width:33.333333%;
+    width:40%;
 }
 /* */
 
@@ -341,7 +341,7 @@ footer hr {
 
 @media (min-width: 992px)  { 
   .fixture-team-name-cell {
-    width:25%;
+    width:18%;
   }
 }
 /* */
@@ -381,12 +381,6 @@ footer hr {
 @media (min-width: 576px)  { 
   .fixture-goal-cell {
     width:15%;
-  }
-}
-
-@media (min-width: 992px)  { 
-  .fixture-goal-cell {
-    width:10%;
   }
 }
 
