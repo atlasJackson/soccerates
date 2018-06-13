@@ -33,7 +33,7 @@
             <h4 class="text-center mt-5">This is a private leaderboard.</h4>
             <h5 class="text-center mb-5"> To join the board, please enter the password below.</h5>
             
-            <div class="col-4 offset-4 col-md-6 offset-md-3">
+            <div class="col-8 offset-2">
 
                 <form class="mb-5" id="access_form" method="post" action="{% url 'show_leaderboard' leaderboard.slug %}">
                     {% csrf_token %}
@@ -58,8 +58,9 @@
                             {{ field|add_class:"form-control" }}
                         </div>
                     {% endfor %}
-
-                    <input class="btn btn-primary col-md-6 offset-md-3" id="access-leaderboard" type="submit" name="submit" value="Join Leaderboard" />
+                    <div class="text-center">
+                        <input class="btn btn-primary" id="access-leaderboard" type="submit" name="submit" value="Join Leaderboard" />
+                    </div>
                 </form>
             </div>
 

@@ -54,20 +54,20 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     /* LEADERBOARDS */
-    $("#join-boards").on("click", function() {
+    $(".join-boards").on("click", function() {
         var link = $(this);
         $(".all-boards").slideToggle(300, function () {
             if ($(this).is(':visible')) {
                  link.text('Hide Leaderboards');                
             } else {
-                 link.text('Show Leaderboards');                
+                 link.text('All Leaderboards');                
             }
         });
     });
 
     /* Displays password fields if private leadderboard is selected in the create_lb form */
-    $("#create-boards").on("click", function() {
-        $(".create-boards").slideToggle(300);
+    $(".create-boards").on("click", function() {
+        $(".create-boards-show").slideToggle(300);
     });
 
     /* Displays password fields if private leadderboard is selected in the create_lb form */

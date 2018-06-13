@@ -16,7 +16,7 @@
 
         <!-- Opening Conotent -->
         <div class="row mb-3">
-            <div class="col-lg-8 col-md-7 col-12 mb-3">
+            <div class="col-12 col-lg-8 mb-3">
                 <div class="col-md-10 offset-md-1">
                     <h2 class="text-center my-3">
                         <img src="{% static 'img/soccerates-text.png' %}" height="55px" class="border-top border-bottom border-secondary py-2" alt="Soccerates"/>
@@ -39,12 +39,12 @@
             </div>
             
             <!-- User Summary -->
-            <div class="col-lg-4 col-md-5 col-12 border-left"> 
+            <div class="col-12 col-lg-4 border-left"> 
                 {% if user.is_authenticated %}
                     <h4 class="text-right font-weight-bold pb-1 mb-3 border-bottom border-secondary">{{ request.user.username }}</h4>
 
                     <div class="row">
-                        <div class="col-lg-7 col-md-12 col-7">
+                        <div class="col-7">
                             <div class="list-star-bullets">
                                 <ul>
                                     <li><strong>{{ user.profile.points }} points.</strong></li>
@@ -52,12 +52,12 @@
                                     <li><strong>{{ points_percentage }}</strong> Pts/Fxt.</li>
                                 </ul>
                             </div>
-                            <a href="{% url 'profile' %}" class="col-8 offset-1  btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
+                            <a href="{% url 'profile' %}" class="col-8 offset-1 col-md-6 col-lg-8 offset-lg-1  btn btn-outline-primary btn-sm btn-block text-uppercase mb-5">
                                 View Profile
                             </a>
                         </div>
 
-                        <div class="col-lg-5 col-md-12 col-5">
+                        <div class="col-5">
                             {% if user.profile.picture %}
                                 <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-image rounded img-fluid" alt="Profile" />
                             {% else %}
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <div class="col-md-12">
+                    <div class="col-12">
                         <img src="{% static 'img/soccerates.png' %}" id="index-logo" alt="Soccerates"/>
                     </div>
                 {% endif %}
@@ -76,7 +76,7 @@
         <!-- Button to request Predictions page -->
         <div class="row mb-5 border-bottom border-info">
         {% if user.is_authenticated %}
-            <a href="{% url 'answer_form' %}" class="btn btn-primary btn-lg btn-block text-uppercase mb-5">
+            <a href="{% url 'answer_form' %}" class="col-10 offset-1 btn btn-primary btn btn-block text-uppercase mb-5">
                 Enter Predictions
             </a>
         {% endif %}

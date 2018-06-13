@@ -18,7 +18,7 @@
         </div>
         
         <div class="border-right border-left border-primary mx-0 px-0">
-            <div class="col-12 col-md-8 offset-md-2 ">
+            <div class="col-10 offset-1 col-lg-8 offset-lg-2 px-3">
 
                 <!-- Leaderboards Information -->
                 <div class="mb-4" id="form-instructions">
@@ -42,37 +42,50 @@
                         </ul>
                     </div>
                     
-                    <div class="row justify-content-around text-center mb-3">
-                        <div class="col-md-5">
-                            <button id="join-boards" class="btn btn-dark btn-lg" type="button">
-                                Show Leaderboards
+                    <!-- Buttons for showing the create board form and show all leaderboards. -->
+                    <div class="d-none d-md-flex justify-content-around text-center mb-3">
+                        <div class="col-5">
+                            <button class="join-boards btn btn-dark btn-lg" type="button">
+                                All Leaderboards
                             </button>
                         </div>
-                        <div class="col-md-5">
-                            <button id="create-boards" class="btn btn-primary btn-lg" type="button">
+                        <div class="col-5">
+                            <button class="create-boards btn btn-primary btn-lg" type="button">
                                 Create Leaderboard
                             </button>
                         </div>
                     </div>
-                    <hr />
+
+                    <div class="d-block d-md-none text-center">
+                        <button class="create-boards btn btn-primary btn-lg" type="button">
+                            Create Leaderboard
+                        </button>
+                    </div>
+                    <hr class="d-none d-md-block"/>
 
                 </div>
 
                 <!-- Create Leaderboards Form -->
                 {% if leaderboard_post %}
-                <div class="create-boards pb-3 my-3">
+                <div class="create-boards-show pb-3 my-3">
                 {% else %}
-                <div id="create-boards-non-post" class="create-boards pb-3 my-3">
+                <div id="create-boards-non-post" class="create-boards-show pb-3 my-3">
                 {% endif %}
                     {% include 'create_leaderboard.html' %} 
                     <hr />
                 </div>   
 
                 <!-- All Leaderboards -->
+                <div class="d-block d-md-none text-center">
+                    <button id="" class="join-boards btn btn-dark btn-lg" type="button">
+                        All Leaderboards
+                    </button>
+                </div>
                 <div class="all-boards pb-3 my-3">
                     {% include 'include_leaderboards.html' with leaderboards=all_lb_subset all_boards=True %} 
                     <hr />
                 </div>
+                <hr class="d-block d-md-none"/>
 
                 <!-- Public Leaderboards -->
                 <div class="pb-3 my-3">

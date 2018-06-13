@@ -4,11 +4,11 @@
 <div class="row mb-3">
 {% if not all_boards %}
     {% if private %}
-        <div class="col-md-4 board-heading">Private Leaderboards</div>
+        <div class="col-8 col-sm-6 col-xl-4 board-heading">Private Leaderboards</div>
     {% else %}
-        <div class="col-md-4 board-heading">Public Leaderboards</div>
+        <div class="col-8 col-sm-6 col-xl-4 board-heading">Public Leaderboards</div>
     {% endif %}
-    <div class="col-md-8 border-bottom border-secondary"></div>
+    <div class="col-4 col-sm-6 col-xl-8 border-bottom border-secondary"></div>
 {% endif %}
 </div>   
 
@@ -28,7 +28,7 @@
             {% if all_boards %}
                 <th class="text-left">Accessibility</th>
             {% else %}
-                <th class="text-right">Current Rank</th>            
+                <th class="text-right">Rank</th>            
             {% endif %}    
             {% if not short %}
             <th class="text-right">Spaces</th>
