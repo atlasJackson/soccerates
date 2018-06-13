@@ -19,38 +19,39 @@
         </div>
         
         <!-- User's profile details and stats -->
+        <div class="col-12 col-md-8 offset-md-2 col-xl-6 offset-xl-3 text-right">
+            <h3 class="text-success pb-1 pr-1 border-bottom border-secondary">{{ user.username }}</h3>
+        </div>
+
         <div class="row pb-3 mb-3 border-bottom border-info">
             
-                <div class="col-md-4 offset-md-3">
-                    <h3 class="text-success pb-1 pl-4 ml-3 border-bottom border-secondary">{{ user.username }}</h3>
-
-                    <div class="list-star-bullets mb-5">
-                        <ul class="">
-                            <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
-                            <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                            <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
-                        </ul>
-                    </div>                
+            <div class="col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
+                <ul class="">
+                    <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
+                    <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                    <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                    <li>Click on your profile picture to change it.</li>
+                </ul>
+            </div>   
+            
+            <!-- User profile image. On clicking, the user can change their display picture. -->
+            <div class="col-5 col-md-3 col-lg-2">
+                <!-- Display the profile picture -->
+                <div class="user-profile">
+                    {% if user.profile.picture %}
+                        <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                    {% else %}
+                        <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                    {% endif %}
                 </div>
-                
-                <!-- User profile image. On clicking, the user can change their display picture. -->
-                <div class="col-md-2">
-                    <!-- Display the profile picture -->
-                    <div class="user-profile">
-                        {% if user.profile.picture %}
-                            <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" id="user-profile-image" class="profile-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
-                        {% else %}
-                            <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
-                        {% endif %}
-                    </div>
-                    <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
-                    <div class="profile-form">
-                        <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
-                            {% csrf_token %}
-                            {{ profile_form.picture|add_id:"picture-upload" }}
-                        </form>
-                    </div>
+                <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
+                <div class="profile-form">
+                    <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
+                        {% csrf_token %}
+                        {{ profile_form.picture|add_id:"picture-upload" }}
+                    </form>
                 </div>
+            </div>
         </div>
         
         <!-- User's Prections and Leaderboards columns -->
@@ -73,15 +74,6 @@
                     {% if answers %}
                         <table class="table table-dark table-striped table-hover table-sm">
 
-                            <colgroup>
-                                <col class="predictions-fixture-team">
-                                <col class="predictions-fixture-goals">
-                                <col class="predictions-fixture-dash">
-                                <col class="predictions-fixture-goals">
-                                <col class="predictions-fixture-team">
-                                <col class="predictions-points">
-                            </colgroup>
-
                             <thead class="group-table-header thead-dark">
                                 <th colspan="5">Fixture</th>
                                 <th>Pts</th>
@@ -94,22 +86,24 @@
                                 {% else %}
                                 <tr data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_match_date }}">
                                 {% endif %}
-                                    <td class="text-right">
+                                    <td class="col-4 text-right">
                                         {{ answer.fixture.team1.name }}
                                         <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
                                         
                                     </td>
-                                    <td>{{ answer.team1_goals }}</td>
-                                    <td> - </td>
-                                    <td>{{ answer.team2_goals }}</td>
-                                    <td class="text-left">
+                                    <td class="col-1 text-right">
+                                        {{ answer.team1_goals }}
+                                    </td>
+                                    <td class="col-1"> - </td>
+                                    <td class="col-1 text-left">{{ answer.team2_goals }}</td>
+                                    <td class="col-4 text-left">
                                         <img class="flag mr-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">
                                         {{ answer.fixture.team2.name }}
                                     </td>
                                     {% if answer.points_added %}
-                                    <td>{{ answer.points }}</td>
+                                    <td class="col-1">{{ answer.points }}</td>
                                     {% else %}
-                                    <td>-</td>
+                                    <td class="col-1">-</td>
                                     {% endif %}
                                 </tr>
                             {% endfor %}

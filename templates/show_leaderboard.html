@@ -71,10 +71,10 @@
             </div>
 
             <!-- Leaderboard buttons. Uses ajax to reload join/leave functionality. -->
-            <div class="leaderboard-buttons">
+            <div class="leaderboard-buttons mb-5">
                 {% if user in members %}
                     <button class="btn btn-danger" type="button" id="leave-button" data-leaderboard="{{ leaderboard.name }}"
-                    data-csrf_token="{{ csrf_token }}" >
+                    data-csrf_token="{{ csrf_token }}" data-url_redirect="{% url 'profile' %}" >
                         Leave Leaderboard
                     </button>
                 {% else %}
