@@ -38,12 +38,6 @@
             <!-- Leaderboard table  -->
             <div class="leaderboard-table">
                 <table class="table table-striped table-bordered">
-                    <colgroup>
-                        <col class="current-rank-cell">
-                        <col class="board-name-cell">
-                        <col class="free-spaces-cell">
-                    </colgroup>
-
                     <thead class="group-table-header thead-dark">
                         <tr class="table-head-row">
                             <th>Rank</th>
@@ -59,8 +53,8 @@
                             {% else %}
                                 <tr>
                             {% endif %}
-                                <td>{{ forloop.counter }}</td>
-                                <td>
+                                <td class="col-2">{{ forloop.counter }}</td>
+                                <td class="col-7 col-sm-8">
                                     {% if member.profile.picture %}
                                         <img src="{{ MEDIA_URL }}{{ member.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
                                     {% else %}
@@ -68,7 +62,7 @@
                                     {% endif %}
                                     <strong>{{ member.username }}</strong>
                                 </td>
-                                <td>{{ member.profile.points }}</td>
+                                <td class="col-3 col-sm-2">{{ member.profile.points }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -14,24 +14,24 @@
 
 
 <table class="table">
-    <colgroup>
-        <col class="board-name-cell">
-        <col class="current-rank-cell">
-        {% if not short %}
-            <col class="free-spaces-cell">
-        {% endif %}
-    </colgroup>
-
     <thead class="thead-dark">
         <tr>
-            <th>Leaderboard</th>
+            <th class="col-6 col-md-8">
+                Leaderboard
+            </th>
             {% if all_boards %}
-                <th class="text-left">Accessibility</th>
+            <th class="col-3 col-md-2 text-left">
+                Access
+            </th>
             {% else %}
-                <th class="text-right">Rank</th>            
+            <th class="col-3 col-md-2 text-right">
+                Rank
+            </th>            
             {% endif %}    
             {% if not short %}
-            <th class="text-right">Spaces</th>
+            <th class="col-3 col-md-2 text-right">
+                Spaces
+            </th>
             {% endif %}
         </tr>
     </thead>

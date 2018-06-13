@@ -154,28 +154,12 @@ footer hr {
   transition: opacity 0.5s ease-in-out;
 }
 
+/* Profile image. */
 .profile-image {
   max-width: 150px;
   min-width: 130px;
   height: 150px;
   float: right;
-}
-/* Profile image. */
-
-.predictions-fixture-team {
-  width:34%;
-}
-
-.predictions-fixture-goals {
-  width:10%;
-}
-
-.predictions-fixture-dash {
-  width:2%;
-}
-
-.predictions-points {
-  width:10%;
 }
 
 .page-item {
@@ -300,20 +284,6 @@ footer hr {
   border-radius: 0px 50px 0px 0px;
   color: #fff;
   padding: 10px;
-}
-
-.board-name-cell {
-  width:60%;
-}
-
-.current-rank-cell {
-  width:20%;
-  text-align: right;
-}
-
-.free-spaces-cell {
-  width:20%;
-  text-align: right;
 }
 
 .leaderboard-buttons {
