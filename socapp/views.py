@@ -375,8 +375,6 @@ def show_leaderboard(request, leaderboard):
 
         # Get a list of all users who are members of the leaderboard.
         members = leaderboard.users.select_related('profile').order_by('-profile__points')
-        print (members)
-
         # Get a collection of board statistics.
         total_points = members.aggregate(tp=Sum('profile__points'))['tp']
         if members:
@@ -398,7 +396,7 @@ def show_leaderboard(request, leaderboard):
 
     except Leaderboard.DoesNotExist:
         # We get here if we couldn't find the specified game
-        context_dict = {'leaderboard':None, 'members':None}
+        return HttpResponseRedirect(reverse('leaderboards'))
 
     return render(request, 'show_leaderboard.html', context_dict)
 
