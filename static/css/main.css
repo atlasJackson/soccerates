@@ -128,7 +128,6 @@ footer hr {
   margin-top: 8px;
 }
 
-
 /* INDEX */
 
 #wc-banner {
@@ -154,7 +153,6 @@ footer hr {
   transition: opacity 0.5s ease-in-out;
 }
 
-/* Profile image. */
 .profile-page-image {
   max-width: 150px;
   min-width: 130px;
@@ -303,3 +301,128 @@ footer hr {
   height: 38px;
   width: 160px;
 }
+
+
+/* All Tables */
+/*
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) { ... }
+@media (min-width: @screen-lg-min) { ... }
+*/
+
+/* FIXTURES */
+
+/* Date row */
+.fixture-date-row {
+    width:100%;
+}
+
+
+/* Date cell */
+.fixture-date-cell {
+    width:41.666667%;
+}
+
+.fixture-date-cell-short {
+    width:33.333333%;
+}
+/* */
+
+/* Team name cell */
+@media (max-width: 576px)  { 
+  .fixture-team-name-cell {
+    width:16.666667%;
+  }
+}
+
+@media (min-width: 576px)  { 
+  .fixture-team-name-cell {
+    width:25%;
+  }
+}
+
+@media (min-width: 992px)  { 
+  .fixture-team-name-cell {
+    width:8.333333%;
+  }
+}
+/* */
+
+/* Team flag cell */
+.fixture-team-flag-cell-short {
+    width:8.333333%;
+}
+
+@media (max-width: 992px)  { 
+  .fixture-team-flag-cell-short {
+    width:25%;
+  }
+}
+
+@media (min-width: 992px)  { 
+  .fixture-team-flag-cell-short {
+    width:8.333333%;
+  }
+}
+/* */
+
+/* Fixture Stage cell */
+@media (max-width: 576px)  { 
+  .fixture-stage-cell {
+    width:25%;
+  }
+}
+
+@media (min-width: 576px)  { 
+  .fixture-stage-cell {
+    width:16.666667%;
+  }
+}
+
+.fixture-stage-cell-short {
+    width:25%;
+}
+/* */
+
+/* Fixture Score/Versus cell */
+@media (max-width: 576px)  { 
+  .fixture-goal-cell {
+    width:25%;
+  }
+}
+
+@media (max-width: 576px)  { 
+  .fixture-goal-cell {
+    width:16.666667%;
+  }
+}
+
+@media (max-width: 992px)  { 
+  .fixture-goal-cell-short {
+    width:25%;
+  }
+}
+
+@media (min-width: 992px)  { 
+  .fixture-goal-cell-short {
+    width:16.666667%;
+  }
+}
+/* */
+
+
+/*
+xs - @media (max-width: 576px) 
+sm - @media (min-width: 576px) 
+md - @media (min-width: 768px)
+lg - @media (min-width: 992px) 
+xl - @media (min-width: 1200px) 
+
+1 -  8.333333%
+2 - 16.666667%
+4 - 33.333333%
+5 - 41.666667%
+7 - 58.333333%
+8 - 66.666667%
+10 - 83.333333%
+11 - 91.666667%
+*/

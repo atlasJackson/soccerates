@@ -1,13 +1,13 @@
 {% load staticfiles %}
 
-<table class ="table">
-
+<table class="table fixtures-table">
+    
     <tbody>
         {% if fixtures %}
             {% for fixture in fixtures %}
 
                 <!-- Fixture Date row/column - moves to separate roww if size is too small -->
-                <tr class="d-table-row d-lg-none col-12 text-center">
+                <tr class="d-table-row d-lg-none fixture-date-row text-center">
                 {% if short %}
                     <td colspan="4">
                 {% else %}
@@ -17,11 +17,11 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr class="table-fixtures">
                     {% if short %}
-                    <td class="d-none d-lg-table-cell col-lg-5">
+                    <td class="d-none d-lg-table-cell fixture-date-cell">
                     {% else %}
-                    <td class="d-none d-lg-table-cell col-lg-4">
+                    <td class="d-none d-lg-table-cell fixture-date-cell-short">
                     {% endif %}
                         <small>{{ fixture.match_date }}</small>
                     </td>
@@ -29,16 +29,16 @@
 
                     <!-- Team 1 Name column -->
                     {% if not short %}
-                    <td class="col-2 col-sm-3 col-lg-1 text-right pr-0">
+                    <td class="fixture-team-name-cell text-right pr-0">
                         {{fixture.team1.name}}
                     </td>
                     {% endif %}
 
                     <!-- Team 1 Flag column -->
                     {% if short %}
-                    <td class="col-3 col-lg-1 text-center mx-0">
+                    <td class="fixture-team-flag-cell-short text-center mx-0">
                     {% else %}
-                    <td class="col-1 text-left mx-0">
+                    <td class="fixture-team-flag-cell mx-0">
                     {% endif %}
                         {% if fixture.team1.flag %}                                
                             <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
@@ -47,9 +47,9 @@
 
                     <!-- Goals/Versus Column -->
                     {% if short %}                    
-                    <td class="col-3 col-lg-2 text-center px-0 mx-0">
+                    <td class="fixture-goal-cell text-center px-0 mx-0">
                     {% else %}
-                    <td class="col-3 col-sm-2 text-center px-0 mx-0">
+                    <td class="fixture-goal-cell-short text-center px-0 mx-0">
                     {% endif %}
                         {% if fixture.status %}
                             <strong>{{ fixture.team1_goals }} - {{ fixture.team2_goals }}</strong>
@@ -60,9 +60,9 @@
 
                     <!-- Team 2 Flag column -->
                     {% if short %}
-                    <td class="col-3 col-lg-1 text-center mx-0">
+                    <td class="fixture-team-flag-cell-short  text-center mx-0">
                     {% else %}
-                    <td class="col-1 text-right mx-0">
+                    <td class="fixture-team-flag-cell text-right mx-0">
                     {% endif %}
                         {% if fixture.team2.flag %}
                             <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
@@ -71,12 +71,12 @@
 
                     <!-- Team 2 Name and Fixture Stage columns -->
                     {% if short %}
-                    <td class="col-3 text-right">                    
+                    <td class="fixture-stage-cell-short text-right">                    
                     {% else %}
-                    <td class="col-2 col-sm-3 col-lg-1">
+                    <td class="fixture-team-name-cell col-lg-1">
                         {{ fixture.team2.name }}
                     </td>
-                    <td class="col-3 col-sm-2 text-right">
+                    <td class="fixture-stage-cell text-right">
                     {% endif %}
                         <small>
                         {{ fixture.get_stage_display }}     
