@@ -6,12 +6,17 @@
 
     <thead class="group-table-header thead-dark"">
         <tr class="table-head-row">
-            <th colspan="2">Country</th>
-            <th>P</th>
+            <th>Country</th>
+            <th class="text-right">P</th>
             {% if not short %}
-                <th>W</th><th>D</th><th>L</th>
+                <th class="text-right">W</th>
+                <th class="text-right">D</th>
+                <th class="text-right">L</th>
+                <th class="text-right">GF</th>
+                <th class="text-right">GA</th>
+            {% else %}
+                <th class="text-right">GD</th>
             {% endif %}
-            <th class="text-right">GD</th>
             <th class="text-right">Pts</th>
         </tr>
     </thead>
@@ -19,28 +24,29 @@
         <!-- table -->
         {% for team in fixture_list|getDistinctTeamsOrderedByPoints %}
         <tr>
-            <td class="col-1">
-                <img src="{% static team.flag.url %}" class="flag mr-1" alt="{{team.name}}"/>
-            </td>
             {% if short %}
-            <td class="col-7">
+            <td class="group-team-name-cell-short">
             {% else %}
-            <td class="col-5">
+            <td class="group-team-name-cell">
             {% endif %}
+                <img src="{% static team.flag.url %}" class="flag mr-1" alt="{{team.name}}"/>
                 {{ team.name }}
             </td>
-            <td class="col-1">
+            <td class="group-team-data-cell text-right">
                 {{ team|getGroupGamesPlayed }}
             </td>
 
             {% if not short %}
-                <td class="col-1">{{ team.group_won }}</td>
-                <td class="col-1">{{ team.group_drawn }}</td>
-                <td class="col-1">{{ team.group_lost }}</td>
+                <td class="group-team-data-cell text-right">{{ team.group_won }}</td>
+                <td class="group-team-data-cell text-right">{{ team.group_drawn }}</td>
+                <td class="group-team-data-cell text-right">{{ team.group_lost }}</td>
+                <td class="group-team-data-cell text-right">{{ team.group_goals_for }}</td>
+                <td class="group-team-data-cell text-right">{{ team.group_goals_against }}</td>
+            {% else %}
+                <td class="group-team-data-cell text-right">{{ team.goal_difference }}</td>
             {% endif %}
 
-            <td class="col-1 text-right">{{ team.goal_difference }}</td>
-            <td class="col-2 text-right">{{ team.points }}</td>
+            <td class="group-team-points-cell text-right">{{ team.points }}</td>
         </tr>
         {% endfor %}
     </tbody>

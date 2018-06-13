@@ -407,6 +407,39 @@ footer hr {
 /* */
 
 
+/* GROUPS */
+
+/* Group Data cell */
+.group-team-data-cell {
+    width:8.333333%;
+}
+
+/* Group Points cell */
+.group-team-points-cell {
+    width:16.666667%;
+}
+
+/* Group Name cell */
+.group-team-name-cell {
+    width:41.666667%;
+}
+
+.group-team-name-cell-short {
+    width:58.333333%;
+}
+/* */
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 xs - @media (max-width: 576px) 
 sm - @media (min-width: 576px) 
