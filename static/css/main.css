@@ -316,10 +316,9 @@ footer hr {
     width:100%;
 }
 
-
 /* Date cell */
 .fixture-date-cell {
-    width:41.666667%;
+    width:30%;
 }
 
 .fixture-date-cell-short {
@@ -330,7 +329,7 @@ footer hr {
 /* Team name cell */
 @media (max-width: 576px)  { 
   .fixture-team-name-cell {
-    width:16.666667%;
+    width:22.5%;
   }
 }
 
@@ -342,15 +341,22 @@ footer hr {
 
 @media (min-width: 992px)  { 
   .fixture-team-name-cell {
-    width:8.333333%;
+    width:25%;
   }
 }
 /* */
 
 /* Team flag cell */
-.fixture-team-flag-cell-short {
-    width:8.333333%;
+@media (max-width: 992px)  { 
+  .fixture-team-flag-cell {
+    width:5%;
+  }
 }
+
+@media (min-width: 992px)  { 
+  .fixture-team-flag-cell {
+    width:2.5%;
+  }
 
 @media (max-width: 992px)  { 
   .fixture-team-flag-cell-short {
@@ -362,24 +368,6 @@ footer hr {
   .fixture-team-flag-cell-short {
     width:8.333333%;
   }
-}
-/* */
-
-/* Fixture Stage cell */
-@media (max-width: 576px)  { 
-  .fixture-stage-cell {
-    width:25%;
-  }
-}
-
-@media (min-width: 576px)  { 
-  .fixture-stage-cell {
-    width:16.666667%;
-  }
-}
-
-.fixture-stage-cell-short {
-    width:25%;
 }
 /* */
 
@@ -390,22 +378,37 @@ footer hr {
   }
 }
 
-@media (max-width: 576px)  { 
+@media (min-width: 576px)  { 
   .fixture-goal-cell {
-    width:16.666667%;
-  }
-}
-
-@media (max-width: 992px)  { 
-  .fixture-goal-cell-short {
-    width:25%;
+    width:15%;
   }
 }
 
 @media (min-width: 992px)  { 
-  .fixture-goal-cell-short {
-    width:16.666667%;
+  .fixture-goal-cell {
+    width:10%;
   }
+}
+
+.fixture-goal-cell-short {
+    width:25%;
+}
+/* */
+
+/* Fixture Stage cell */
+@media (max-width: 992px)  { 
+  .fixture-stage-cell {
+    width:20%;
+  }
+}
+
+@media (min-width: 992px)  { 
+  .fixture-stage-cell {
+    width:15%;
+  }
+}
+.fixture-stage-cell-short {
+    width:25%;
 }
 /* */
 

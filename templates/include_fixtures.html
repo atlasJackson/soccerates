@@ -1,13 +1,32 @@
 {% load staticfiles %}
 
 <table class="table fixtures-table">
-    
+    {% comment %}
+    <colgroup>
+    {% if short %}
+        <col class="short-fx-game-date-cell">
+        <col class="short-fx-team-flag-cell">
+        <col class="short-fx-goals-versus-cell">
+        <col class="short-fx-team-flag-cell">
+        <col class="short-fx-game-stage-cell">
+    {% else %}
+        <col class="fx-game-date-cell">
+        <col class="fx-team-name-cell">
+        <col class="fx-team-flag-cell">
+        <col class="fx-goals-versus-cell">
+        <col class="fx-team-flag-cell">
+        <col class="fx-team-name-cell">
+        <col class="fx-game-stage-cell">
+    {% endif %}
+    </colgroup>
+    {% endcomment %}
+
     <tbody>
         {% if fixtures %}
             {% for fixture in fixtures %}
 
                 <!-- Fixture Date row/column - moves to separate roww if size is too small -->
-                <tr class="d-table-row d-lg-none fixture-date-row text-center">
+                <tr class="d-table-row d-lg-none col-12 text-center">
                 {% if short %}
                     <td colspan="4">
                 {% else %}
@@ -19,9 +38,9 @@
 
                 <tr class="table-fixtures">
                     {% if short %}
-                    <td class="d-none d-lg-table-cell fixture-date-cell">
-                    {% else %}
                     <td class="d-none d-lg-table-cell fixture-date-cell-short">
+                    {% else %}
+                    <td class="d-none d-lg-table-cell fixture-date-cell">
                     {% endif %}
                         <small>{{ fixture.match_date }}</small>
                     </td>
@@ -47,9 +66,9 @@
 
                     <!-- Goals/Versus Column -->
                     {% if short %}                    
-                    <td class="fixture-goal-cell text-center px-0 mx-0">
-                    {% else %}
                     <td class="fixture-goal-cell-short text-center px-0 mx-0">
+                    {% else %}
+                    <td class="fixture-goal-cell text-center px-0 mx-0">
                     {% endif %}
                         {% if fixture.status %}
                             <strong>{{ fixture.team1_goals }} - {{ fixture.team2_goals }}</strong>
@@ -65,7 +84,7 @@
                     <td class="fixture-team-flag-cell text-right mx-0">
                     {% endif %}
                         {% if fixture.team2.flag %}
-                            <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
+                            <img src="{% static fixture.team2.flag.url %}" class="flag" alt="{{ fixture.team2.name }}"/>
                         {% endif %}
                     </td>
 
