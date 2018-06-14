@@ -110,6 +110,9 @@
                             {% endif %}
 
                             <!-- Normal operation for every iteration: draw the table row with the fixture details, and the form -->
+                                            <tr>
+                                                <td colspan="5">{{ fixture.match_date }}</td>
+                                            </tr>
                                             <tr style="height:30px;">
                                                 {{ answer_form.fixture }}
                                                 
@@ -142,9 +145,6 @@
                                                     <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>        
                                                     {{ fixture.team2.name }}
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5">{{ fixture.match_date }}</td>
                                             </tr>
                             
                             <!-- If the last iteration, destroy the table! -->
