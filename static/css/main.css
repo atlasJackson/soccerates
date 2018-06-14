@@ -465,23 +465,19 @@ footer hr {
 
 /* Predictions Name cell */
 .predict-name-cell {
-    width:30%;
+    width:25%;
 }
 
 /* Predictions Flag cell */
 .predict-flag-cell {
-    width:10%;
+    width:5%;
 }
 
 /* Predictions Form cell */
 .predict-form-cell {
-    width:100px;
+    width:50px;
 }
 
-.predict-form-cell-short {
-    width:70px;
-}
-/* */
 
 
 

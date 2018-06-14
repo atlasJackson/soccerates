@@ -116,16 +116,17 @@
                                             </tr>
 
                                             <tr class="prediction-row-date d-table-row d-sm-none">
-                                                <td colspan="2">{{ fixture.match_date }}</td>
+                                                <td colspan="4">{{ fixture.match_date }}</td>
                                             </tr>
 
 
-                                            <tr class="d-none d-sm-table-row" style="height:30px;">
+                                            <tr class="" style="height:30px;">
                                                 {{ answer_form.fixture }}
                                                 
                                                 <!-- Team 1 name and flag -->
                                                 <td class="predict-name-cell text-right">
-                                                    {{ fixture.team1.name }}
+                                                    <small class="d-initial d-sm-none">{{ fixture.team1.country_code }}</small>
+                                                    <div class="d-none d-sm-inline">{{ fixture.team1.name }}</div>
                                                     <img src="{% static fixture.team1.flag.url %}" class="flag text-right ml-2" alt="{{fixture.team1.name}}"/>
                                                 </td>
                                                 
@@ -150,48 +151,9 @@
                                                 <!-- Team 2 name and flag - switches order depending on screen size -->
                                                 <td class="predict-name-cell text-left">
                                                     <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>        
-                                                    {{ fixture.team2.name }}
+                                                    <small class="d-initial d-sm-none">{{ fixture.team2.country_code }}</small>
+                                                    <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
                                                 </td>
-                                            </tr>
-
-                                            <!-- Displays teams on separate rows for short -->
-                                            <tr class="d-table-row d-sm-none">
-                                                <!-- Team 1 name and flag -->
-                                                <td class="predict-name-cell text-right">
-                                                    {{ fixture.team1.name }}
-                                                    <img src="{% static fixture.team1.flag.url %}" class="flag text-right ml-2" alt="{{fixture.team1.name}}"/>
-                                                </td>
-
-                                                <div class="form-group">
-                                                    {% if fixture|editable %}
-                                                        <td class="predict-form-cell-short">
-                                                            {{ answer_form.team1_goals|add_class:"form-control form-control-sm goal-input-widget" }}
-                                                        </td>
-                                                    {% else %}
-                                                        <td class="predict-form-cell-short">
-                                                            {{ answer_form.team1_goals|disable_input }}
-                                                        </td>                                       
-                                                    {% endif %}
-                                                </div>
-                                            </tr>
-                                            <tr class="d-table-row d-sm-none">
-                                                <!-- Team 1 name and flag -->
-                                                <td class="predict-name-cell text-right">
-                                                    {{ fixture.team2.name }}
-                                                    <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{fixture.team1.name}}"/>        
-                                                </td>
-
-                                                <div class="form-group">
-                                                    {% if fixture|editable %}
-                                                        <td class="predict-form-cell-short">
-                                                            {{ answer_form.team2_goals|add_class:"form-control form-control-sm goal-input-widget" }}
-                                                        </td>
-                                                    {% else %}
-                                                        <td class="predict-form-cell-short">
-                                                            {{ answer_form.team2_goals|disable_input }}
-                                                        </td>                                           
-                                                    {% endif %}
-                                                </div>
                                             </tr>
                             
                             <!-- If the last iteration, destroy the table! -->
