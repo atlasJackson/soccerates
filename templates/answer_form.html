@@ -138,10 +138,10 @@
                                                         </td>
                                                     {% else %}
                                                         <td class="predict-form-cell">
-                                                            {{ answer_form.team1_goals|disable_input }}
+                                                            {{ answer_form.team1_goals|add_class:"disabled form-control form-control-sm goal-input-widget" }}
                                                         </td>
                                                         <td class="predict-form-cell">
-                                                            {{ answer_form.team2_goals|disable_input }}
+                                                            {{ answer_form.team2_goals|add_class:"disabled form-control form-control-sm goal-input-widget" }}
                                                         </td>                                           
                                                     {% endif %}
                                                 </div>
@@ -168,7 +168,7 @@
                                                         </td>
                                                     {% else %}
                                                         <td class="predict-form-cell-short">
-                                                            {{ answer_form.team1_goals|disable_input }}
+                                                            {{ answer_form.team1_goals|add_class:"disabled form-control form-control-sm goal-input-widget" }}
                                                         </td>                                       
                                                     {% endif %}
                                                 </div>
@@ -187,7 +187,7 @@
                                                         </td>
                                                     {% else %}
                                                         <td class="predict-form-cell-short">
-                                                            {{ answer_form.team2_goals|disable_input }}
+                                                            {{ answer_form.team2_goals|add_class:"disabled form-control form-control-sm goal-input-widget" }}
                                                         </td>                                           
                                                     {% endif %}
                                                 </div>
