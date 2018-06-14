@@ -305,9 +305,7 @@ footer hr {
 
 /* All Tables */
 /*
-@media (min-width: @screen-md-min) and (max-width: @screen-md-max) { ... }
-@media (min-width: @screen-lg-min) { ... }
-*/
+/*
 
 /* FIXTURES */
 
@@ -357,6 +355,7 @@ footer hr {
   .fixture-team-flag-cell {
     width:2.5%;
   }
+}
 
 @media (max-width: 992px)  { 
   .fixture-team-flag-cell-short {
@@ -458,23 +457,31 @@ footer hr {
     width:15%;
 }
 
+
 /* PREDICTIONS */
+.prediction-row-date {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
 /* Predictions Name cell */
 .predict-name-cell {
-    width:20%;
+    width:30%;
 }
 
 /* Predictions Flag cell */
 .predict-flag-cell {
-    width:5%;
+    width:10%;
 }
 
 /* Predictions Form cell */
 .predict-form-cell {
-    width:50px;
+    width:100px;
 }
 
+.predict-form-cell-short {
+    width:70px;
+}
+/* */
 
 
 

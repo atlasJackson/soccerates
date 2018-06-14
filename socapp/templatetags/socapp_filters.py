@@ -7,12 +7,12 @@ register = template.Library()
 # Filter for adding a css class to a Form field.
 @register.filter(name="add_class")
 def add_class(field, css):
-    return field.as_widget(attrs={"class": css})
-
-#
-@register.filter(name="disable_input")
-def disable_input(field):
-    return field.as_widget(attrs={"disabled": True})
+    css_list = css.split(" ")
+    if "disabled" in css_list:
+        css_list.remove("disabled")
+        return field.as_widget(attrs={"class": css, "disabled": True})
+    else:
+        return field.as_widget(attrs={"class": css})
 
 @register.filter(name="editable")
 def editable(fixture):
