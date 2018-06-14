@@ -14,6 +14,11 @@ def add_class(field, css):
     else:
         return field.as_widget(attrs={"class": css})
 
+#
+@register.filter(name="disable_input")
+def disable_input(field):
+    return field.as_widget(attrs={"disabled": True})
+
 @register.filter(name="editable")
 def editable(fixture):
     # Allow a fixture to be edited up to 15 mins before kickoff
