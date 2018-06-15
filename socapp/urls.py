@@ -15,6 +15,7 @@ urlpatterns = [
     path('answer_form/', views.answer_form, name='answer_form'),
     path('worldcup/schedule/', views.world_cup_schedule, name='wc_schedule'),
 
+    path('global_leaderboard/', views.global_leaderboard, name='global_leaderboard'),
     path('leaderboards/', views.leaderboards, name='leaderboards'),
     path('leaderboards/<slug:leaderboard>/', views.show_leaderboard, name='show_leaderboard'),
     path('leaderboards/<slug:leaderboard>/join_leaderboard/', views.join_leaderboard, name='join_leaderboard'),

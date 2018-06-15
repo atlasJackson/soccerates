@@ -22,12 +22,23 @@
             
             <!-- Title and board statistics.  -->
             <div class="leaderboard-stats mb-5">
-                <h3 class="text-center font-weight-light">{{ leaderboard.name }}</h3>
+                <h3 class="text-center font-weight-light">
+                    {% if global_leaderboard %}
+                        Global User Leaderboard
+                    {% else %}
+                        {{ leaderboard.name }}
+                    {% endif %}
+                </h3>
                 <hr />
 
                 <div class="list-star-bullets m-3">
                     <ul >
-                        <li>The total points obtained by the members of this board is <strong>{{ total_points }}</strong>.</li>
+                        <li>The total points obtained by 
+                            {% if global_leaderboard %} all users 
+                            {% else %} the members of this board 
+                            {% endif %} is 
+                            <strong>{{ total_points }}</strong>.
+                        </li>
                         <li>That's an average of <strong>{{ average_points|floatformat:2 }}</strong> points per user.</li>
                         <li><strong>{{ percent_above_average|floatformat:1 }}%</strong> of users are equal to or above that average score.</li>
                     </ul>
@@ -70,7 +81,8 @@
 
             </div>
 
-            <!-- Leaderboard buttons. Uses ajax to reload join/leave functionality. -->
+            <!-- Leaderboard buttons. Uses ajax to reload join/leave functionality. Only if not the global leaderboard! -->
+            {% if not global_leaderboard %}
             <div class="leaderboard-buttons mb-5">
                 {% if user in members %}
                     <button class="btn btn-danger" type="button" id="leave-button" data-leaderboard="{{ leaderboard.name }}"
@@ -84,7 +96,7 @@
                     </button>
                 {% endif %}
             </div>
-
+            {% endif %}
         </div>
 
     </div>

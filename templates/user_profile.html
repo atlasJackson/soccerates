@@ -18,6 +18,14 @@
             </div>
         </div>
         
+        {% if messages %}
+        <div class="alert alert-danger col-10 col-sm-8 col-md-6 mx-auto mb-4 text-center">
+            {% for message in messages %}
+            <strong class="ml-2">{{ message }}</strong>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
         <!-- User's profile details and stats -->
         <div class="col-12 col-md-8 offset-md-2 col-xl-6 offset-xl-3 text-right">
             <h3 class="text-success pb-1 pr-1 border-bottom border-secondary">{{ user.username }}</h3>

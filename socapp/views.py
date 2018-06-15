@@ -24,31 +24,8 @@ from . import utils
 import datetime
 
 def test(request):
-
-    fixtures = group_fixtures_dictionary()
-    fixtures2 = Fixture.objects.order_by('match_date')
-    upcoming_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
-    past_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
-
-    AnswerFormSet = formset_factory(AnswerForm, extra=len(fixtures), max_num=len(fixtures))
-    answer_formset = AnswerFormSet()
-
-    context = {
-        'fixtures': fixtures,
-        'fixtures2': fixtures2,
-        'upcoming_fixtures' : upcoming_fixtures,
-        'past_fixtures': past_fixtures,
-        'answer_formset': answer_formset,
-    }
-
-    if request.method == 'POST':
-        answer_formset = AnswerFormSet(request.POST)
-
-    return render(request, "test.html", context)
-
-
-
-
+    #return render(request, "test.html", context)
+    return HttpResponseRedirect(reverse("index"))
 
 def index(request):
 
@@ -378,8 +355,9 @@ def show_leaderboard(request, leaderboard):
         # Get a collection of board statistics.
         total_points = members.aggregate(tp=Sum('profile__points'))['tp']
         if members:
-            average_points = total_points/(members.count())
-            percent_above_average = members.filter(profile__points__gte=average_points).count()*100/(members.count())
+            membercount = members.count()
+            average_points = total_points / membercount
+            percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / membercount
         else:
             average_points = 0
             percent_above_average = 0
@@ -401,6 +379,29 @@ def show_leaderboard(request, leaderboard):
 
     return render(request, 'show_leaderboard.html', context_dict)
 
+
+
+# Global leaderboard for all users in the system
+@login_required
+def global_leaderboard(request):
+    members = get_user_model().objects.select_related('profile').order_by('-profile__points')
+    usercount = members.count()
+    total_points = members.aggregate(total_pts=Sum('profile__points'))['total_pts']
+    average_points = total_points / usercount
+    percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / usercount
+    global_leaderboard = True # Allows us to conditionally render/unrender parts of the template
+
+    # Pagination stuff goes here
+
+    context = {
+        'members':members, 
+        'total_points': total_points,
+        'average_points': average_points,
+        'percent_above_average': percent_above_average,
+        'global_leaderboard': global_leaderboard
+    }
+
+    return render(request, "show_leaderboard.html", context)
 
 @login_required
 def join_leaderboard(request, leaderboard):

@@ -85,6 +85,16 @@ nav > a {
   color: #fff;
 }
 
+.dropdown > a {
+  background: black;
+  text-transform: uppercase;
+}
+
+/* This displays the dropdown on hover */
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
 /* BODY STYLES */
 
 #wrapper-body {

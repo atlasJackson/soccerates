@@ -56,7 +56,17 @@
                         <a href="{% url 'answer_form' %}">Score-Predictions</a>
                         
                         <a href="{% url 'wc_schedule' %}">World Cup</a>
-                        <a href="{% url 'leaderboards' %}">Leaderboards</a>
+
+                        <div class="dropdown d-inline">
+                            <a class="dropdown-toggle text-white border-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Leaderboards
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="{% url 'leaderboards' %}">User Leaderboards</a>
+                                <a class="dropdown-item" href="{% url 'global_leaderboard' %}">Global Leaderboard</a>
+                            </div>
+                        </div>
+
                         <a href="{% url 'forums' %}">Forums</a>
                     </nav>
                 </div>
