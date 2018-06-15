@@ -134,17 +134,17 @@
                                                 <div class="form-group">
                                                     {% if fixture|editable %}
                                                         <td class="predict-form-cell">
-                                                            {{ answer_form.team1_goals|add_class:"form-control form-control-sm goal-input-widget" }}
+                                                            {{ answer_form.team1_goals }}
                                                         </td>
                                                         <td class="predict-form-cell">
-                                                            {{ answer_form.team2_goals|add_class:"form-control form-control-sm goal-input-widget" }}
+                                                            {{ answer_form.team2_goals }}
                                                         </td>
                                                     {% else %}
                                                         <td class="predict-form-cell">
-                                                            {{ answer_form.team1_goals|add_class:"disabled form-control form-control-sm goal-input-widget" }}
+                                                            {{ answer_form.team1_goals|disable_input }}
                                                         </td>
                                                         <td class="predict-form-cell">
-                                                            {{ answer_form.team2_goals|add_class:"disabled form-control form-control-sm goal-input-widget" }}
+                                                            {{ answer_form.team2_goals|disable_input }}
                                                         </td>                                           
                                                     {% endif %}
                                                 </div>
