@@ -95,6 +95,11 @@ nav > a {
   display: block;
 }
 
+.dropdown-item:hover {
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+
 /* BODY STYLES */
 
 #wrapper-body {

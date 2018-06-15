@@ -2,7 +2,11 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Leaderboard {{ leaderboard.name }}
+    {% if global_leaderboard %}
+        Leaderboard: Gaia
+    {% else %}
+        Leaderboard: {{ leaderboard.name }}
+    {% endif %}
 {% endblock %}
 
 {% block body_block %}
@@ -24,7 +28,7 @@
             <div class="leaderboard-stats mb-5">
                 <h3 class="text-center font-weight-light">
                     {% if global_leaderboard %}
-                        Global User Leaderboard
+                        Gaia Leaderboard
                     {% else %}
                         {{ leaderboard.name }}
                     {% endif %}

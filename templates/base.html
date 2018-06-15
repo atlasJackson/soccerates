@@ -61,9 +61,10 @@
                             <a class="dropdown-toggle text-white border-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Leaderboards
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{% url 'leaderboards' %}">User Leaderboards</a>
-                                <a class="dropdown-item" href="{% url 'global_leaderboard' %}">Global Leaderboard</a>
+                            <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item text-white dropdown-hover" href="{% url 'leaderboards' %}">User Leaderboards</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-white dropdown-hover" href="{% url 'global_leaderboard' %}">Gaia Leaderboard</a>
                             </div>
                         </div>
 

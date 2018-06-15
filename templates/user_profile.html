@@ -61,6 +61,8 @@
                 </div>
             </div>
         </div>
+
+
         
         <!-- User's Prections and Leaderboards columns -->
         <div class="row mt-1">
@@ -177,6 +179,10 @@
                     <div class="card-body">
                         <p>The leaderboards you are currently subscribed to are given below.</p>
                         <p>To create or join leaderboards, visit the leaderboards page <a href="{% url 'leaderboards' %}">here</a>.</p>
+                        <!-- Link to Global Leaderboard -->
+                        <div class="col-12 text-center">
+                            <a class="col-10 offset-1 btn btn-outline-secondary btn btn-block text-uppercase mb-1" href="{% url 'global_leaderboard' %}">Gaia Leaderboard</a>
+                        </div>
                     </div>
                 </div>
 
