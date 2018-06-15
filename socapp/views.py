@@ -227,7 +227,7 @@ def get_initial_data(fixtures, user):
 # Determines whether a fixture can edited (it can be edited up to 15 mins before its kickoff)
 # This returns true or false based on the fixture passed in.
 def can_edit_answer(fixture):
-    cutoff_time = fixture.match_date - datetime.timedelta(minutes=15)
+    cutoff_time = fixture.match_date - datetime.timedelta(minutes=75)
     return timezone.now() < cutoff_time
 
     
