@@ -85,11 +85,7 @@ def user_profile(request, username=None):
     answers = user.profile.get_predictions()
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
-        print ("Hello")
-        answers.exclude(points_added=True)
-        print ("Goodbye!")
-    answers.exclude(points_added=False)
-    print (answers)
+        answers = [a for a in answers if a.points_added]
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)

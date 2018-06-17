@@ -178,13 +178,17 @@
                         {% endif %}
 
                     {% else %}
-                        <div class="mb-2">
-                            <div class="text-center">
-                                <img src="{% static 'img/soccerates-error.png' %}" class="img-fluid" alt="Soccerates Error Image"/>
-                            </div>
+                            <div class="mb-2">
+                                <div class="text-center">
+                                    <img src="{% static 'img/soccerates-error.png' %}" class="img-fluid" alt="Soccerates Error Image"/>
+                                </div>
 
-                            <p class="mt-2">You've currently made no predictions.</p>
-                        </div>
+                                {% if user == request.user %}
+                                    <p class="mt-2">You've currently made no predictions.</p>
+                                {% else %}
+                                    <p class="mt-2">{{ user.username }} currently has no predictions which you can view.</p>
+                                {% endif %}
+                            </div>
                     {% endif %}
                 </div>
             </div>
