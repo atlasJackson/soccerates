@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q, F, When, Case, Value, Sum
+from django.utils import timezone
 
 import socapp.utils as utils
 
@@ -176,6 +177,13 @@ class Fixture(models.Model):
             raise ValidationError("Invalid group name supplied")
         return Fixture.objects.select_related('team1', 'team2') \
             .filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
+    
+    # Gets all fixtures for the current day, or None if there are none
+    @staticmethod
+    def todays_fixtures():
+        current_month, current_day = timezone.now().month, timezone.now().day   
+        fixtures = Fixture.objects.select_related('team1', 'team2').filter(match_date__month=current_month, match_date__day=current_day)
+        return fixtures or None
 
 
     #################################
