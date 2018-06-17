@@ -62,9 +62,17 @@
                     <td colspan="12">No leaderboards found.</td>
             {% else %}
                 {% if private %}
-                    <td colspan="12">You're currently not a member of any private leaderboards.</td>
+                    {% if not_user %}
+                        <td colspan="12">No private leaderboards to display.</td>
+                    {% else %}
+                        <td colspan="12">You're currently not a member of any private leaderboards.</td>
+                    {% endif %} 
                 {% else %}
-                    <td colspan="12">You're currently not a member of any public leaderboards.</td>
+                    {% if not_user %}
+                        <td colspan="12">No public leaderboards to display.</td>
+                    {% else %}
+                        <td colspan="12">You're currently not a member of any public leaderboards.</td>
+                    {% endif %} 
                 {% endif %}
             {% endif %}
             </tr>               
