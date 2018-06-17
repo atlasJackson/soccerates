@@ -467,6 +467,11 @@ footer hr {
     width:70%;
 }
 
+.board-name-cell a {
+    color: #000;
+    text-decoration: none;
+}
+
 /* Group Points cell */
 .board-data-cell {
     width:15%;

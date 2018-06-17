@@ -12,7 +12,7 @@
         <!-- Profile Banner  -->
         <div class="profile row mb-5">
             <div class="col-12 my-5 text-center">
-                <a href="{% url 'profile'  request.user.username %}">
+                <a href="{% url 'profile' %}">
                     <img src="{% static 'img/soccerates-profile.png' %}" class="img-fluid" alt="Profile"/>
                 </a>
             </div>
@@ -61,7 +61,7 @@
                     </div>
                     <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
                     <div class="profile-form">
-                        <form id='profile-image-form' method="POST" action="{% url 'profile' request.user.username %}" enctype="multipart/form-data" hidden>
+                        <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
                             {% csrf_token %}
                             {{ profile_form.picture|add_id:"picture-upload" }}
                         </form>

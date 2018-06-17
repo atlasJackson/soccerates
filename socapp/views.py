@@ -70,12 +70,15 @@ def world_cup_schedule(request):
 
 
 @login_required
-def user_profile(request, username):
+def user_profile(request, username=None):
 
     try:
         user = get_user_model().objects.get(username=username)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        if username is None:
+            user = request.user
+        else:
+            return HttpResponseRedirect(reverse("index"))
 
     print(user)
 

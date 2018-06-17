@@ -75,12 +75,14 @@
                             {% endif %}
                                 <td class="board-data-cell">{{ forloop.counter }}</td>
                                 <td class="board-name-cell">
-                                    {% if member.profile.picture %}
-                                        <img src="{{ MEDIA_URL }}{{ member.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
-                                    {% else %}
-                                        <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded mr-3" height="25" width="25" alt="Profile"/>
-                                    {% endif %}
-                                    <strong>{{ member.username }}</strong>
+                                    <a href="{% url 'other_user_profile' member.username %}">
+                                        {% if member.profile.picture %}
+                                            <img src="{{ MEDIA_URL }}{{ member.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
+                                        {% else %}
+                                            <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded mr-3" height="25" width="25" alt="Profile"/>
+                                        {% endif %}
+                                        <strong>{{ member.username }}</strong>
+                                    </a>
                                 </td>
                                 <td class="board-data-cell">{{ member.profile.points }}</td>
                             </tr>
