@@ -94,3 +94,10 @@ def get_result(answer):
 @register.filter(name="get_match_date")
 def get_match_date(answer):
     return "Fixture will be played on {}".format(answer.fixture.match_date)
+
+@register.filter(name="split_users")
+def split_users(users):
+    if len(users) <= 5:
+        return ', '.join([str(u) for u in users])
+    else:
+        return "{} users".format(len(users))

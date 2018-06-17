@@ -398,8 +398,13 @@ def global_leaderboard(request):
         'total_points': total_points,
         'average_points': average_points,
         'percent_above_average': percent_above_average,
-        'global_leaderboard': global_leaderboard
+        'global_leaderboard': global_leaderboard,
     }
+
+    daily_user_stats = utils.user_daily_performance()
+    if daily_user_stats is not None:
+        context['best_users'] = daily_user_stats['best_users']
+        context['best_points'] = daily_user_stats['best_points']
 
     return render(request, "show_leaderboard.html", context)
 

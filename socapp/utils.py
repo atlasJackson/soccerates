@@ -93,6 +93,34 @@ def get_fixtures_with_no_prediction(user, stage=None):
         fixtures = Fixture.objects.exclude(pk__in=user_predictions)
     return fixtures
 
+# Daily movement stats for a leaderboard. If no leaderboard is provided, assumes global leaderboard
+def user_daily_performance(leaderboard=None):
+    from socapp.models import Fixture, Answer
+    user_set = leaderboard.users.all() if leaderboard is not None else get_user_model().objects.all()
+    fixtures = Fixture.todays_fixtures().filter(status=Fixture.MATCH_STATUS_PLAYED)
+    if fixtures.exists():
+        daily_points = Answer.objects.select_related('fixture', 'user').filter(user__in=user_set, fixture__in=fixtures) \
+            .values_list('user').annotate(pts=Sum('points'))
+        
+        min_pts, max_pts = min(daily_points[1]), max(daily_points[1])
+        if max_pts == 0: return None
+
+        best_users = []
+        worst_users = []
+
+        for user, points in daily_points:
+            if points == max_pts: best_users.append(get_user_model().objects.get(pk=user))
+            if points == min_pts: worst_users.append(get_user_model().objects.get(pk=user))
+        
+        return {
+            'best_users': best_users, 
+            'worst_users': worst_users, 
+            'best_points': max_pts, 
+            'worst_points': min_pts
+        }
+    return None
+    
+
 ######
 # Methods for updating the two associated Team model instances whenever a Fixture is updated with a result
 

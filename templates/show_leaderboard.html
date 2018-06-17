@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load socapp_filters %}
 
 {% block title_block %}
     {% if global_leaderboard %}
@@ -45,6 +46,10 @@
                         </li>
                         <li>That's an average of <strong>{{ average_points|floatformat:2 }}</strong> points per user.</li>
                         <li><strong>{{ percent_above_average|floatformat:1 }}%</strong> of users are equal to or above that average score.</li>
+                        
+                        {% if best_users %}
+                            <li>Today's best performer(s): <strong>{{ best_users|split_users }}</strong> with {{ best_points }} points</li>
+                        {% endif %}
                     </ul>
                 </div>
                 <hr />
