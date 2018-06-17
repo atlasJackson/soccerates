@@ -30,8 +30,8 @@
                         </div>
 
                         <div class="col-5 col-md-4 header-auth">
-                            {% if user.is_authenticated %}
-                                {% if user.profile.picture %}
+                            {% if request.user.is_authenticated %}
+                                {% if request.user.profile.picture %}
                                     <img src="{{ MEDIA_URL }}{{ request.user.profile.picture }}" class="rounded" height="20" width="20" alt="Profile" />
                                 {% else %}
                                     <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded" height="20" width="20" alt="Profile"/>
