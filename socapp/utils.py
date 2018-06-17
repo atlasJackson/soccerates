@@ -102,22 +102,25 @@ def user_daily_performance(leaderboard=None):
         daily_points = Answer.objects.select_related('fixture', 'user').filter(user__in=user_set, fixture__in=fixtures) \
             .values_list('user').annotate(pts=Sum('points'))
         
-        min_pts, max_pts = min(daily_points[1]), max(daily_points[1])
-        if max_pts == 0: return None
+        # If there are no predictions for any of these games, return None
+        if len(daily_points) == 0:
+            return None
+        else:
+            min_pts, max_pts = min(daily_points[1]), max(daily_points[1])
+            if max_pts == 0: return None
+            best_users = []
+            worst_users = []
 
-        best_users = []
-        worst_users = []
-
-        for user, points in daily_points:
-            if points == max_pts: best_users.append(get_user_model().objects.get(pk=user))
-            if points == min_pts: worst_users.append(get_user_model().objects.get(pk=user))
-        
-        return {
-            'best_users': best_users, 
-            'worst_users': worst_users, 
-            'best_points': max_pts, 
-            'worst_points': min_pts
-        }
+            for user, points in daily_points:
+                if points == max_pts: best_users.append(get_user_model().objects.get(pk=user))
+                if points == min_pts: worst_users.append(get_user_model().objects.get(pk=user))
+            
+            return {
+                'best_users': best_users, 
+                'worst_users': worst_users, 
+                'best_points': max_pts, 
+                'worst_points': min_pts
+            }
     return None
     
 
