@@ -70,8 +70,23 @@ def world_cup_schedule(request):
 
 
 @login_required
-def user_profile(request):
-    answers = request.user.profile.get_predictions()
+def user_profile(request, username):
+
+    try:
+        user = get_user_model().objects.get(username=username)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+
+    print(user)
+
+    answers = user.profile.get_predictions()
+    # Filter out fixtures not yet played if viewing someone else's profile.
+    if user.username != request.user.username:
+        print ("Hello")
+        answers.exclude(points_added=True)
+        print ("Goodbye!")
+    answers.exclude(points_added=False)
+    print (answers)
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
@@ -84,13 +99,14 @@ def user_profile(request):
     except EmptyPage:
         answers_subset = paginator.page(paginator.num_pages)
 
-    ranking = utils.get_user_ranking(request.user)
+    ranking = utils.get_user_ranking(user)
     usercount = get_user_model().objects.count()
-    points_percentage = utils.points_per_fixture(request.user)
-    public_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=False)
-    private_lb = Leaderboard.objects.filter(users=request.user.pk, is_private=True)
+    points_percentage = utils.points_per_fixture(user)
+    public_lb = Leaderboard.objects.filter(users=user.pk, is_private=False)
+    private_lb = Leaderboard.objects.filter(users=user.pk, is_private=True)
 
     context = {
+        'user': user,
         'answers': answers_subset,
         'ranking': ranking,
         'usercount': usercount,

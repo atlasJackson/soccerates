@@ -12,7 +12,7 @@
         <!-- Profile Banner  -->
         <div class="profile row mb-5">
             <div class="col-12 my-5 text-center">
-                <a href="{% url 'profile' %}">
+                <a href="{% url 'profile'  request.user.username %}">
                     <img src="{% static 'img/soccerates-profile.png' %}" class="img-fluid" alt="Profile"/>
                 </a>
             </div>
@@ -35,30 +35,46 @@
             
             <div class="col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
                 <ul class="">
-                    <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
-                    <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                    <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
-                    <li>Click on your profile picture to change it.</li>
+                    {% if user.username == request.user.username %}
+                        <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
+                        <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                        <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                        <li>Click on your profile picture to change it.</li>
+                    {% else %}
+                        <li>{{ user.username }} currently has <strong>{{ user.profile.points }} points.</strong></li>
+                        <li>{{ user.username }} is currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                        <li>{{ user.username }} has scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                    {% endif %}
                 </ul>
             </div>   
             
             <!-- User profile image. On clicking, the user can change their display picture. -->
             <div class="col-5 col-md-3 col-lg-2">
                 <!-- Display the profile picture -->
-                <div class="user-profile">
-                    {% if user.profile.picture %}
-                        <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
-                    {% else %}
-                        <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
-                    {% endif %}
-                </div>
-                <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
-                <div class="profile-form">
-                    <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
-                        {% csrf_token %}
-                        {{ profile_form.picture|add_id:"picture-upload" }}
-                    </form>
-                </div>
+                {% if user == request.user %}
+                    <div class="user-profile">
+                        {% if user.profile.picture %}
+                            <img src="{{ MEDIA_URL }}{{ request.user.profile.picture }}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                        {% else %}
+                            <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                        {% endif %}
+                    </div>
+                    <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
+                    <div class="profile-form">
+                        <form id='profile-image-form' method="POST" action="{% url 'profile' request.user.username %}" enctype="multipart/form-data" hidden>
+                            {% csrf_token %}
+                            {{ profile_form.picture|add_id:"picture-upload" }}
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="user-profile">
+                        {% if user.profile.picture %}
+                            <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-page-image rounded img-fluid" alt="Profile"/>
+                        {% else %}
+                            <img src="{% static 'img/soccerates-blank-profile.png' %}" class="profile-page-image rounded img-fluid" alt="Profile"/>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -75,8 +91,13 @@
                     </div>
                     
                     <div class="card-body">
-                        <p>Your predictions are given below.</p>
-                        <p>To add to or change your predictions, visit <a href="{% url 'answer_form' %}">here</a>.</p>
+                        {% if user.username == request.user.username %}
+                            <p>Your predictions are given below.</p>
+                            <p>To add to or change your predictions, visit <a href="{% url 'answer_form' %}">here</a>.</p>
+                        {% else %}
+                            <p>{{ user.username }}'s predictions are given below.</p>
+                            <p>To add to or change your own predictions, visit <a href="{% url 'answer_form' %}">here</a>.</p>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -177,8 +198,13 @@
                     </div>
 
                     <div class="card-body">
-                        <p>The leaderboards you are currently subscribed to are given below.</p>
+                        {% if user.username == request.user.username %}
+                            <p>The leaderboards you are currently subscribed to are given below.</p>
+                        {% else %}
+                            <p>The leaderboards {{ user.username }} is currently subscribed to are given below.</p>
+                        {% endif %}
                         <p>To create or join leaderboards, visit the leaderboards page <a href="{% url 'leaderboards' %}">here</a>.</p>
+                        
                         <!-- Link to Global Leaderboard -->
                         <div class="col-12 text-center">
                             <a class="col-10 offset-1 btn btn-outline-secondary btn btn-block text-uppercase mb-1" href="{% url 'global_leaderboard' %}">Gaia Leaderboard</a>

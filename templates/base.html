@@ -32,11 +32,11 @@
                         <div class="col-5 col-md-4 header-auth">
                             {% if user.is_authenticated %}
                                 {% if user.profile.picture %}
-                                    <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="rounded" height="20" width="20" alt="Profile" />
+                                    <img src="{{ MEDIA_URL }}{{ request.user.profile.picture }}" class="rounded" height="20" width="20" alt="Profile" />
                                 {% else %}
                                     <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded" height="20" width="20" alt="Profile"/>
                                 {% endif %}
-                                <a href="{% url 'profile' %}">{{ request.user.username }}</a> | 
+                                <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a> | 
                                 <a href="{% url 'logout' %}">Logout</a>
                             {% else %}
                                 <a href="{% url 'login' %}">Login</a> |
@@ -52,7 +52,7 @@
                 <div class="container header-navs pl-0">
                     <nav>
                         <a href="{% url 'index' %}">Home</a>
-                        <a href="{% url 'profile' %}">Profile</a>
+                        <a href="{% url 'profile' request.user.username %}">Profile</a>
                         <a href="{% url 'answer_form' %}">Score-Predictions</a>
                         
                         <a href="{% url 'wc_schedule' %}">World Cup</a>
@@ -90,7 +90,7 @@
                         <h6 class="text-uppercase font-weight-bold">User Links</h6>
                         <hr />
 
-                        <a href="{% url 'profile' %}">Profile</a><br />
+                        <a href="{% url 'profile' request.user.username %}">Profile</a><br />
                         <a href="{% url 'answer_form' %}">Submit Predictions</a><br />
                         <a href="{% url 'leaderboards' %}">Leaderboards</a>
                     </div>
