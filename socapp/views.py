@@ -387,10 +387,10 @@ def show_leaderboard(request, leaderboard):
             'percent_above_average': percent_above_average,
         }
 
-        daily_user_stats = utils.user_daily_performance(leaderboard)
-        if daily_user_stats is not None:
-            context_dict['best_users'] = daily_user_stats['best_users']
-            context_dict['best_points'] = daily_user_stats['best_points']
+        #daily_user_stats = utils.user_daily_performance(leaderboard)
+        #if daily_user_stats is not None:
+        #    context_dict['best_users'] = daily_user_stats['best_users']
+        #    context_dict['best_points'] = daily_user_stats['best_points']
 
     except Leaderboard.DoesNotExist:
         # We get here if we couldn't find the specified game
