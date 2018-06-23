@@ -118,56 +118,114 @@
                 <div>
                     <h4 class="card-header bg-dark text-white text-center text-uppercase mb-3">Current Standings</h4>
 
-                    <div>
-                        <!-- Nav tabs for each group -->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-
-                            <li class="nav-item text-uppercase">
-                            <a class="nav-link disabled" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="true">
-                                Group:
-                            </a>
-                        </li>
-
-                            {% for group,_ in fixtures.items %}
-                                {% if forloop.first %} 
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="true">
-                                            {{ group }}
-                                        </a>
-                                    </li>
-                                {% else %}
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="false">
-                                            {{ group }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-
+                    <div class="mb-3">
+                        <ul class="nav nav-tabs nav-fill" id="stageTab" role="tablist">
+                          <li class="nav-item">
+                            <a class="nav-link active" id="group-content-tab" data-toggle="tab" href="#group-content" role="tab" aria-controls="group-content" aria-selected="true"><strong>Group Stage</strong></a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" id="knockout-content-tab" data-toggle="tab" href="#knockout-content" role="tab" aria-controls="knockout-content" aria-selected="false"><strong>Knockout Stage</strong></a>
+                          </li>
                         </ul>
                     </div>
 
-                    <div class="tab-content" id="myTabContent">
-                        {% for group, fixture_list in fixtures.items %}
+                    <div class="tab-content" id="stageTabContent">
+                        <!-- Group Stage Display -->
+                        <div class="tab-pane fade show active" id="group-content" role="tabpanel" aria-labelledby="group-content">
+                            <div>
+                                <!-- Nav tabs for each group -->
+                                <ul class="nav nav-tabs" id="groupTab" role="tablist">
 
-                            <!-- Display management form on the first iteration, and create first group's table -->
-                            {% if forloop.first %}
-                                <div class="tab-pane fade show active" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
-                                    {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
-                                    {% include 'include_fixtures.html' with fixtures=fixture_list short=True %}
+                                    <li class="nav-item text-uppercase">
+                                        <a class="nav-link disabled" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="true">
+                                            Group:
+                                        </a>
+                                    </li>
+
+                                    {% for group,_ in fixtures.items %}
+                                        {% if forloop.first %} 
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="true">
+                                                    {{ group }}
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="group-{{ group }}-tab" data-toggle="tab" href="#group-{{ group }}" role="tab" aria-controls="group-{{ group }}" aria-selected="false">
+                                                    {{ group }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+
+                            <div class="tab-content" id="groupTabContent">
+                                {% for group, fixture_list in fixtures.items %}
+
+                                    {% if forloop.first %}
+                                        <div class="tab-pane fade show active" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
+                                            {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
+                                            {% include 'include_fixtures.html' with fixtures=fixture_list short=True %}
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-pane fade" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
+                                            {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
+                                            {% include 'include_fixtures.html' with fixtures=fixture_list short=True %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <!-- -->
+
+                        <!-- Knockout Stage Display -->
+                        <div class="tab-pane fade" id="knockout-content" role="tabpanel" aria-labelledby="knockout-content">
+                            <div>
+                                <!-- Nav tabs for each group -->
+                                <ul class="nav nav-tabs nav-fill" id="knockoutTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="ro16-tab" data-toggle="tab" href="#ro16">RO16</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="qfinal-tab" data-toggle="tab" href="#qfinal">QF</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="sfinal-tab" data-toggle="tab" href="#sfinal">SF</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tpp-tab" data-toggle="tab" href="#tpp">3PP</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="final-tab" data-toggle="tab" href="#final">F</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-content" id="knockoutTabContent">
+                                <div class="tab-pane fade show active" id="ro16" role="tabpanel" aria-labelledby="ro16-tab">
+                                    Nothing to show.
                                 </div>
-                            {% else %}
-                                <div class="tab-pane fade" id="group-{{ group }}" role="tabpanel" aria-labelledby="group-{{ group }}-tab">
-                                    {% include 'include_groups.html' with group=group fixture_list=fixture_list short=True %}
-                                    {% include 'include_fixtures.html' with fixtures=fixture_list short=True %}
+                                <div class="tab-pane fade" id="qfinal" role="tabpanel" aria-labelledby="qfinal-tab">
+                                    Nothing here either.
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-            
+                                <div class="tab-pane fade" id="sfinal" role="tabpanel" aria-labelledby="sfinal-tab">
+                                    Still nothing.
+                                </div>
+                                <div class="tab-pane fade" id="tpp" role="tabpanel" aria-labelledby="tpp-tab">
+                                    You're wasting your time.
+                                </div>
+                                <div class="tab-pane fade" id="final" role="tabpanel" aria-labelledby="final-tab">
+                                    ...
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                    </div>            
                 </div>
-
             </div>
+
         </div>
     </div>
 {% endblock %} 
