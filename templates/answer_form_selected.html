@@ -25,8 +25,10 @@
             <div class="list-star-bullets m-3">
                 <ul >
                     <li>Use the arrows to increment/decrement the number shown in the box, or use the keyboard to manually enter a number into each box.</li>
+                    {% if stage_is_group %}
                     <li>Use the tabs at the top to display the fixtures for each group.</li>
-                    <li><strong>Clicking submit will submit your entire set of predictions</strong> - there is no need to submit each group's predictions individually.</li>
+                    {% endif %}
+                    <li><strong>Clicking submit will submit your entire set of predictions</strong> - there is no need to submit each prediction individually.</li>
                     <li>The number of points awarded for each prediction is given at the <a href="#top">top of the page</a>.</li>
                     <li><strong>Submission for a fixture will be disabled 15 minutes prior to kick-off.</strong></li>
                 </ul>
