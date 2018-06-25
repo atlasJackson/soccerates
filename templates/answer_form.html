@@ -52,28 +52,28 @@
                 <!-- Button hyperlinks to generate the relevant form. -->
                 <div class="btn-group d-none d-md-flex justify-content-around text-center mb-5">
                     <div class="btn-group-vertical col-4">
-                        <a href="{% url 'profile' %}" class="create-boards btn btn-danger btn-lg mb-3" type="button" href="{% url 'profile' %}">
+                        <a href="{% url 'answer_form_selected' 'group_stages' %}" class="create-boards btn btn-danger btn-lg mb-3" type="button">
                             Group Stage
                         </a>
-                        <a href="{% url 'profile' %}" class="create-boards btn btn-info btn-lg" type="button">
+                        <a href="{% url 'answer_form_selected' 'semi-finals' %}" class="create-boards btn btn-info btn-lg" type="button">
                             Semi-Finals
                         </a>
                     </div>
 
                     <div class="btn-group-vertical col-4">
-                        <a href="{% url 'profile' %}" class="create-boards btn btn-warning btn-lg mb-3" type="button">
+                        <a href="{% url 'answer_form_selected' 'round_of_16' %}" class="create-boards btn btn-warning btn-lg mb-3" type="button">
                             Round of 16
                         </a>
-                        <a href="{% url 'profile' %}" class="create-boards btn btn-primary btn-lg" type="button">
+                        <a href="{% url 'answer_form_selected' 'third_place_play-off' %}" class="create-boards btn btn-primary btn-lg" type="button">
                             3rd PPO
                         </a>
                     </div>
 
                     <div class="btn-group-vertical col-4">
-                        <a href="{% url 'profile' %}" class="create-boards btn btn-success btn-lg mb-3" type="button">
+                        <a href="{% url 'answer_form_selected' 'quarter-finals' %}" class="create-boards btn btn-success btn-lg mb-3" type="button">
                             Quarter-Finals
                         </a>
-                        <a href="{% url 'profile' %}" class="create-boards btn btn-dark btn-lg" type="button">
+                        <a href="{% url 'answer_form_selected' 'final' %}" class="create-boards btn btn-dark btn-lg" type="button">
                             Final
                         </a>
                     </div>
@@ -81,27 +81,27 @@
 
                 <div class="btn-group-vertical col-10 offset-1 d-flex d-md-none justify-content-around text-center mb-5">
 
-                    <a href="{% url 'profile' %}" class="create-boards btn btn-danger btn-lg mb-3" type="button" href="{% url 'profile' %}">
+                    <a href="{% url 'answer_form_selected' 'group_stages' %}" class="create-boards btn btn-danger btn-lg mb-3" type="button">
                         Group Stage
                     </a>
 
-                    <a href="{% url 'profile' %}" class="create-boards btn btn-warning btn-lg mb-3" type="button">
+                    <a href="{% url 'answer_form_selected' 'round_of_16' %}" class="create-boards btn btn-warning btn-lg mb-3" type="button">
                         Round of 16
                     </a>
 
-                    <a href="{% url 'profile' %}" class="create-boards btn btn-success btn-lg mb-3" type="button">
+                    <a href="{% url 'answer_form_selected' 'quarter-finals' %}" class="create-boards btn btn-success btn-lg mb-3" type="button">
                         Quarter-Finals
                     </a>
 
-                    <a href="{% url 'profile' %}" class="create-boards btn btn-info btn-lg mb-3" type="button">
+                    <a href="{% url 'answer_form_selected' 'semi-finals' %}" class="create-boards btn btn-info btn-lg mb-3" type="button">
                         Semi-Finals
                     </a>
 
-                    <a href="{% url 'profile' %}" class="create-boards btn btn-primary btn-lg mb-3" type="button">
+                    <a href="{% url 'answer_form_selected' 'third_place_play-off' %}" class="create-boards btn btn-primary btn-lg mb-3" type="button">
                         3rd PPO
                     </a>
 
-                    <a href="{% url 'profile' %}" class="create-boards btn btn-dark btn-lg mb-3" type="button">
+                    <a href="{% url 'answer_form_selected' 'final' %}" class="create-boards btn btn-dark btn-lg mb-3" type="button">
                         Final
                     </a>
                 </div>

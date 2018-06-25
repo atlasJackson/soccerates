@@ -14,6 +14,7 @@ urlpatterns = [
     path('register', views.RegistrationView.as_view(), name='register'),
 
     path('answer_form/', views.answer_form, name='answer_form'),
+    path('answer_form/<slug:stage>/', views.answer_form_selected, name='answer_form_selected'),
     path('worldcup/schedule/', views.world_cup_schedule, name='wc_schedule'),
 
     path('global_leaderboard/', views.global_leaderboard, name='global_leaderboard'),

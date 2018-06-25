@@ -15,6 +15,11 @@
         <div class="mb-4" id="form-instructions">
             <h3 class="text-center font-weight-bold">Score-Form for {{request.user.username}}</h3>
             <h5 class="text-center font-weight-light">Enter your predictions below.</h5>
+            <div class="text-center mt-3">
+                <a href="{% url 'answer_form'%}" class="create-boards btn btn-dark btn-lg mb-3" type="button" href="{% url 'profile' %}">
+                    Return to Form Hub
+                </a>
+            </div>
             <hr />
 
             <div class="list-star-bullets m-3">
@@ -30,7 +35,8 @@
 
         </div>
 
-        <!-- Form for predictions. -->
+        {% if stage_is_group %}
+        <!-- Form for group predictions. -->
         <form class="mb-5" id="answer_form" method="post" action="{% url 'answer_form' %}">
 
             {% csrf_token %}
@@ -145,6 +151,7 @@
                 {% endfor %}
             </div>
 
+
             <div class="submit-form">
                 <input class="btn btn-primary col-md-4 offset-md-4" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
                 <span id="form-disabled-error" class="mt-2 text-danger d-none text-center">
@@ -153,6 +160,14 @@
             </div>
 
         </form>
+        <!-- End of group predictions. -->
+
+        {% else %}
+        <!-- Form for knockout predictions. -->
+                Hello there!
+        <!-- End of knockout predictions. -->
+
+        {% endif %}
 
     </div>
 </div>
