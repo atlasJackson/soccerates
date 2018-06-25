@@ -142,7 +142,7 @@ def answer_form(request):
 def answer_form_selected(request, stage):
 
     # Check if the group stage has been selected to handle the required group-specific logic in this view, and the template.
-    stage_is_group = (stage == "group_stages")
+    stage_is_group = (stage == "group_stage")
 
     context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 'stage_is_group': stage_is_group}
 
