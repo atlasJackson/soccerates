@@ -13,6 +13,8 @@
 
         <!-- Predictions details and information. -->
         <div class="mb-4" id="form-instructions">
+            <h2 class="text-center font-weight-bold">{{ stage|display_stage_heading }}</h2>
+            <hr />
             <h3 class="text-center font-weight-bold">Score-Form for {{request.user.username}}</h3>
             <h5 class="text-center font-weight-light">Enter your predictions below.</h5>
             <div class="text-center mt-3">
@@ -39,7 +41,7 @@
 
         {% if stage_is_group %}
         <!-- Form for group predictions. -->
-        <form class="mb-5" id="answer_form" method="post" action="{% url 'answer_form' %}">
+        <form class="mb-5" id="answer_form" method="post" action="{% url 'answer_form_selected' stage %}">
 
             {% csrf_token %}
 
@@ -166,7 +168,79 @@
 
         {% else %}
         <!-- Form for knockout predictions. -->
-                Hello there!
+        <!-- Form for group predictions. -->
+        <form class="mb-5" id="answer_form" method="post" action="{% url 'answer_form_selected' stage %}">
+
+            {% csrf_token %}
+
+            <!-- Nav content for each nav tab group -->
+            <div class="">
+                {% for fixture, answer_form in fixtures_and_forms %}
+                    
+                {{ management_form }}
+                <table class="table table-hover text-center">
+                    <tbody>
+
+                        <tr class="prediction-row-date d-none d-sm-table-row">
+                            <td colspan="4">{{ fixture.match_date }}</td>
+                        </tr>
+
+                        <tr class="prediction-row-date d-table-row d-sm-none">
+                            <td colspan="4">{{ fixture.match_date }}</td>
+                        </tr>
+
+
+                        <tr class="" style="height:30px;">
+                            {{ answer_form.fixture }}
+                            
+                            <!-- Team 1 name and flag -->
+                            <td class="predict-name-cell text-right">
+                                <img src="{% static fixture.team1.flag.url %}" class="d-inline d-sm-none flag text-right ml-2" alt="{{fixture.team1.name}}"/>
+                                <small class="d-inline d-sm-none">{{ fixture.team1.country_code }}</small>
+                                <div class="d-none d-sm-inline">{{ fixture.team1.name }}</div>
+                                <img src="{% static fixture.team1.flag.url %}" class="d-none d-sm-inline flag text-right ml-2" alt="{{fixture.team1.name}}"/>
+                            </td>
+                            
+                            <div class="form-group">
+                                {% if fixture|editable %}
+                                    <td class="predict-form-cell">
+                                        {{ answer_form.team1_goals }}
+                                    </td>
+                                    <td class="predict-form-cell">
+                                        {{ answer_form.team2_goals }}
+                                    </td>
+                                {% else %}
+                                    <td class="predict-form-cell">
+                                        {{ answer_form.team1_goals|disable_input }}
+                                    </td>
+                                    <td class="predict-form-cell">
+                                        {{ answer_form.team2_goals|disable_input }}
+                                    </td>                                           
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Team 2 name and flag - switches order depending on screen size -->
+                            <td class="predict-name-cell text-left">
+                                <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>        
+                                <small class="d-inline d-sm-none">{{ fixture.team2.country_code }}</small>
+                                <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                {% endfor %}
+            </div>
+
+            <div class="submit-form">
+                <input class="btn btn-primary col-md-4 offset-md-4" id="predict_scores" type="submit" name="submit" value="Submit Scores" />
+                <span id="form-disabled-error" class="mt-2 text-danger d-none text-center">
+                    <small>You must select a score for both teams in each fixture</small>
+                </span>
+            </div>
+
+        </form>
         <!-- End of knockout predictions. -->
 
         {% endif %}

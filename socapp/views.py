@@ -21,7 +21,7 @@ from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardFor
 from .models import UserProfile, Fixture, Answer, Team, Leaderboard
 from . import utils
 
-import datetime
+import datetime, re
 
 def test(request):
     #return render(request, "test.html", context)
@@ -144,64 +144,84 @@ def answer_form_selected(request, stage):
     # Check if the group stage has been selected to handle the required group-specific logic in this view, and the template.
     stage_is_group = (stage == "group_stage")
 
-    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 'stage_is_group': stage_is_group}
+    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 
+                    'stage_is_group': stage_is_group,
+                    'stage': stage,
+                    }
 
+    # Create as many formsets as there are fixtures whose scores are to be predicted.
+    # Forms for the group stage.
     if stage_is_group:
-        # Create as many formsets as there are fixtures whose scores are to be predicted.
         group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
         AnswerFormSet = formset_factory(AnswerForm, extra=len(group_fixtures), max_num=len(group_fixtures))
-        initial_data = get_initial_data(group_fixtures, request.user)
-        
-        # Check if the request was HTTP POST.
-        if request.method == 'POST':
-            answer_formset = AnswerFormSet(request.POST, initial=[data for data in initial_data])
-            if answer_formset.is_valid():
-                # Get score predictions from corresponding form for each fixture.
-                for answer_form in answer_formset:
+        initial_data = get_initial_data(group_fixtures, request.user)    
+    # Forms for the knockout stage.
+    else:
+        stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
+        print (stage)
+        knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.LAST_16).order_by('match_date')
+        AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
+        initial_data = get_initial_data(knockout_fixtures, request.user)
 
-                    # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
-                    if answer_form.has_changed():
-                        fixt = answer_form.cleaned_data.get('fixture')
+   
+    # Check if the request was HTTP POST.
+    if request.method == 'POST':
+        answer_formset = AnswerFormSet(request.POST, initial=[data for data in initial_data])
+        if answer_formset.is_valid():
+            # Get score predictions from corresponding form for each fixture.
+            for answer_form in answer_formset:
 
-                        # Check if the answer can be edited.
-                        if not can_edit_answer(fixt):
-                            continue
+                # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
+                if answer_form.has_changed():
+                    fixt = answer_form.cleaned_data.get('fixture')
 
-                        # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
-                        if not Answer.objects.filter(user=request.user, fixture=fixt).exists():
+                    # Check if the answer can be edited.
+                    if not can_edit_answer(fixt):
+                        continue
 
-                            Answer.objects.create(
-                                user=request.user, 
-                                fixture=fixt,
-                                team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                                team2_goals=answer_form.cleaned_data.get('team2_goals')
-                            )
+                    # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
+                    if not Answer.objects.filter(user=request.user, fixture=fixt).exists():
 
-                        else:                    
-                            Answer.objects.filter(user=request.user,fixture=fixt) \
-                                .update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                                        team2_goals=answer_form.cleaned_data.get('team2_goals'))
+                        Answer.objects.create(
+                            user=request.user, 
+                            fixture=fixt,
+                            team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                            team2_goals=answer_form.cleaned_data.get('team2_goals')
+                        )
 
-                # Return to the index for now.
-                return HttpResponseRedirect(reverse('profile'))
-            else:
-                # Print problems to the terminal.
-                print(answer_formset.errors)
+                    else:                    
+                        Answer.objects.filter(user=request.user,fixture=fixt) \
+                            .update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                                    team2_goals=answer_form.cleaned_data.get('team2_goals'))
+
+            # Return to the index for now.
+            return HttpResponseRedirect(reverse('profile'))
         else:
+            # Print problems to the terminal.
+            print(answer_formset.errors)
+    
+    else:
             
-            # Check user is logged in, otherwise can't render the formset.
-            if not request.user.is_anonymous:
-                # Not a POST, so all forms will be blank unless the user has already submitted an answer.
-                # If answers exist, populate the form with the existing answers.
+        # Check user is logged in, otherwise can't render the formset.
+        if stage_is_group:
+            # Not a POST, so all forms will be blank unless the user has already submitted an answer.
+            # If answers exist, populate the form with the existing answers.
 
-                zipped_groups = [fixture.team1.group for fixture in group_fixtures]
-                formset = AnswerFormSet(initial=[data for data in initial_data])
-                management_form = formset.management_form
+            zipped_groups = [fixture.team1.group for fixture in group_fixtures]
+            formset = AnswerFormSet(initial=[data for data in initial_data])
+            management_form = formset.management_form
 
-                # With the initial values set within the form, we add the zipped fixtures/forms/groups data structure to the template context. 
-                # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
-                context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
-                context_dict['management_form'] = management_form
+            # With the initial values set within the form, we add the zipped fixtures/forms/groups data structure to the template context. 
+            # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
+            context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
+            context_dict['management_form'] = management_form
+        else:
+
+            formset = AnswerFormSet(initial=[data for data in initial_data])
+            management_form = formset.management_form
+
+            context_dict['fixtures_and_forms'] = zip(knockout_fixtures, formset)
+            context_dict['management_form'] = management_form
 
     return render(request, 'answer_form_selected.html', context_dict)
 

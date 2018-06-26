@@ -1,6 +1,6 @@
 from django import template
 from django.utils import timezone
-import datetime
+import datetime, re
 
 register = template.Library()
 
@@ -8,6 +8,11 @@ register = template.Library()
 @register.filter(name="add_class")
 def add_class(field, css):
     return field.as_widget(attrs={"class": css})
+
+# Adjust the stage string for display.
+@register.filter(name="display_stage_heading")
+def display_stage_heading(stage):
+    return (" ").join(re.findall(r"[A-Za-z0-9\-]+", stage.upper()))
 
 #
 @register.filter(name="disable_input")
