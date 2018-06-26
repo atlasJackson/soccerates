@@ -29,14 +29,26 @@ def test(request):
 
 def index(request):
 
-    fixtures = group_fixtures_dictionary()
+    # Grouops by stage.
+    group_fixtures = group_fixtures_dictionary()
+    ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('team1__group', 'match_date')
+    qf_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('team1__group', 'match_date')
+    sf_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('team1__group', 'match_date')
+    tpp_fixture = Fixture.all_fixtures_by_stage(Fixture.TPP).order_by('team1__group', 'match_date')
+    final_fixture = Fixture.all_fixtures_by_stage(Fixture.FINAL).order_by('team1__group', 'match_date')
+
     upcoming_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
     past_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
     context = {
-        'fixtures': fixtures,
+        'group_fixtures': group_fixtures,
+        'ro16_fixtures' : ro16_fixtures,
+        'qf_fixtures' : qf_fixtures,
+        'sf_fixtures': sf_fixtures,
+        'tpp_fixture' : tpp_fixture,
+        'final_fixture' : final_fixture,
         'upcoming_fixtures' : upcoming_fixtures,
         'past_fixtures': past_fixtures,
     }
@@ -52,8 +64,6 @@ def index(request):
     
     except AttributeError:
         pass
-
-
 
     return render(request, "index.html", context)
 
@@ -159,7 +169,7 @@ def answer_form_selected(request, stage):
     else:
         stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
         print (stage)
-        knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.LAST_16).order_by('match_date')
+        knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
         AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
         initial_data = get_initial_data(knockout_fixtures, request.user)
 

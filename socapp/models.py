@@ -88,16 +88,18 @@ class Fixture(models.Model):
 
     # Constants to determine if the Fixture is a group match, knockout, etc
     GROUP = 1
-    LAST_16 = 2
+    ROUND_OF_16 = 2
     QUARTER_FINALS = 3
     SEMI_FINALS = 4
     FINAL = 5
+    TPP = 6
     STAGE_CHOICES = (
         (GROUP, "Group"),
-        (LAST_16, "Round of 16"),
+        (ROUND_OF_16, "Round of 16"),
         (QUARTER_FINALS, "Quarter Finals"),
         (SEMI_FINALS, "Semi Finals"),
-        (FINAL, "Final")
+        (FINAL, "Final"),
+        (TPP, "Third Place Play-off")
     )
     
     # Specify related names, since there are 2 foreign keys to the same parent model.
