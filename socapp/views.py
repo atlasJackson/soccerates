@@ -167,9 +167,21 @@ def answer_form_selected(request, stage):
         initial_data = get_initial_data(group_fixtures, request.user)    
     # Forms for the knockout stage.
     else:
-        stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
-        print (stage)
-        knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
+        #stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
+        #print (stage)
+        
+        if (stage == "round_of_16"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
+        if (stage == "quarter-finals"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
+        if (stage == "semi-finals"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
+        if (stage == "third_place_play-off"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.TPP)
+        if (stage == "final"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.FINAL)
+
+        context_dict['knockout_fixtures'] = knockout_fixtures
         AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
         initial_data = get_initial_data(knockout_fixtures, request.user)
 
