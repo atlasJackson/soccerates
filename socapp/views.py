@@ -21,7 +21,7 @@ from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardFor
 from .models import UserProfile, Fixture, Answer, Team, Leaderboard
 from . import utils
 
-import datetime
+import datetime, re
 
 def test(request):
     #return render(request, "test.html", context)
@@ -29,14 +29,26 @@ def test(request):
 
 def index(request):
 
-    fixtures = group_fixtures_dictionary()
+    # Grouops by stage.
+    group_fixtures = group_fixtures_dictionary()
+    ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('team1__group', 'match_date')
+    qf_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('team1__group', 'match_date')
+    sf_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('team1__group', 'match_date')
+    tpp_fixture = Fixture.all_fixtures_by_stage(Fixture.TPP).order_by('team1__group', 'match_date')
+    final_fixture = Fixture.all_fixtures_by_stage(Fixture.FINAL).order_by('team1__group', 'match_date')
+
     upcoming_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
     past_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
     context = {
-        'fixtures': fixtures,
+        'group_fixtures': group_fixtures,
+        'ro16_fixtures' : ro16_fixtures,
+        'qf_fixtures' : qf_fixtures,
+        'sf_fixtures': sf_fixtures,
+        'tpp_fixture' : tpp_fixture,
+        'final_fixture' : final_fixture,
         'upcoming_fixtures' : upcoming_fixtures,
         'past_fixtures': past_fixtures,
     }
@@ -52,8 +64,6 @@ def index(request):
     
     except AttributeError:
         pass
-
-
 
     return render(request, "index.html", context)
 
@@ -133,17 +143,49 @@ def user_profile(request, username=None):
 
     return render(request, "user_profile.html", context)
 
-
 @login_required
 def answer_form(request):
+    return render(request, 'answer_form.html', {})
 
-    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"]}
+
+@login_required
+def answer_form_selected(request, stage):
+
+    # Check if the group stage has been selected to handle the required group-specific logic in this view, and the template.
+    stage_is_group = (stage == "group_stage")
+
+    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 
+                    'stage_is_group': stage_is_group,
+                    'stage': stage,
+                    }
 
     # Create as many formsets as there are fixtures whose scores are to be predicted.
-    group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
-    AnswerFormSet = formset_factory(AnswerForm, extra=len(group_fixtures), max_num=len(group_fixtures))
-    initial_data = get_initial_data(group_fixtures, request.user)
-    
+    # Forms for the group stage.
+    if stage_is_group:
+        group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
+        AnswerFormSet = formset_factory(AnswerForm, extra=len(group_fixtures), max_num=len(group_fixtures))
+        initial_data = get_initial_data(group_fixtures, request.user)    
+    # Forms for the knockout stage.
+    else:
+        #stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
+        #print (stage)
+        
+        if (stage == "round_of_16"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
+        if (stage == "quarter-finals"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
+        if (stage == "semi-finals"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
+        if (stage == "third_place_play-off"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.TPP)
+        if (stage == "final"):
+            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.FINAL)
+
+        context_dict['knockout_fixtures'] = knockout_fixtures
+        AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
+        initial_data = get_initial_data(knockout_fixtures, request.user)
+
+   
     # Check if the request was HTTP POST.
     if request.method == 'POST':
         answer_formset = AnswerFormSet(request.POST, initial=[data for data in initial_data])
@@ -179,10 +221,11 @@ def answer_form(request):
         else:
             # Print problems to the terminal.
             print(answer_formset.errors)
+    
     else:
-        
+            
         # Check user is logged in, otherwise can't render the formset.
-        if not request.user.is_anonymous:
+        if stage_is_group:
             # Not a POST, so all forms will be blank unless the user has already submitted an answer.
             # If answers exist, populate the form with the existing answers.
 
@@ -194,8 +237,15 @@ def answer_form(request):
             # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
             context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
             context_dict['management_form'] = management_form
+        else:
 
-    return render(request, 'answer_form.html', context_dict)
+            formset = AnswerFormSet(initial=[data for data in initial_data])
+            management_form = formset.management_form
+
+            context_dict['fixtures_and_forms'] = zip(knockout_fixtures, formset)
+            context_dict['management_form'] = management_form
+
+    return render(request, 'answer_form_selected.html', context_dict)
 
 
 # Determines initial data for an AnswerForm based on the fixtures and user passed in.

@@ -1,0 +1,33 @@
+{% load staticfiles %}
+{% load socapp_filters %}
+
+<table class="table table-striped mb-3 world-cup-group border-bottom">
+
+    <thead class="group-table-header thead-dark"">
+        <tr class="table-head-row">
+            <th >Teams Qualified</th>
+            <th class="text-right">Group</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% if fixtures %}
+            {% for team in fixtures|getDistinctTeams %}
+            <tr>
+                <td>
+                    {% if team.flag %}
+                        <img src="{% static team.flag.url %}" class="flag mr-2" alt="{{ team.name }}"/>
+                    {% endif %}
+                    {{ team.name }}
+                </td>
+                <td class="text-right">{{ team.group }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="2" class="text-center">
+                No teams have qualilfied for this stage of the competition.
+            </td></tr>
+        {% endif %}
+    </tbody>
+
+</table>
