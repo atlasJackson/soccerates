@@ -17,18 +17,7 @@
                 </a>
             </div>
         </div>
-    
-        <!-- Predictions Points Graphic  -->
-        <div class="row points-system mb-5">
-            <div class="col-8 my-3">
-                <img src="{% static 'img/soccerates-points-system.png' %}" class="img-fluid" alt="Points System Graphic"/>
-            </div>
-
-            <div class="col-4 my-3 border-left border-white">
-                <img src="{% static 'img/soccerates-points-system-combinations.png' %}" class="img-fluid" alt="Point Combinations Graphic"/>
-            </div>
-        </div>
-
+        
         {% block main_block %}
          <!-- Main block. -->
         <div class="border-right border-left border-primary mx-0 px-0">
@@ -41,6 +30,9 @@
 
                     <div class="list-star-bullets m-3">
                         <ul >
+                            <li>
+                                Points are awarded based on the accuracy of your prediction, with a maximum of 5 points awarded for a perfect match. <strong>You can find a summary of the points system in the graphic at the bottom of the page.</strong>
+                            </li>
                             <li>Click on the buttons below to open the answer form for the relevant stage.</li>
                             <li>The number of points awarded for each prediction is given at the <a href="#top">top of the page</a>.</li>
                             <li><strong>Submission for a fixture will be disabled 15 minutes prior to kick-off.</strong></li>
@@ -107,13 +99,26 @@
                 </div>
                 <!-- End of buttons -->
 
-                <div class="col-10 offset-1 text-center font-weight-light mb-5">
+                <div class="col-10 offset-1 text-center font-weight-light mb-3">
                     Click a button to open the form for your selected stage.
                 </div>
 
             </div>
         </div>
         {% endblock %}
+
+        <!-- Predictions Points Graphic  -->
+        <hr/>
+        <div class="row points-system mb-3">
+            <div class="col-8 my-3">
+                <img src="{% static 'img/soccerates-points-system.png' %}" class="img-fluid" alt="Points System Graphic"/>
+            </div>
+
+            <div class="col-4 my-3 border-left border-white">
+                <img src="{% static 'img/soccerates-points-system-combinations.png' %}" class="img-fluid" alt="Point Combinations Graphic"/>
+            </div>
+        </div>
+        <hr/>
 
     </div>
 {% endblock %}

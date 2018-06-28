@@ -15,7 +15,7 @@
         </div>
 
         <!-- Opening Conotent -->
-        <div class="row mb-3">
+        <div class="row pb-2 mb-3 border-bottom border-info">
             <div class="col-12 col-lg-8 mb-3">
                 <div class="col-md-10 offset-md-1">
                     <h2 class="text-center my-3">
@@ -35,6 +35,14 @@
                     {% endif %}
                     
                     {% comment %}<a href="{% url 'test' %}">Test page.</a>{% endcomment %}
+                </div>
+                <!-- Button to request Predictions page -->
+                <div class="row mt-5 mb-3">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'answer_form' %}" class="col-10 offset-1 btn btn-primary btn btn-block text-uppercase mb-5">
+                        Enter Predictions
+                    </a>
+                {% endif %}
                 </div>
             </div>
             
@@ -83,14 +91,6 @@
             </div>
         </div>
 
-        <!-- Button to request Predictions page -->
-        <div class="row mb-5 border-bottom border-info">
-        {% if user.is_authenticated %}
-            <a href="{% url 'answer_form' %}" class="col-10 offset-1 btn btn-primary btn btn-block text-uppercase mb-5">
-                Enter Predictions
-            </a>
-        {% endif %}
-        </div>
 
         <div class="row">
             

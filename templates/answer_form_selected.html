@@ -9,23 +9,28 @@
 {% block main_block %}
 <!-- Main block. -->
 <div class="border-right border-left border-primary mx-0 px-0">
-    <div class="scoreline-form col-12 col-lg-8 offset-lg-2">
+            
+    <div class="scoreline-form col-12 col-lg-10 offset-lg-1">
 
         <!-- Predictions details and information. -->
         <div class="mb-4" id="form-instructions">
-            <h2 class="text-center text-white bg-dark font-weight-bold py-3">{{ stage|display_stage_heading }}</h2>
+            <h2 class="text-center text-white bg-dark font-weight-bold py-3 mb-3">{{ stage|display_stage_heading }}</h2>
             <hr />
+            
             <h3 class="text-center font-weight-bold">Score-Form for {{request.user.username}}</h3>
             <h5 class="text-center font-weight-light">Enter your predictions below.</h5>
+
             <div class="text-center mt-3">
-                <a href="{% url 'answer_form'%}" class="create-boards btn btn-dark btn-lg mb-3" type="button" href="{% url 'profile' %}">
+                <a href="{% url 'answer_form'%}" class="create-boards btn btn-dark btn-lg" type="button" href="{% url 'profile' %}">
                     Return to Form Hub
                 </a>
             </div>
             <hr />
-
             <div class="list-star-bullets m-3">
                 <ul >
+                    <li>
+                        Points are awarded based on the accuracy of your prediction, with a maximum of 5 points awarded for a perfect match. <strong>You can find a summary of the points system in the graphic at the bottom of the page.</strong>
+                    </li>
                     <li>Use the arrows to increment/decrement the number shown in the box, or use the keyboard to manually enter a number into each box.</li>
                     {% if stage_is_group %}
                     <li>Use the tabs at the top to display the fixtures for each group.</li>
