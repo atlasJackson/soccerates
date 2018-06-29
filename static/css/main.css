@@ -266,6 +266,10 @@ footer hr {
   margin: 10px 0px;
 }
 
+.list-initial-bullets {
+  list-style-image: initial;
+}
+
 .icon {
   max-width: 35px;
   max-height: 35px;

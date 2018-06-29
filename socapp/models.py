@@ -115,8 +115,11 @@ class Fixture(models.Model):
     team2_goals = models.PositiveIntegerField(null=True, blank=True)
 
     # For knockout rounds. Subject to change
+    can_be_over_90 = models.BooleanField(default=False)
     has_extra_time = models.BooleanField(default=False)
     has_penalties = models.BooleanField(default=False)
+    team1_penalties = models.PositiveIntegerField(null=True, blank=True)
+    team2_penalties = models.PositiveIntegerField(null=True, blank=True)
 
     #################################
     ### HELPER METHODS
