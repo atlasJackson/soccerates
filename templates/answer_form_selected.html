@@ -186,8 +186,7 @@
         <!-- End of group predictions. -->
 
         {% else %}
-            <!-- Form for knockout predictions. -->
-            <!-- Form for group predictions. -->
+        <!-- Form for knockout predictions. -->
             {% if knockout_fixtures %}
             <form class="mb-5" id="answer_form" method="post" action="{% url 'answer_form_selected' stage %}">
 
@@ -255,7 +254,7 @@
                                 </td>
                                 <td colspan="2" class="text-left">
                                     {% if fixture|editable %}
-                                        {{ answer_form.has_extra_time }}
+                                        {{ answer_form.has_extra_time|add_class:"has_extra_time" }}
                                     {% else %}
                                         {{ answer_form.has_extra_time|disable_input }}
                                     {% endif %}
@@ -268,7 +267,7 @@
                                 </td>
                                 <td colspan="2" class="text-left">
                                     {% if fixture|editable %}
-                                        {{ answer_form.has_penalties }}
+                                        {{ answer_form.has_penalties|add_class:"has_penalties" }}
                                     {% else %}
                                         {{ answer_form.has_penalties|disable_input }}
                                     {% endif %}                                    
@@ -290,13 +289,12 @@
                 </div>
 
             </form>
-            <!-- End of knockout predictions. -->
             {% else %}
                 <div class="alert alert-info text-center m-5">
                     There are no fixtures for this stage of the competition.
                 </div>
             {% endif %}
-
+        <!-- End of knockout predictions. -->
         {% endif %}
 
     </div>
