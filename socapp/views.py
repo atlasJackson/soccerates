@@ -90,8 +90,6 @@ def user_profile(request, username=None):
         else:
             return HttpResponseRedirect(reverse("index"))
 
-    print(user)
-
     answers = user.profile.get_predictions()
     group_answers = answers.filter(fixture__stage=Fixture.GROUP)
     knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
