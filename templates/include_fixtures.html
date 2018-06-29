@@ -30,7 +30,8 @@
                     <!-- Team 1 Name column -->
                     {% if not short %}
                     <td class="fixture-team-name-cell text-right pr-0">
-                        {{fixture.team1.name}}
+                        <small class="d-inline d-sm-none">{{ fixture.team1.country_code }}</small>
+                        <div class="d-none d-sm-inline">{{ fixture.team1.name }}</div>
                     </td>
                     {% endif %}
 
@@ -74,7 +75,8 @@
                     <td class="fixture-stage-cell-short text-right">                    
                     {% else %}
                     <td class="fixture-team-name-cell col-lg-1">
-                        {{ fixture.team2.name }}
+                        <small class="d-inline d-sm-none">{{ fixture.team2.country_code }}</small>
+                        <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
                     </td>
                     <td class="fixture-stage-cell text-right">
                     {% endif %}

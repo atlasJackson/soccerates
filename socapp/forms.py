@@ -66,9 +66,14 @@ class AnswerForm(forms.ModelForm):
         attrs = {'class': 'form-control form-control-sm goal-input-widget'}), 
         required=False)
 
+    has_extra_time = forms.BooleanField(widget=forms.CheckboxInput(), initial=False, required=False, \
+                                    label="Extra time?")
+    has_penalties = forms.BooleanField(widget=forms.CheckboxInput(), initial=False, required=False, \
+                                    label="Penalties?")
+
     class Meta:
         model = Answer
-        fields = ('fixture', 'team1_goals', 'team2_goals')
+        fields = ('fixture', 'team1_goals', 'team2_goals', 'has_extra_time', 'has_penalties')
 
 
 class LeaderboardForm(forms.ModelForm):

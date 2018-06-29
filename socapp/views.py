@@ -93,20 +93,23 @@ def user_profile(request, username=None):
     print(user)
 
     answers = user.profile.get_predictions()
+    group_answers = answers.filter(fixture__stage=Fixture.GROUP)
+    knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
-        answers = [a for a in answers if a.points_added]
+        group_answers = [a for a in group_answers if a.points_added]
+        knockout_answewrs = [a for a in knockout_answers if a.points_added]
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(answers, 12)
+    paginator = Paginator(group_answers, 12)
     try:
-        answers_subset = paginator.page(page)
+        group_answers_subset = paginator.page(page)
     except PageNotAnInteger:
-        answers_subset = paginator.page(1)
+        group_answers_subset = paginator.page(1)
     except EmptyPage:
-        answers_subset = paginator.page(paginator.num_pages)
+        group_answers_subset = paginator.page(paginator.num_pages)
 
     ranking = utils.get_user_ranking(user)
     usercount = get_user_model().objects.count()
@@ -116,7 +119,8 @@ def user_profile(request, username=None):
 
     context = {
         'user': user,
-        'answers': answers_subset,
+        'group_answers': group_answers_subset,
+        'knockout_answers': knockout_answers,
         'ranking': ranking,
         'usercount': usercount,
         'public_lb': public_lb,
@@ -183,7 +187,7 @@ def answer_form_selected(request, stage):
 
         context_dict['knockout_fixtures'] = knockout_fixtures
         AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
-        initial_data = get_initial_data(knockout_fixtures, request.user)
+        initial_data = get_initial_data(knockout_fixtures, request.user, True) # Boolean argument adds ET/Penalties to initial data.
 
    
     # Check if the request was HTTP POST.
@@ -208,13 +212,17 @@ def answer_form_selected(request, stage):
                             user=request.user, 
                             fixture=fixt,
                             team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                            team2_goals=answer_form.cleaned_data.get('team2_goals')
+                            team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                            has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                            has_penalties=answer_form.cleaned_data.get('has_penalties')
                         )
 
                     else:                    
                         Answer.objects.filter(user=request.user,fixture=fixt) \
                             .update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                                    team2_goals=answer_form.cleaned_data.get('team2_goals'))
+                                    team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                                    has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                                    has_penalties=answer_form.cleaned_data.get('has_penalties'))
 
             # Return to the index for now.
             return HttpResponseRedirect(reverse('profile'))
@@ -250,7 +258,7 @@ def answer_form_selected(request, stage):
 
 # Determines initial data for an AnswerForm based on the fixtures and user passed in.
 # Returns list comprised of dictionaries with the initial data.
-def get_initial_data(fixtures, user):
+def get_initial_data(fixtures, user, knockout=False):
     initial_list = []
     for fixture in fixtures:
         this_initial = {}
@@ -260,6 +268,11 @@ def get_initial_data(fixtures, user):
 
             this_initial['team1_goals'] = ans.team1_goals
             this_initial['team2_goals'] = ans.team2_goals
+
+            if knockout:
+                this_initial['has_extra_time'] = ans.has_extra_time
+                this_initial['has_penalties'] = ans.has_penalties
+
         except Answer.DoesNotExist:
             continue
         finally:
@@ -471,10 +484,10 @@ def global_leaderboard(request):
         'global_leaderboard': global_leaderboard,
     }
 
-    daily_user_stats = utils.user_daily_performance()
-    if daily_user_stats is not None:
-        context['best_users'] = daily_user_stats['best_users']
-        context['best_points'] = daily_user_stats['best_points']
+    #daily_user_stats = utils.user_daily_performance()
+    #if daily_user_stats is not None:
+    #    context['best_users'] = daily_user_stats['best_users']
+    #    context['best_points'] = daily_user_stats['best_points']
 
     return render(request, "show_leaderboard.html", context)
 

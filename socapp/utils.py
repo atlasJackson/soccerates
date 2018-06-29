@@ -450,6 +450,12 @@ def calculate_points(fixture, answer):
     """
     Takes a Fixture and its associated Answer, and calculates the points to be given for the user who added the Answer
     """
+
+    # List of points available.
+    ANSWER_RESULT = 5
+    ANSWER_OUTCOME = 2
+    ANSWER_BONUS = 1
+
     # Get actual and predicted goals scored for each team in the fixture
     user_team1_goals = answer.team1_goals
     user_team2_goals = answer.team2_goals
@@ -464,7 +470,7 @@ def calculate_points(fixture, answer):
     team2_accuracy = user_team2_goals - actual_team2_goals
 
     if (team1_accuracy == team2_accuracy == 0):
-        total_points += 5
+        total_points += ANSWER_RESULT
 
     # If not, then check for other conditions to get points. 
     else:
@@ -478,11 +484,25 @@ def calculate_points(fixture, answer):
         if ((user_goal_difference > 0 and actual_goal_difference > 0) or
             (user_goal_difference < 0 and actual_goal_difference < 0) or
             (user_goal_difference == actual_goal_difference)): 
-            total_points += 2
+            total_points += ANSWER_OUTCOME
 
         # Check the total goals scored or the goal difference is correct (can't have both, or the prediction would be correct).
         if ((user_total_goals == actual_total_goals) or (user_goal_difference == actual_goal_difference)):
-            total_points += 1
+            total_points += ANSWER_BONUS
+
+    # Calculate additional points for fixtures which can go to extra time/penalties.
+    if (fixture.can_be_over_90):
+        if (answer.has_extra_time):
+            if (fixture.has_extra_time):
+                total_points += ANSWER_OUTCOME
+            else:
+                total_points -= ANSWER_BONUS
+
+        if (answer.has_penalties):
+            if (fixture.has_penalties):
+                total_points += ANSWER_OUTCOME
+            else:
+                total_points -= ANSWER_BONUS
 
     return total_points
 

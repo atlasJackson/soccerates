@@ -105,7 +105,12 @@ def get_free_spaces(leaderboard):
 # Returns the result of the fixture associated with the given fixture.
 @register.filter(name="get_result")
 def get_result(answer):
-    return "Result: {} {}-{} {}".format(answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)
+    if answer.fixture.has_extra_time: 
+        return "Result: {} {}-{} {} *AET".format(
+            answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)
+    else:
+        return "Result: {} {}-{} {}".format(
+            answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)
 
 # Returns the match date of the fixture associated with the given answer.
 @register.filter(name="get_match_date")

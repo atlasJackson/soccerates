@@ -81,6 +81,30 @@ document.addEventListener("DOMContentLoaded", function() {
         $(".create-lb-pass").slideToggle(200);
     });
 
+
+    /* (De)selects the relevant checkboxes based on allowed combinations (can't have penalties without ET). */
+    $(".has_penalties").on("click", function(e) {
+        // Get the numerical id of the checkbox that was clicked.
+        var box_id = $(this).parent().prop('id').split("_").pop();
+        // Get the corresponding penalties checkbox.
+        var counterpart_checkbox = $("#has_extra_time_" + box_id).children(":first").prop("id");
+        
+        if ($(this).is(':checked')) {
+            $("#"+counterpart_checkbox).prop('checked', true);           
+        } 
+    });
+    $(".has_extra_time").on("click", function(e) {
+        // Get the numerical id of the checkbox that was clicked.
+        var box_id = $(this).parent().prop('id').split("_").pop();
+        // Get the corresponding penalties checkbox.
+        var counterpart_checkbox = $("#has_penalties_" + box_id).children(":first").prop("id");
+
+        if ($(this).not(':checked')) {
+            $("#"+counterpart_checkbox).prop('checked', false);           
+        } 
+    });
+
+
     /* Buttons to join and leave leaderboards */
     $(".board-content").on("click", "#join-button", function(e) {
 

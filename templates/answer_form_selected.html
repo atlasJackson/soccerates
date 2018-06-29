@@ -38,6 +38,21 @@
                     <li><strong>Clicking submit will submit your entire set of predictions</strong> - there is no need to submit each prediction individually.</li>
                     <li>The number of points awarded for each prediction is given at the <a href="#top">top of the page</a>.</li>
                     <li><strong>Submission for a fixture will be disabled 15 minutes prior to kick-off.</strong></li>
+
+                    {% if not stage_is_group %}
+                    <li>
+                        For fixtures which can go over 90 minutes, there is an additional points system:
+                        <ul class="list-initial-bullets">
+                            <li>An additional <strong>2 points</strong> will be awarded if the user correctly selects for the match going to Extra Time/Penalties.</li>
+                            <li>If the user incorrectly selects these options, a <strong>1 point</strong> penalty will apply.</li>
+                            <li>These points are cumulative: if the user selects for the match to go to Extra Time and Penalties, 4 points will be awarded for a correct prediction; if the fixture goes to ET but not penalties, a net 1 point will be awarded. Finally, 2 points will be deducted for the game finishing in 90 minutes.</li>
+                            <li>No points will be awarded/deducted if both options are ignored.</li>
+                            <li>Your prediction will be matched against the result after Extra Time if the game is tied at the end of the standard 90 minutes.</li>
+                        </ul>
+
+                    </li>
+                    {% endif %}
+
                 </ul>
             </div>
             <hr />
@@ -172,8 +187,7 @@
         <!-- End of group predictions. -->
 
         {% else %}
-            <!-- Form for knockout predictions. -->
-            <!-- Form for group predictions. -->
+        <!-- Form for knockout predictions. -->
             {% if knockout_fixtures %}
             <form class="mb-5" id="answer_form" method="post" action="{% url 'answer_form_selected' stage %}">
 
@@ -233,6 +247,35 @@
                                 </td>
                             </tr>
 
+                            <!-- Add extra time and penalty options for games that can go over 90 minutes -->
+                            {% if fixture.can_be_over_90 %}
+                            <tr class="">
+                                <td colspan="2" class="text-right">
+                                    {{ answer_form.has_extra_time.label_tag}}
+                                </td>
+                                <td colspan="2" class="text-left" id="has_extra_time_{{ forloop.counter }}">
+                                    {% if fixture|editable %}
+                                        {{ answer_form.has_extra_time|add_class:"has_extra_time" }}
+                                    {% else %}
+                                        {{ answer_form.has_extra_time|disable_input }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <tr class="">
+                                <td colspan="2" class="text-right">
+                                    {{ answer_form.has_penalties.label_tag}}
+                                </td>
+                                <td colspan="2" class="text-left" id="has_penalties_{{ forloop.counter }}">
+                                    {% if fixture|editable %}
+                                        {{ answer_form.has_penalties|add_class:"has_penalties" }}
+                                    {% else %}
+                                        {{ answer_form.has_penalties|disable_input }}
+                                    {% endif %}                                    
+                                </td>
+                            </tr>
+                            {% endif %}
+
                         </tbody>
                     </table>
 
@@ -247,13 +290,12 @@
                 </div>
 
             </form>
-            <!-- End of knockout predictions. -->
             {% else %}
                 <div class="alert alert-info text-center m-5">
                     There are no fixtures for this stage of the competition.
                 </div>
             {% endif %}
-
+        <!-- End of knockout predictions. -->
         {% endif %}
 
     </div>

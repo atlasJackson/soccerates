@@ -266,6 +266,10 @@ footer hr {
   margin: 10px 0px;
 }
 
+.list-initial-bullets {
+  list-style-image: initial;
+}
+
 .icon {
   max-width: 35px;
   max-height: 35px;
@@ -500,9 +504,12 @@ footer hr {
 
 
 
-
-
-
+/* BOOTSTRAP Override */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1d2124;
+}
 
 
 
