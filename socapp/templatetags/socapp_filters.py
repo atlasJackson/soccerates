@@ -106,6 +106,10 @@ def get_result(answer):
     if answer.fixture.has_extra_time: 
         return "Result: {} {}-{} {} *AET".format(
             answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)
+    elif answer.fixture.has_penalties:
+        return "Result: {} {} ({})-({}) {} {} *Pen".format(
+            answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team1_penalties,
+            answer.fixture.team2_penalties, answer.fixture.team2_goals, answer.fixture.team2.name)
     else:
         return "Result: {} {}-{} {}".format(
             answer.fixture.team1.name, answer.fixture.team1_goals, answer.fixture.team2_goals, answer.fixture.team2.name)

@@ -31,11 +31,11 @@ def index(request):
 
     # Grouops by stage.
     group_fixtures = group_fixtures_dictionary()
-    ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('team1__group', 'match_date')
-    qf_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('team1__group', 'match_date')
-    sf_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('team1__group', 'match_date')
-    tpp_fixture = Fixture.all_fixtures_by_stage(Fixture.TPP).order_by('team1__group', 'match_date')
-    final_fixture = Fixture.all_fixtures_by_stage(Fixture.FINAL).order_by('team1__group', 'match_date')
+    ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
+    qf_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
+    sf_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
+    tpp_fixture = Fixture.all_fixtures_by_stage(Fixture.TPP).order_by('match_date')
+    final_fixture = Fixture.all_fixtures_by_stage(Fixture.FINAL).order_by('match_date')
 
     upcoming_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
