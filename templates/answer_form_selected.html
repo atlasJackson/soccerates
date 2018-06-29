@@ -253,7 +253,7 @@
                                 <td colspan="2" class="text-right">
                                     {{ answer_form.has_extra_time.label_tag}}
                                 </td>
-                                <td colspan="2" class="text-left">
+                                <td colspan="2" class="text-left" id="has_extra_time_{{ forloop.counter }}">
                                     {% if fixture|editable %}
                                         {{ answer_form.has_extra_time|add_class:"has_extra_time" }}
                                     {% else %}
@@ -266,7 +266,7 @@
                                 <td colspan="2" class="text-right">
                                     {{ answer_form.has_penalties.label_tag}}
                                 </td>
-                                <td colspan="2" class="text-left">
+                                <td colspan="2" class="text-left" id="has_penalties_{{ forloop.counter }}">
                                     {% if fixture|editable %}
                                         {{ answer_form.has_penalties|add_class:"has_penalties" }}
                                     {% else %}

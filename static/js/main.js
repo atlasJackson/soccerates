@@ -84,13 +84,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* (De)selects the relevant checkboxes based on allowed combinations (can't have penalties without ET). */
     $(".has_penalties").on("click", function(e) {
-        if ($(".has_penalties").is(':checked')) {
-            $(".has_extra_time").prop('checked', true);           
+        // Get the numerical id of the checkbox that was clicked.
+        var box_id = $(this).parent().prop('id').split("_").pop();
+        // Get the corresponding penalties checkbox.
+        var counterpart_checkbox = $("#has_extra_time_" + box_id).children(":first").prop("id");
+        
+        if ($(this).is(':checked')) {
+            $("#"+counterpart_checkbox).prop('checked', true);           
         } 
     });
     $(".has_extra_time").on("click", function(e) {
-        if ($(".has_extra_time").not(':checked')) {
-            $(".has_penalties").prop('checked', false);           
+        // Get the numerical id of the checkbox that was clicked.
+        var box_id = $(this).parent().prop('id').split("_").pop();
+        // Get the corresponding penalties checkbox.
+        var counterpart_checkbox = $("#has_penalties_" + box_id).children(":first").prop("id");
+
+        if ($(this).not(':checked')) {
+            $("#"+counterpart_checkbox).prop('checked', false);           
         } 
     });
 
