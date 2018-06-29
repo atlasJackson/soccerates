@@ -183,7 +183,7 @@ def answer_form_selected(request, stage):
 
         context_dict['knockout_fixtures'] = knockout_fixtures
         AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
-        initial_data = get_initial_data(knockout_fixtures, request.user)
+        initial_data = get_initial_data(knockout_fixtures, request.user, True) # Boolean argument adds ET/Penalties to initial data.
 
    
     # Check if the request was HTTP POST.
@@ -208,13 +208,17 @@ def answer_form_selected(request, stage):
                             user=request.user, 
                             fixture=fixt,
                             team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                            team2_goals=answer_form.cleaned_data.get('team2_goals')
+                            team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                            has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                            has_penalties=answer_form.cleaned_data.get('has_penalties')
                         )
 
                     else:                    
                         Answer.objects.filter(user=request.user,fixture=fixt) \
                             .update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                                    team2_goals=answer_form.cleaned_data.get('team2_goals'))
+                                    team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                                    has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                                    has_penalties=answer_form.cleaned_data.get('has_penalties'))
 
             # Return to the index for now.
             return HttpResponseRedirect(reverse('profile'))
@@ -250,7 +254,7 @@ def answer_form_selected(request, stage):
 
 # Determines initial data for an AnswerForm based on the fixtures and user passed in.
 # Returns list comprised of dictionaries with the initial data.
-def get_initial_data(fixtures, user):
+def get_initial_data(fixtures, user, knockout=False):
     initial_list = []
     for fixture in fixtures:
         this_initial = {}
@@ -260,6 +264,11 @@ def get_initial_data(fixtures, user):
 
             this_initial['team1_goals'] = ans.team1_goals
             this_initial['team2_goals'] = ans.team2_goals
+
+            if knockout:
+                this_initial['has_extra_time'] = ans.has_extra_time
+                this_initial['has_penalties'] = ans.has_penalties
+
         except Answer.DoesNotExist:
             continue
         finally:

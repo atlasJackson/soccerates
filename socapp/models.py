@@ -286,6 +286,9 @@ class Answer(models.Model):
     fixture = models.ForeignKey(Fixture, on_delete=models.CASCADE)
     team1_goals = models.PositiveIntegerField(default=0)
     team2_goals = models.PositiveIntegerField(default=0)
+    
+    has_extra_time = models.BooleanField(default=False)
+    has_penalties = models.BooleanField(default=False)
 
     points_added = models.BooleanField(default=POINTS_NOT_ADDED)
     points = models.IntegerField(blank=True, null=True)

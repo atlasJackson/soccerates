@@ -233,6 +233,57 @@
                                 </td>
                             </tr>
 
+                            <tr class="d-none d-sm-table-row">
+                                <td colspan="2" class="text-right">
+                                    <div class="mr-2">
+                                        <label class="mr-1">{{ answer_form.has_extra_time.label_tag}}</label>
+                                        {% if fixture|editable %}
+                                            {{ answer_form.has_extra_time }}
+                                        {% else %}
+                                            {{ answer_form.has_extra_time|disable_input }}
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td colspan="2" class="text-left">
+                                    <div class="ml-2">
+                                        <label class="mr-1">{{ answer_form.has_penalties.label_tag}}</label>
+                                        {% if fixture|editable %}
+                                            {{ answer_form.has_penalties }}
+                                        {% else %}
+                                            {{ answer_form.has_penalties|disable_input }}
+                                        {% endif %}
+                                    </div>                                 
+                                </td>
+                            </tr>
+
+                            <tr class="d-table-row d-sm-none ">
+                                <td colspan="2" class="text-right">
+                                    {{ answer_form.has_extra_time.label_tag}}
+                                </td>
+                                <td colspan="2" class="text-left">
+                                    {% if fixture|editable %}
+                                        {{ answer_form.has_extra_time }}
+                                    {% else %}
+                                        {{ answer_form.has_extra_time|disable_input }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <tr class="d-table-row d-sm-none ">
+                                <td colspan="2" class="text-right">
+                                    {{ answer_form.has_penalties.label_tag}}
+                                </td>
+                                <td colspan="2" class="text-left">
+                                    {% if fixture|editable %}
+                                        {{ answer_form.has_penalties }}
+                                    {% else %}
+                                        {{ answer_form.has_penalties|disable_input }}
+                                    {% endif %}                                    
+                                </td>
+                            </tr>
+                            
+
+
                         </tbody>
                     </table>
 
