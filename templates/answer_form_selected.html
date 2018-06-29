@@ -47,6 +47,7 @@
                             <li>If the user incorrectly selects these options, a <strong>1 point</strong> penalty will apply.</li>
                             <li>These points are cumulative: if the user selects for the match to go to Extra Time and Penalties, 4 points will be awarded for a correct prediction; if the fixture goes to ET but not penalties, a net 1 point will be awarded. Finally, 2 points will be deducted for the game finishing in 90 minutes.</li>
                             <li>No points will be awarded/deducted if both options are ignored.</li>
+                            <li>Your prediction will be matched against the result after Extra Time if the game is tied at the end of the standard 90 minutes.</li>
                         </ul>
 
                     </li>
@@ -261,7 +262,7 @@
                                 </td>
                             </tr>
 
-                            <tr class="d">
+                            <tr class="">
                                 <td colspan="2" class="text-right">
                                     {{ answer_form.has_penalties.label_tag}}
                                 </td>
