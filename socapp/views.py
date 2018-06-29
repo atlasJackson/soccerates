@@ -93,20 +93,23 @@ def user_profile(request, username=None):
     print(user)
 
     answers = user.profile.get_predictions()
+    group_answers = answers.filter(fixture__stage=Fixture.GROUP)
+    knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
-        answers = [a for a in answers if a.points_added]
+        group_answers = [a for a in group_answers if a.points_added]
+        knockout_answewrs = [a for a in knockout_answers if a.points_added]
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(answers, 12)
+    paginator = Paginator(group_answers, 12)
     try:
-        answers_subset = paginator.page(page)
+        group_answers_subset = paginator.page(page)
     except PageNotAnInteger:
-        answers_subset = paginator.page(1)
+        group_answers_subset = paginator.page(1)
     except EmptyPage:
-        answers_subset = paginator.page(paginator.num_pages)
+        group_answers_subset = paginator.page(paginator.num_pages)
 
     ranking = utils.get_user_ranking(user)
     usercount = get_user_model().objects.count()
@@ -116,7 +119,8 @@ def user_profile(request, username=None):
 
     context = {
         'user': user,
-        'answers': answers_subset,
+        'group_answers': group_answers_subset,
+        'knockout_answers': knockout_answers,
         'ranking': ranking,
         'usercount': usercount,
         'public_lb': public_lb,
