@@ -191,7 +191,7 @@ class FixtureTests(TestCase):
         """ All fixtures seeded in the Django fixtures JSON files are group stage games.
             We make one fixture a latter-stage match here for testing purposes """
         
-        Fixture.objects.filter(pk=1).update(stage=Fixture.LAST_16)
+        Fixture.objects.filter(pk=1).update(stage=Fixture.ROUND_OF_16)
 
         # Now, grab the group stage fixtures
         fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP)
@@ -203,7 +203,7 @@ class FixtureTests(TestCase):
         self.assertTrue(correct_stage)
 
         # Test for the last-16 fixtures - there should be one (created above), with a PK of 1
-        fixtures = Fixture.all_fixtures_by_stage(Fixture.LAST_16)
+        fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16)
         self.assertEqual(len(fixtures), 1)
         self.assertIn(Fixture.objects.get(pk=1), fixtures)
 
