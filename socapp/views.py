@@ -96,7 +96,7 @@ def user_profile(request, username=None):
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
         group_answers = [a for a in group_answers if a.points_added]
-        knockout_answewrs = [a for a in knockout_answers if a.points_added]
+        knockout_answers = [a for a in knockout_answers if a.points_added]
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
