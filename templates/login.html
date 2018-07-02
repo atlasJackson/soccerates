@@ -8,7 +8,7 @@
 
 {% block body_block %}
 <div class="container">
-    <div class="col-6 offset-3">
+    <div class="col-10 offset-1 col-md-6 offset-md-3">
         {% if user.is_authenticated %}
             <h2 class="my-4 text-success">{{user.username}}, you're already logged in!</h2>
             <a href="{% url 'index' %}">Click here</a> to return to the homepage.

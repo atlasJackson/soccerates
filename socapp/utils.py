@@ -106,14 +106,24 @@ def user_daily_performance(leaderboard=None):
         if len(daily_points) == 0:
             return None
         else:
-            min_pts, max_pts = min(daily_points[1]), max(daily_points[1])
-            if max_pts == 0: return None
             best_users = []
             worst_users = []
-
+            max_pts = min_pts = 0
             for user, points in daily_points:
-                if points == max_pts: best_users.append(get_user_model().objects.get(pk=user))
-                if points == min_pts: worst_users.append(get_user_model().objects.get(pk=user))
+                if len(best_users) == 0:
+                    best_users.append(get_user_model().objects.get(pk=user))
+                    worst_users.append(get_user_model().objects.get(pk=user))
+                    max_pts = min_pts = points
+                elif points > max_pts:
+                    best_users = [get_user_model().objects.get(pk=user)]
+                    max_pts = points
+                elif points == max_pts:
+                    best_users.append(get_user_model().objects.get(pk=user))
+                elif points < min_pts:
+                    worst_users = [get_user_model().objects.get(pk=user)]
+                    min_pts = points
+                elif points == min_pts:
+                    worst_users.append(get_user_model().objects.get(pk=user))
             
             return {
                 'best_users': best_users, 
