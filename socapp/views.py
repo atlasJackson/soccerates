@@ -215,16 +215,19 @@ def answer_form_selected(request, stage):
                             has_penalties=answer_form.cleaned_data.get('has_penalties')
                         )
 
+                        if answer.has_penalties:
+                            answer.has_extra_time = True
+                            answer.save()
+
                     else:                    
-                        answer = Answer.objects.filter(user=request.user,fixture=fixt) \
-                            .update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                        answer = Answer.objects.filter(user=request.user,fixture=fixt)
+                        answer.update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
                                     team2_goals=answer_form.cleaned_data.get('team2_goals'),
                                     has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
                                     has_penalties=answer_form.cleaned_data.get('has_penalties'))
 
-                    if answer.has_penalties:
-                        answer.has_extra_time = True
-                        answer.save()
+                        if answer[0].has_penalties:
+                            answer.update(has_extra_time=True)
 
             # Return to the index for now.
             return HttpResponseRedirect(reverse('profile'))
