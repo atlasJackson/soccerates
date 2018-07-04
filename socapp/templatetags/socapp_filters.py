@@ -22,6 +22,7 @@ def disable_input(field):
 @register.filter(name="editable")
 def editable(fixture):
     # Allow a fixture to be edited up to 15 mins before kickoff
+    if fixture.match_date is None: return False
     cutoff_time = fixture.match_date - datetime.timedelta(minutes=75)
     return timezone.now() < cutoff_time
 
