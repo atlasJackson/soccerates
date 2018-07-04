@@ -30,25 +30,13 @@
 
                 <!-- Leaderboards Information -->
                 <div class="mb-4" id="form-instructions">
-                    <h4 class="text-center font-weight-light">Manage your leaderboards below.</h4>
-                    <hr />
-
-                    <div class="list-star-bullets mb-5">
-                        <ul >
-                            <li>
-                                To join a leaderboard, click the 'All Leaderboards' button below. This will display a table of all the leaderboards in the system. Click on a leaderboard to be taken to its main page, where you will be able to join/leave the leaderboard in question.
-                            </li>
-                            <li>
-                                In the 'All Leaderboards' list, leaderboards you are already subscribed to are highlighted in green.
-                            </li>
-                            <li>
-                                Private leaderboards will require a password for other users to join, so keep it handy for sharing in the future.
-                            </li>
-                            <li>
-                                To create a leaderboard, click the 'Create Leaderboard' button below. This will display a form for you to fill in the details of your desired board.
-                            </li>
-                        </ul>
+                    <div class="d-flex justify-content-between">
+                        <h4 class="text-center font-weight-light">Manage your leaderboards below.</h4>
+                        <span class="pointer" data-toggle="modal" data-target="#leaderboardInfoModal">
+                            <img src="{% static 'img/info.png' %}" alt="" class="icon">
+                        </span>
                     </div>
+                    <hr />
                     
                     <!-- Buttons for showing the create board form and show all leaderboards. -->
                     <div class="d-none d-md-flex justify-content-around text-center mb-3">
@@ -109,4 +97,39 @@
         </div>
 
     </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="leaderboardInfoModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Leaderboard Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-star-bullets mb-5">
+                    <ul >
+                        <li>
+                            To join a leaderboard, click the 'All Leaderboards' button below. This will display a table of all the leaderboards in the system. Click on a leaderboard to be taken to its main page, where you will be able to join/leave the leaderboard in question.
+                        </li>
+                        <li>
+                            In the 'All Leaderboards' list, leaderboards you are already subscribed to are highlighted in green.
+                        </li>
+                        <li>
+                            Private leaderboards will require a password for other users to join, so keep it handy for sharing in the future.
+                        </li>
+                        <li>
+                            To create a leaderboard, click the 'Create Leaderboard' button below. This will display a form for you to fill in the details of your desired board.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
