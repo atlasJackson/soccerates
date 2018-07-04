@@ -77,7 +77,7 @@ header h1 a:hover {
   background-color: #000;
 }
 
-nav > a {
+.nav-item > a {
   padding-left: 15px;
   padding-right: 15px;
   text-transform: uppercase;
@@ -90,9 +90,14 @@ nav > a {
   text-transform: uppercase;
 }
 
+.navbar-toggler-icon {
+  background-image: url('../img/hamburger.svg');
+}
+
 /* This displays the dropdown on hover */
 .dropdown:hover>.dropdown-menu {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .dropdown-item:hover {

@@ -50,25 +50,40 @@
 
             <div class="wrapper pb-2 pt-2 border-top border-white" id="wrapper-bottom">
                 <div class="container header-navs pl-0">
-                    <nav>
-                        <a href="{% url 'index' %}">Home</a>
-                        <a href="{% url 'profile' %}">Profile</a>
-                        <a href="{% url 'answer_form' %}">Score-Predictions</a>
-                        
-                        <a href="{% url 'wc_schedule' %}">World Cup</a>
-
-                        <div class="dropdown d-inline">
-                            <a class="dropdown-toggle text-white text-uppercase border-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Leaderboards
-                            </a>
-                            <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item text-white dropdown-hover" href="{% url 'leaderboards' %}">User Leaderboards</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-white dropdown-hover" href="{% url 'global_leaderboard' %}">Gaia Leaderboard</a>
-                            </div>
+                    <nav class="navbar-expand-lg">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#socceratesNavbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="socceratesNavbar">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item">
+                                    <a href="{% url 'index' %}">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'profile' %}">Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'answer_form' %}">Score-Predictions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'wc_schedule' %}">World Cup</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="dropdown-toggle text-white text-uppercase border-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Leaderboards
+                                    </a>
+                                    <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item text-white dropdown-hover" href="{% url 'leaderboards' %}">User Leaderboards</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-white dropdown-hover" href="{% url 'global_leaderboard' %}">Gaia Leaderboard</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'forums' %}">Forums</a>
+                                </li>               
+                            </ul>
+    
                         </div>
-
-                        <a href="{% url 'forums' %}">Forums</a>
                     </nav>
                 </div>
             </div>
