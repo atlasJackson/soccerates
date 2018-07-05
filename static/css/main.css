@@ -73,6 +73,10 @@ header h1 a:hover {
   color: #fff;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 #wrapper-bottom {
   background-color: #000;
 }
