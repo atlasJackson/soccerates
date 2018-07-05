@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let searchTerm = $("#board-searchbox").val()
         var postRequest = $.post("/ajax/leaderboards/get_page", {'page': page, 'search_term':searchTerm})
         postRequest.done(function(data) {
-            $(".all-boards").html(data)
+            $(".all-boards").html(data.result)
             $("#board-searchbox").val(searchTerm)
         });
     })
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let searchTerm = $("#board-searchbox").val()
         var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})
         postRequest.done(function(data) {
-            $(".all-boards").html(data)
+            $(".all-boards").html(data.result)
             $("#board-searchbox").val(searchTerm)
             $("#board-searchbox").focus()
         });

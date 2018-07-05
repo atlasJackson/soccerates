@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
-
+from django.template.loader import render_to_string
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.forms import formset_factory
@@ -368,7 +368,10 @@ def paginate_leaderboards(request):
             'all_boards': True,
             'user_leaderboard_set': user_leaderboard_set,
         }
-        return render(request, 'include_leaderboards.html', context_dict)
+        data = {
+            'result': render_to_string('include_leaderboards.html', context_dict)
+        }
+        return JsonResponse(data)
 
 @login_required
 @csrf_exempt
@@ -397,8 +400,10 @@ def search_leaderboards(request):
             'all_boards': True,
             'user_leaderboard_set': user_leaderboard_set,
         }
-        return render(request, 'include_leaderboards.html', context_dict)
-
+        data = {
+            'result': render_to_string('include_leaderboards.html', context_dict, request=request)
+        }
+        return JsonResponse(data)
 
 @login_required
 def show_leaderboard(request, leaderboard):
