@@ -298,6 +298,9 @@ def can_edit_answer(fixture):
 @login_required
 def leaderboards(request):
 
+    # User's ranking for position on global leaderboard.
+    ranking = utils.get_user_ranking(request.user)
+
     user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
     all_lb = Leaderboard.objects.all().order_by(Lower('name'))
 
@@ -316,6 +319,7 @@ def leaderboards(request):
         all_lb_subset = paginator.page(paginator.num_pages)
 
     context_dict = {
+        'ranking': ranking,
         'all_lb_subset': all_lb_subset, 
         'public_lb': public_lb, 
         'private_lb': private_lb,

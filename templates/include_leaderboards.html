@@ -3,7 +3,9 @@
 
 <div class="row mb-3">
 {% if not all_boards %}
-    {% if private %}
+    {% if universal %}
+        <div class="col-8 col-sm-6 col-xl-4 board-heading">Default Leaderboards</div>
+    {% elif private %}
         <div class="col-8 col-sm-6 col-xl-4 board-heading">Private Leaderboards</div>
     {% else %}
         <div class="col-8 col-sm-6 col-xl-4 board-heading">Public Leaderboards</div>
@@ -36,46 +38,72 @@
         </tr>
     </thead>
     <tbody>
-        {% if leaderboards %}
-            {% for leaderboard in leaderboards %}
-                {% if leaderboard.name in user_leaderboard_set and all_boards%}
-                    <tr class="subscribed-board">
-                {% else %}
-                    <tr >
-                {% endif %}
-                <td> 
-                    <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
+        {% if universal %}
+            <tr>
+                <td>
+                    <a href="{% url 'global_leaderboard' %}">Global Leaderboard</a>
                 </td>
-                {% if all_boards %}
-                    <td class="text-left">{{ leaderboard.get_is_private_display }} </td>
-                {% else %}
-                    <td class="text-right">{{ leaderboard|get_user_leaderboard_position:user }} </td>
-                {% endif %}    
-                {% if not short %}
-                <td class="text-right">{{ leaderboard|get_free_spaces }} </td>
-                {% endif %}
+                <td class="text-right">
+                    {{ ranking }}
+                </td>
             </tr>
-            {% endfor %}
-        {% else %}
-            <tr class="text-center">
-            {% if all_boards  %}
-                    <td colspan="12">No leaderboards found.</td>
-            {% else %}
-                {% if private %}
-                    {% if not_user %}
-                        <td colspan="12">No private leaderboards to display.</td>
-                    {% else %}
-                        <td colspan="12">You're currently not a member of any private leaderboards.</td>
-                    {% endif %} 
-                {% else %}
-                    {% if not_user %}
-                        <td colspan="12">No public leaderboards to display.</td>
-                    {% else %}
-                        <td colspan="12">You're currently not a member of any public leaderboards.</td>
-                    {% endif %} 
-                {% endif %}
+
+            {% comment %}
+            <!-- For user's friend board -->
+            {% if not not_user %}
+            <tr>
+                <td>
+                    <a href="#">Friends Leaderboard</a>
+                </td>
+                <td class="text-right">
+                    ** Rank **
+                </td>
+            </tr>
             {% endif %}
-            </tr>               
+            {% endcomment %}
+
+        {% else %}
+            {% if leaderboards %}
+                {% for leaderboard in leaderboards %}
+                    {% if leaderboard.name in user_leaderboard_set and all_boards%}
+                        <tr class="subscribed-board">
+                    {% else %}
+                        <tr >
+                    {% endif %}
+                    <td> 
+                        <a href="{% url 'show_leaderboard' leaderboard.slug %}">{{ leaderboard.name }}</a>
+                    </td>
+                    {% if all_boards %}
+                        <td class="text-left">{{ leaderboard.get_is_private_display }} </td>
+                    {% else %}
+                        <td class="text-right">{{ leaderboard|get_user_leaderboard_position:user }} </td>
+                    {% endif %}    
+                    {% if not short %}
+                    <td class="text-right">{{ leaderboard|get_free_spaces }} </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr class="text-center">
+                {% if all_boards %}
+                        <td colspan="12">No leaderboards found.</td>
+                {% else %}
+                    {% if private %}
+                        {% if not_user %}
+                            <td colspan="12">No private leaderboards to display.</td>
+                        {% else %}
+                            <td colspan="12">You're currently not a member of any private leaderboards.</td>
+                        {% endif %} 
+                    {% else %}
+                        {% if not_user %}
+                            <td colspan="12">No public leaderboards to display.</td>
+                        {% else %}
+                            <td colspan="12">You're currently not a member of any public leaderboards.</td>
+                        {% endif %} 
+                    {% endif %}
+                {% endif %}
+                </tr>
+            {% endif %}            
         {% endif %}
     </tbody>
 </table>
