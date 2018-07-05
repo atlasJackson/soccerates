@@ -428,26 +428,14 @@ def show_leaderboard(request, leaderboard):
         if leaderboard.is_private and not request.user in leaderboard.users.all():
             return render(request, 'private_leaderboard_login.html', context_dict)
 
-        # Get a list of all users who are members of the leaderboard.
-        members = leaderboard.users.select_related('profile').order_by('-profile__points')
-        # Get a collection of board statistics.
-        total_points = members.aggregate(tp=Sum('profile__points'))['tp']
-        if members:
-            membercount = members.count()
-            average_points = total_points / membercount
-            percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / membercount
-        else:
-            average_points = 0
-            percent_above_average = 0
+        # Get stats for the given leaderboard
+        stats = leaderboard_stats(leaderboard)
 
-        # Add entities to the context dictionary
+        # Add entities to the context dictionary, unpacking the stats into the dictionary.
         context_dict = {
             'access_form': access_form,
             'leaderboard':leaderboard, 
-            'members':members, 
-            'total_points': total_points,
-            'average_points': average_points,
-            'percent_above_average': percent_above_average,
+            **stats
         }
 
         # daily_user_stats = utils.user_daily_performance(leaderboard)
@@ -462,26 +450,17 @@ def show_leaderboard(request, leaderboard):
 
     return render(request, 'show_leaderboard.html', context_dict)
 
-
-
 # Global leaderboard for all users in the system
 @login_required
 def global_leaderboard(request):
-    members = get_user_model().objects.select_related('profile').order_by('-profile__points')
-    usercount = members.count()
-    total_points = members.aggregate(total_pts=Sum('profile__points'))['total_pts']
-    average_points = total_points / usercount
-    percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / usercount
+    stats = leaderboard_stats()
     global_leaderboard = True # Allows us to conditionally render/unrender parts of the template
-
+    
     # Pagination stuff goes here
 
     context = {
-        'members':members, 
-        'total_points': total_points,
-        'average_points': average_points,
-        'percent_above_average': percent_above_average,
         'global_leaderboard': global_leaderboard,
+        **stats
     }
 
     #daily_user_stats = utils.user_daily_performance()
@@ -490,6 +469,31 @@ def global_leaderboard(request):
     #    context['best_points'] = daily_user_stats['best_points']
 
     return render(request, "show_leaderboard.html", context)
+
+# Returns stats for the leaderboard passed in. If leaderboard is None, we assume global leaderboard
+# This may need altered when friend lists are added, to accommodate the extra option.
+def leaderboard_stats(leaderboard=None):
+    if leaderboard is None:
+        members = get_user_model().objects.select_related('profile').order_by('-profile__points')
+    else:
+        members = leaderboard.users.select_related('profile').order_by('-profile__points')
+    # Get a collection of board statistics.
+    total_points = members.aggregate(tp=Sum('profile__points'))['tp']
+
+    # Create the stats dictionary
+    stats_dict = { 'members': members, 'total_points': total_points }
+    if members:
+        membercount = members.count()
+        average_points = total_points / membercount
+        percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / membercount
+    else:
+        average_points = percent_above_average = 0
+    # Update the stats dict and return it
+    stats_dict.update({
+        'average_points': average_points, 
+        'percent_above_average': percent_above_average,
+    })
+    return stats_dict
 
 @login_required
 def join_leaderboard(request, leaderboard):
