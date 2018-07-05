@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
@@ -155,13 +155,12 @@ def answer_form_selected(request, stage):
 
     # Check if the group stage has been selected to handle the required group-specific logic in this view, and the template.
     stage_is_group = (stage == "group_stage")
+    context_dict = {
+        'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 
+        'stage_is_group': stage_is_group,
+        'stage': stage, 
+    }
 
-    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 
-                    'stage_is_group': stage_is_group,
-                    'stage': stage,
-                    }
-
-    # Create as many formsets as there are fixtures whose scores are to be predicted.
     # Forms for the group stage.
     if stage_is_group:
         group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
@@ -169,75 +168,22 @@ def answer_form_selected(request, stage):
         initial_data = get_initial_data(group_fixtures, request.user)    
     # Forms for the knockout stage.
     else:
-        #stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
-        #print (stage)
-        
-        if (stage == "round_of_16"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
-        if (stage == "quarter-finals"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
-        if (stage == "semi-finals"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
-        if (stage == "third_place_play-off"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.TPP)
-        if (stage == "final"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.FINAL)
-
+        knockout_fixtures = get_form_fixtures(stage)
         context_dict['knockout_fixtures'] = knockout_fixtures
         AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
         initial_data = get_initial_data(knockout_fixtures, request.user, True) # Boolean argument adds ET/Penalties to initial data.
 
    
-    # Check if the request was HTTP POST.
+    # If POST, check formset is valid, and if so process the formset and redirect to profile page on completion.
     if request.method == 'POST':
         answer_formset = AnswerFormSet(request.POST, initial=[data for data in initial_data])
         if answer_formset.is_valid():
-            # Get score predictions from corresponding form for each fixture.
-            for answer_form in answer_formset:
-
-                # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
-                if answer_form.has_changed():
-                    fixt = answer_form.cleaned_data.get('fixture')
-
-                    # Check if the answer can be edited.
-                    if not can_edit_answer(fixt):
-                        continue
-
-                    # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
-                    if not Answer.objects.filter(user=request.user, fixture=fixt).exists():
-
-                        answer = Answer.objects.create(
-                            user=request.user, 
-                            fixture=fixt,
-                            team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                            team2_goals=answer_form.cleaned_data.get('team2_goals'),
-                            has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
-                            has_penalties=answer_form.cleaned_data.get('has_penalties')
-                        )
-
-                        if answer.has_penalties:
-                            answer.has_extra_time = True
-                            answer.save()
-
-                    else:                    
-                        answer = Answer.objects.filter(user=request.user,fixture=fixt)
-                        answer.update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                                    team2_goals=answer_form.cleaned_data.get('team2_goals'),
-                                    has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
-                                    has_penalties=answer_form.cleaned_data.get('has_penalties'))
-
-                        if answer[0].has_penalties:
-                            answer.update(has_extra_time=True)
-
-            # Return to the index for now.
+            process_formset(answer_formset, request.user)
             return HttpResponseRedirect(reverse('profile'))
         else:
             # Print problems to the terminal.
             print(answer_formset.errors)
-    
     else:
-            
-        # Check user is logged in, otherwise can't render the formset.
         if stage_is_group:
             # Not a POST, so all forms will be blank unless the user has already submitted an answer.
             # If answers exist, populate the form with the existing answers.
@@ -245,13 +191,9 @@ def answer_form_selected(request, stage):
             zipped_groups = [fixture.team1.group for fixture in group_fixtures]
             formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
-
-            # With the initial values set within the form, we add the zipped fixtures/forms/groups data structure to the template context. 
-            # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
             context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
             context_dict['management_form'] = management_form
         else:
-
             formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
 
@@ -260,6 +202,57 @@ def answer_form_selected(request, stage):
 
     return render(request, 'answer_form_selected.html', context_dict)
 
+# Processes a submitted formset of answers
+def process_formset(answer_formset, user):
+
+    for answer_form in answer_formset:
+        # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
+        if answer_form.has_changed():
+            fixt = answer_form.cleaned_data.get('fixture')
+
+            # Check if the answer can be edited.
+            if not can_edit_answer(fixt):
+                continue
+
+            # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
+            if not Answer.objects.filter(user=user, fixture=fixt).exists():
+
+                answer = Answer.objects.create(
+                    user=user, 
+                    fixture=fixt,
+                    team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                    team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                    has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                    has_penalties=answer_form.cleaned_data.get('has_penalties')
+                )
+
+                if answer.has_penalties:
+                    answer.has_extra_time = True
+                    answer.save()
+
+            else:                    
+                answer = Answer.objects.filter(user=user,fixture=fixt)
+                answer.update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                            team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                            has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                            has_penalties=answer_form.cleaned_data.get('has_penalties'))
+
+                if answer[0].has_penalties:
+                    answer.update(has_extra_time=True)
+
+
+# Gets the fixtures to display on the form, based on the stage passed in.
+def get_form_fixtures(stage=None):
+    if (stage == "round_of_16"):
+        return Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
+    if (stage == "quarter-finals"):
+        return Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
+    if (stage == "semi-finals"):
+        return Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
+    if (stage == "third_place_play-off"):
+        return Fixture.all_fixtures_by_stage(Fixture.TPP)
+    if (stage == "final"):
+        return Fixture.all_fixtures_by_stage(Fixture.FINAL)
 
 # Determines initial data for an AnswerForm based on the fixtures and user passed in.
 # Returns list comprised of dictionaries with the initial data.
@@ -413,7 +406,6 @@ def show_leaderboard(request, leaderboard):
     try:
         # Get leaderboard with given slug.
         leaderboard = Leaderboard.objects.prefetch_related('users', 'users__profile').get(slug=leaderboard)
-        print (request.user in leaderboard.users.all())
 
         # If there are errors, do not reinitialise the form.
         access_form = PrivateAccessForm(request.POST or None)
@@ -426,7 +418,6 @@ def show_leaderboard(request, leaderboard):
             if access_form.is_valid():
 
                 given_password = access_form.cleaned_data['password']
-                hashed_password = make_password(given_password)
 
                 if check_password(given_password, leaderboard.password):
                     leaderboard.users.add(request.user)
