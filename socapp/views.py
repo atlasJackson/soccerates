@@ -390,7 +390,7 @@ def search_leaderboards(request):
             'user_leaderboard_set': user_leaderboard_set,
         }
         data = {
-            'result': render_to_string('include_leaderboards.html', context_dict, request=request)
+            'result': render_to_string('include_leaderboards.html', context_dict)
         }
         return JsonResponse(data)
 
