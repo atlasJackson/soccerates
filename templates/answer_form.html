@@ -25,16 +25,12 @@
 
                 <!-- Predictions details and information. -->
                 <div class="mb-4" id="form-instructions">
-                    <h3 class="text-center font-weight-bold">Score-Form for {{request.user.username}}</h3>
+                    <h3 class="text-center font-weight-bold">Score-Forms for {{request.user.username}}</h3>
                     <hr />
 
                     <div class="list-star-bullets m-3">
                         <ul >
-                            <li>
-                                Points are awarded based on the accuracy of your prediction, with a maximum of 5 points awarded for a perfect match. <strong>You can find a summary of the points system in the graphic at the bottom of the page.</strong>
-                            </li>
-                            <li>Click on the buttons below to open the answer form for the relevant stage.</li>
-                            <li>The number of points awarded for each prediction is given at the <a href="#top">top of the page</a>.</li>
+                            <li>A thorough breakdown of the points system can be found <a href="{% url 'points_system' %}">here</a>.</li>
                             <li><strong>Submission for a fixture will be disabled 15 minutes prior to kick-off.</strong></li>
                         </ul>
                     </div>

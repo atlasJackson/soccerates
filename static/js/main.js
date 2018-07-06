@@ -57,6 +57,19 @@ document.addEventListener("DOMContentLoaded", function() {
         $("#profile-image-form").submit();
     });
 
+    /*POINTS SYSTEM */
+
+    /* Highlights the column whose result has been selected from the corresponding nav-tab */
+    $("#pointsStandardTab").on("click", function(e) {
+        var trigger = e.target.id.slice(0,-4) + "-column";
+        var pointsColumns = $(".points-system-standard-col");
+        for (i=0, len=pointsColumns.length; i <len; i++) {
+            pointsColumns[i].classList.remove("table-info");
+        }
+        $("#"+trigger).addClass("table-info");
+    });
+
+
     /* LEADERBOARDS */
     $(".join-boards").on("click", function() {
         var link = $(this);
@@ -107,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function() {
             $("#"+counterpart_checkbox).prop('checked', false);           
         } 
     });
-
 
     /* Buttons to join and leave leaderboards */
     $(".board-content").on("click", "#join-button", function(e) {

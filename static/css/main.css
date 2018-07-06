@@ -255,6 +255,10 @@ footer hr {
   background-color: #023d4d;
 }
 
+.points-system-title {
+  background-color: #464646;  
+}
+
 .profile {
   background-color: #464646;  
 }
@@ -333,7 +337,13 @@ footer hr {
 
 /* All Tables */
 /*
-/*
+/* */
+
+.blank-cell {
+  background-color: #fff !important;
+  border-top: none !important;
+  border-left: none !important;
+}
 
 /* FIXTURES */
 

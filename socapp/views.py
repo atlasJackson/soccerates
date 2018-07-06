@@ -162,9 +162,12 @@ def paginated_data(data, num_per_page, page=1):
 
 
 @login_required
+def points_system(request):
+    return render(request, 'points_system.html', {})
+
+@login_required
 def answer_form(request):
     return render(request, 'answer_form.html', {})
-
 
 @login_required
 def answer_form_selected(request, stage):
