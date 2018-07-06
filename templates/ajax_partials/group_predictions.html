@@ -1,0 +1,83 @@
+{% load static %}
+{% load socapp_filters %}
+
+<!-- Displays user profile predictions, and pagination menu -->
+
+<table class="table table-dark table-striped table-hover table-sm userprofile-predictions">
+    <thead class="group-table-header thead-dark"> 
+        <th colspan="5">Fixture</th>
+        <th>Pts</th>
+    </thead>
+
+    <tbody>
+    {% for answer in group_answers %}
+        {% if answer.points_added %}
+        <tr class="bg-success text-white" data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_result }}">
+        {% else %}
+        <tr data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_match_date }}">
+        {% endif %}
+            <td class="profile-pred-name-cell text-right">
+                <small class="d-inline d-sm-none">{{ answer.fixture.team1.country_code }}</small>
+                <div class="d-none d-sm-inline">{{ answer.fixture.team1.name }}</div>
+                <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
+                
+            </td>
+            <td class="profile-pred-score-cell text-right">
+                {{ answer.team1_goals }}
+            </td>
+            <td class="profile-pred-dash-cell"> - </td>
+            <td class="profile-pred-score-cell text-left">{{ answer.team2_goals }}</td>
+            <td class="profile-pred-name-cell text-left">
+                <img class="flag mr-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">                                                
+                <small class="d-inline d-sm-none">{{ answer.fixture.team2.country_code }}</small>
+                <div class="d-none d-sm-inline">{{ answer.fixture.team2.name }}</div>
+            </td>
+            <td class="profile-pred-points-cell">
+            {% if answer.points_added %}
+                {{ answer.points }}
+            {% else %}
+                    - 
+            {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if group_answers.has_other_pages %}
+    <ul class="pagination justify-content-center">
+        {% if group_answers.has_previous %}
+            <li class="page-item">
+                <a href="?page={{ group_answers.previous_page_number }}" class="prediction-pagination">
+                    <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span>
+                <img src="{% static 'img/pages_prev.png' %}" alt="&laquo;">
+            </span></li>
+        {% endif %}
+
+        {% for i in group_answers.paginator.page_range %}
+            {% if group_answers.number == i %}
+                <li class="page-item-active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+                <li class="page-item">
+                    <a href="?page={{ i }}" class="prediction-pagination">{{ i }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if group_answers.has_next %}
+            <li class="page-item">
+                <a href="?page={{ group_answers.next_page_number }}" class="prediction-pagination">
+                    <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled"><span>
+                <img src="{% static 'img/pages_next.png' %}" alt="&raquo;">
+            </span></li>
+        {% endif %}
+    </ul>
+{% endif %}

@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let searchTerm = ''
         var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})
         postRequest.done(function(data) {
-            $(".all-boards").html(data)
+            $(".all-boards").html(data.result)
         });
     })
 

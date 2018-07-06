@@ -99,22 +99,16 @@ def user_profile(request, username=None):
         group_answers = [a for a in group_answers if a.points_added]
         knockout_answers = [a for a in knockout_answers if a.points_added]
 
-    paginator = Paginator(group_answers, 12)
     if request.is_ajax():
         page = request.POST.get('page', 1)
-        try:
-            group_answers_subset = paginator.page(page)
-        except PageNotAnInteger:
-            group_answers_subset = paginator.page(1)
-        except EmptyPage:
-            group_answers_subset = paginator.page(paginator.num_pages)
+        group_answers_subset = paginated_data(group_answers, num_per_page=12, page=page)
 
         data = {
             'page_html': render_to_string('ajax_partials/group_predictions.html', {'group_answers': group_answers_subset })
         }
         return JsonResponse(data)
     else:
-        group_answers_subset = paginator.page(1)
+        group_answers_subset = paginated_data(group_answers, num_per_page=12, page=1)
     
 
     ranking = utils.get_user_ranking(user)
@@ -152,6 +146,20 @@ def user_profile(request, username=None):
             print (profile_form.errors)
 
     return render(request, "user_profile.html", context)
+
+
+# Takes data, a number of entries to display per-page, and the page to display.
+# Returns the relevant page for the data set.
+def paginated_data(data, num_per_page, page=1):
+    paginator = Paginator(data, num_per_page)
+    try:
+        data_subset = paginator.page(page)
+    except PageNotAnInteger:
+        data_subset = paginator.page(1)
+    except EmptyPage:
+        data_subset = paginator.page(paginator.num_pages)
+    return data_subset
+
 
 @login_required
 def answer_form(request):
@@ -310,14 +318,7 @@ def leaderboards(request):
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
-
-    paginator = Paginator(all_lb, 5)
-    try:
-        all_lb_subset = paginator.page(page)
-    except PageNotAnInteger:
-        all_lb_subset = paginator.page(1)
-    except EmptyPage:
-        all_lb_subset = paginator.page(paginator.num_pages)
+    all_lb_subset = paginated_data(all_lb, num_per_page=5, page=page)
 
     context_dict = {
         'ranking': ranking,
@@ -354,7 +355,6 @@ def leaderboards(request):
 @csrf_exempt
 def paginate_leaderboards(request):
     if request.is_ajax():
-        page = request.POST.get('page', 1)
         search_term = request.POST.get('search_term', None)
 
         if search_term == '' or search_term is None:
@@ -362,13 +362,8 @@ def paginate_leaderboards(request):
         else:
             all_lb = Leaderboard.objects.filter(name__contains=search_term).order_by(Lower('name'))
 
-        paginator = Paginator(all_lb, 5)
-        try:
-            all_lb_subset = paginator.page(page)
-        except PageNotAnInteger:
-            all_lb_subset = paginator.page(1)
-        except EmptyPage:
-            all_lb_subset = paginator.page(paginator.num_pages)
+        page = request.POST.get('page', 1)
+        all_lb_subset = paginated_data(all_lb, num_per_page=5, page=page)
 
         user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))        
         context_dict = { 
@@ -386,20 +381,15 @@ def paginate_leaderboards(request):
 def search_leaderboards(request):
     if request.is_ajax():
         search_term = request.POST.get('search_term', None)
-        page = request.POST.get('page', 1)
 
         # Filter leaderboards by the search term
         if search_term == '' or search_term is None:
             matched_lbs = Leaderboard.objects.order_by(Lower("name"))
         else:
             matched_lbs = Leaderboard.objects.filter(name__contains=search_term).order_by(Lower("name"))
-        paginator = Paginator(matched_lbs, 5)
-        try:
-            matched_lb_subset = paginator.page(page)
-        except PageNotAnInteger:
-            matched_lb_subset = paginator.page(1)
-        except EmptyPage:
-            matched_lb_subset = paginator.page(paginator.num_pages)
+
+        page = request.POST.get('page', 1)
+        matched_lb_subset = paginated_data(matched_lbs, num_per_page=5, page=page)
 
         user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
         
@@ -409,7 +399,7 @@ def search_leaderboards(request):
             'user_leaderboard_set': user_leaderboard_set,
         }
         data = {
-            'result': render_to_string('include_leaderboards.html', context_dict, request=request)
+            'result': render_to_string('include_leaderboards.html', context_dict)
         }
         return JsonResponse(data)
 
