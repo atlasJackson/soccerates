@@ -29,5 +29,6 @@ urlpatterns = [
 # AJAX URLS
 urlpatterns += [
     path('ajax/leaderboards/get_page', views.paginate_leaderboards, name='paginate_leaderboard'),
-    path('ajax/leaderboards/search', views.search_leaderboards, name='search_leaderboard')
+    path('ajax/leaderboards/search', views.search_leaderboards, name='search_leaderboard'),
+    path('ajax/profile/get_predictions', views.user_profile, name='user_predictions')
 ]

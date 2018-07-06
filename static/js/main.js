@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     /* Initialize tooltips */
-    $('[data-toggle="tooltip"]').tooltip();
+    function initTooltip() {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    initTooltip()
 
     /* This block disables the submit button when a result has only been partially entered: ie - one team's goals, but not the other */
     let numberfields = $("input[type='number']")
@@ -130,6 +134,19 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     })
 
+    /* AJAX request for paginating user-profile predictions */
+    $(".userprofile-predictions").on("click", ".prediction-pagination", function(e) {
+        e.preventDefault()
+        let page = $(this).attr("href")
+        page = page.substr(page.length - 1)
+        var postRequest = $.post("/ajax/profile/get_predictions", {'page': page})
+        postRequest.done(function(data) {
+            $(".userprofile-predictions").html(data.page_html)
+            initTooltip()
+        })
+    })
+
+    /* AJAX request for searching for leaderboards */
     $(".all-boards").on("click", "#board-searchbtn", function(e) {
         let searchTerm = $("#board-searchbox").val()
         var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})
@@ -140,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     })
 
+    /* AJAX call for clearing the search results for leaderboards */
     $(".all-boards").on("click", "#clearsearch", function(e) {
         let searchTerm = ''
         var postRequest = $.post("/ajax/leaderboards/search", {'search_term': searchTerm})

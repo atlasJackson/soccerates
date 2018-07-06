@@ -80,6 +80,7 @@ def world_cup_schedule(request):
 
 
 @login_required
+@csrf_exempt
 def user_profile(request, username=None):
 
     try:
@@ -91,23 +92,30 @@ def user_profile(request, username=None):
             return HttpResponseRedirect(reverse("index"))
 
     answers = user.profile.get_predictions()
-    group_answers = answers.filter(fixture__stage=Fixture.GROUP)
+    group_answers = answers.filter(fixture__stage=Fixture.GROUP).order_by("fixture__team1__group", "fixture__match_date")
     knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
         group_answers = [a for a in group_answers if a.points_added]
         knockout_answers = [a for a in knockout_answers if a.points_added]
 
-    # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
-    page = request.GET.get('page', 1)
-
     paginator = Paginator(group_answers, 12)
-    try:
-        group_answers_subset = paginator.page(page)
-    except PageNotAnInteger:
+    if request.is_ajax():
+        page = request.POST.get('page', 1)
+        try:
+            group_answers_subset = paginator.page(page)
+        except PageNotAnInteger:
+            group_answers_subset = paginator.page(1)
+        except EmptyPage:
+            group_answers_subset = paginator.page(paginator.num_pages)
+
+        data = {
+            'page_html': render_to_string('ajax_partials/group_predictions.html', {'group_answers': group_answers_subset })
+        }
+        return JsonResponse(data)
+    else:
         group_answers_subset = paginator.page(1)
-    except EmptyPage:
-        group_answers_subset = paginator.page(paginator.num_pages)
+    
 
     ranking = utils.get_user_ranking(user)
     usercount = get_user_model().objects.count()
