@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
-
+from django.template.loader import render_to_string
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.forms import formset_factory
@@ -155,13 +155,12 @@ def answer_form_selected(request, stage):
 
     # Check if the group stage has been selected to handle the required group-specific logic in this view, and the template.
     stage_is_group = (stage == "group_stage")
+    context_dict = {
+        'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 
+        'stage_is_group': stage_is_group,
+        'stage': stage, 
+    }
 
-    context_dict = {'groups': ["A", "B", "C", "D", "E", "F", "G", "H"], 
-                    'stage_is_group': stage_is_group,
-                    'stage': stage,
-                    }
-
-    # Create as many formsets as there are fixtures whose scores are to be predicted.
     # Forms for the group stage.
     if stage_is_group:
         group_fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP).order_by('team1__group', 'match_date')
@@ -169,75 +168,22 @@ def answer_form_selected(request, stage):
         initial_data = get_initial_data(group_fixtures, request.user)    
     # Forms for the knockout stage.
     else:
-        #stage = ("_").join(re.findall(r"[\w']+", stage.upper())) #Get string matching fixture's stage choices.
-        #print (stage)
-        
-        if (stage == "round_of_16"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
-        if (stage == "quarter-finals"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
-        if (stage == "semi-finals"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
-        if (stage == "third_place_play-off"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.TPP)
-        if (stage == "final"):
-            knockout_fixtures = Fixture.all_fixtures_by_stage(Fixture.FINAL)
-
+        knockout_fixtures = get_form_fixtures(stage)
         context_dict['knockout_fixtures'] = knockout_fixtures
         AnswerFormSet = formset_factory(AnswerForm, extra=len(knockout_fixtures), max_num=len(knockout_fixtures))
         initial_data = get_initial_data(knockout_fixtures, request.user, True) # Boolean argument adds ET/Penalties to initial data.
 
    
-    # Check if the request was HTTP POST.
+    # If POST, check formset is valid, and if so process the formset and redirect to profile page on completion.
     if request.method == 'POST':
         answer_formset = AnswerFormSet(request.POST, initial=[data for data in initial_data])
         if answer_formset.is_valid():
-            # Get score predictions from corresponding form for each fixture.
-            for answer_form in answer_formset:
-
-                # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
-                if answer_form.has_changed():
-                    fixt = answer_form.cleaned_data.get('fixture')
-
-                    # Check if the answer can be edited.
-                    if not can_edit_answer(fixt):
-                        continue
-
-                    # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
-                    if not Answer.objects.filter(user=request.user, fixture=fixt).exists():
-
-                        answer = Answer.objects.create(
-                            user=request.user, 
-                            fixture=fixt,
-                            team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                            team2_goals=answer_form.cleaned_data.get('team2_goals'),
-                            has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
-                            has_penalties=answer_form.cleaned_data.get('has_penalties')
-                        )
-
-                        if answer.has_penalties:
-                            answer.has_extra_time = True
-                            answer.save()
-
-                    else:                    
-                        answer = Answer.objects.filter(user=request.user,fixture=fixt)
-                        answer.update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
-                                    team2_goals=answer_form.cleaned_data.get('team2_goals'),
-                                    has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
-                                    has_penalties=answer_form.cleaned_data.get('has_penalties'))
-
-                        if answer[0].has_penalties:
-                            answer.update(has_extra_time=True)
-
-            # Return to the index for now.
+            process_formset(answer_formset, request.user)
             return HttpResponseRedirect(reverse('profile'))
         else:
             # Print problems to the terminal.
             print(answer_formset.errors)
-    
     else:
-            
-        # Check user is logged in, otherwise can't render the formset.
         if stage_is_group:
             # Not a POST, so all forms will be blank unless the user has already submitted an answer.
             # If answers exist, populate the form with the existing answers.
@@ -245,13 +191,9 @@ def answer_form_selected(request, stage):
             zipped_groups = [fixture.team1.group for fixture in group_fixtures]
             formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
-
-            # With the initial values set within the form, we add the zipped fixtures/forms/groups data structure to the template context. 
-            # This allows us to iterate over each fixture/form in the template, with access to the associated group, and will ensure they're in sync.
             context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
             context_dict['management_form'] = management_form
         else:
-
             formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
 
@@ -260,6 +202,57 @@ def answer_form_selected(request, stage):
 
     return render(request, 'answer_form_selected.html', context_dict)
 
+# Processes a submitted formset of answers
+def process_formset(answer_formset, user):
+
+    for answer_form in answer_formset:
+        # Only process/save the form if the form differs from its initial data. Formsets have a has_changed method for detecting this.
+        if answer_form.has_changed():
+            fixt = answer_form.cleaned_data.get('fixture')
+
+            # Check if the answer can be edited.
+            if not can_edit_answer(fixt):
+                continue
+
+            # Check to see if the user has already provided an answer for this fixture. If not, create the Answer. Otherwise update.
+            if not Answer.objects.filter(user=user, fixture=fixt).exists():
+
+                answer = Answer.objects.create(
+                    user=user, 
+                    fixture=fixt,
+                    team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                    team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                    has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                    has_penalties=answer_form.cleaned_data.get('has_penalties')
+                )
+
+                if answer.has_penalties:
+                    answer.has_extra_time = True
+                    answer.save()
+
+            else:                    
+                answer = Answer.objects.filter(user=user,fixture=fixt)
+                answer.update(team1_goals=answer_form.cleaned_data.get('team1_goals'),
+                            team2_goals=answer_form.cleaned_data.get('team2_goals'),
+                            has_extra_time=answer_form.cleaned_data.get('has_extra_time'),
+                            has_penalties=answer_form.cleaned_data.get('has_penalties'))
+
+                if answer[0].has_penalties:
+                    answer.update(has_extra_time=True)
+
+
+# Gets the fixtures to display on the form, based on the stage passed in.
+def get_form_fixtures(stage=None):
+    if (stage == "round_of_16"):
+        return Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
+    if (stage == "quarter-finals"):
+        return Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
+    if (stage == "semi-finals"):
+        return Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
+    if (stage == "third_place_play-off"):
+        return Fixture.all_fixtures_by_stage(Fixture.TPP)
+    if (stage == "final"):
+        return Fixture.all_fixtures_by_stage(Fixture.FINAL)
 
 # Determines initial data for an AnswerForm based on the fixtures and user passed in.
 # Returns list comprised of dictionaries with the initial data.
@@ -298,6 +291,9 @@ def can_edit_answer(fixture):
 @login_required
 def leaderboards(request):
 
+    # User's ranking for position on global leaderboard.
+    ranking = utils.get_user_ranking(request.user)
+
     user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
     all_lb = Leaderboard.objects.all().order_by(Lower('name'))
 
@@ -316,6 +312,7 @@ def leaderboards(request):
         all_lb_subset = paginator.page(paginator.num_pages)
 
     context_dict = {
+        'ranking': ranking,
         'all_lb_subset': all_lb_subset, 
         'public_lb': public_lb, 
         'private_lb': private_lb,
@@ -371,7 +368,10 @@ def paginate_leaderboards(request):
             'all_boards': True,
             'user_leaderboard_set': user_leaderboard_set,
         }
-        return render(request, 'include_leaderboards.html', context_dict)
+        data = {
+            'result': render_to_string('include_leaderboards.html', context_dict)
+        }
+        return JsonResponse(data)
 
 @login_required
 @csrf_exempt
@@ -400,8 +400,10 @@ def search_leaderboards(request):
             'all_boards': True,
             'user_leaderboard_set': user_leaderboard_set,
         }
-        return render(request, 'include_leaderboards.html', context_dict)
-
+        data = {
+            'result': render_to_string('include_leaderboards.html', context_dict, request=request)
+        }
+        return JsonResponse(data)
 
 @login_required
 def show_leaderboard(request, leaderboard):
@@ -409,7 +411,6 @@ def show_leaderboard(request, leaderboard):
     try:
         # Get leaderboard with given slug.
         leaderboard = Leaderboard.objects.prefetch_related('users', 'users__profile').get(slug=leaderboard)
-        print (request.user in leaderboard.users.all())
 
         # If there are errors, do not reinitialise the form.
         access_form = PrivateAccessForm(request.POST or None)
@@ -422,7 +423,6 @@ def show_leaderboard(request, leaderboard):
             if access_form.is_valid():
 
                 given_password = access_form.cleaned_data['password']
-                hashed_password = make_password(given_password)
 
                 if check_password(given_password, leaderboard.password):
                     leaderboard.users.add(request.user)
@@ -433,26 +433,14 @@ def show_leaderboard(request, leaderboard):
         if leaderboard.is_private and not request.user in leaderboard.users.all():
             return render(request, 'private_leaderboard_login.html', context_dict)
 
-        # Get a list of all users who are members of the leaderboard.
-        members = leaderboard.users.select_related('profile').order_by('-profile__points')
-        # Get a collection of board statistics.
-        total_points = members.aggregate(tp=Sum('profile__points'))['tp']
-        if members:
-            membercount = members.count()
-            average_points = total_points / membercount
-            percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / membercount
-        else:
-            average_points = 0
-            percent_above_average = 0
+        # Get stats for the given leaderboard
+        stats = leaderboard_stats(leaderboard)
 
-        # Add entities to the context dictionary
+        # Add entities to the context dictionary, unpacking the stats into the dictionary.
         context_dict = {
             'access_form': access_form,
             'leaderboard':leaderboard, 
-            'members':members, 
-            'total_points': total_points,
-            'average_points': average_points,
-            'percent_above_average': percent_above_average,
+            **stats
         }
 
         # daily_user_stats = utils.user_daily_performance(leaderboard)
@@ -467,26 +455,17 @@ def show_leaderboard(request, leaderboard):
 
     return render(request, 'show_leaderboard.html', context_dict)
 
-
-
 # Global leaderboard for all users in the system
 @login_required
 def global_leaderboard(request):
-    members = get_user_model().objects.select_related('profile').order_by('-profile__points')
-    usercount = members.count()
-    total_points = members.aggregate(total_pts=Sum('profile__points'))['total_pts']
-    average_points = total_points / usercount
-    percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / usercount
+    stats = leaderboard_stats()
     global_leaderboard = True # Allows us to conditionally render/unrender parts of the template
-
+    
     # Pagination stuff goes here
 
     context = {
-        'members':members, 
-        'total_points': total_points,
-        'average_points': average_points,
-        'percent_above_average': percent_above_average,
         'global_leaderboard': global_leaderboard,
+        **stats
     }
 
     #daily_user_stats = utils.user_daily_performance()
@@ -495,6 +474,31 @@ def global_leaderboard(request):
     #    context['best_points'] = daily_user_stats['best_points']
 
     return render(request, "show_leaderboard.html", context)
+
+# Returns stats for the leaderboard passed in. If leaderboard is None, we assume global leaderboard
+# This may need altered when friend lists are added, to accommodate the extra option.
+def leaderboard_stats(leaderboard=None):
+    if leaderboard is None:
+        members = get_user_model().objects.select_related('profile').order_by('-profile__points')
+    else:
+        members = leaderboard.users.select_related('profile').order_by('-profile__points')
+    # Get a collection of board statistics.
+    total_points = members.aggregate(tp=Sum('profile__points'))['tp']
+
+    # Create the stats dictionary
+    stats_dict = { 'members': members, 'total_points': total_points }
+    if members:
+        membercount = members.count()
+        average_points = total_points / membercount
+        percent_above_average = members.filter(profile__points__gte=average_points).count()*100 / membercount
+    else:
+        average_points = percent_above_average = 0
+    # Update the stats dict and return it
+    stats_dict.update({
+        'average_points': average_points, 
+        'percent_above_average': percent_above_average,
+    })
+    return stats_dict
 
 @login_required
 def join_leaderboard(request, leaderboard):

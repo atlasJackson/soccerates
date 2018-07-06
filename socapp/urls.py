@@ -17,8 +17,8 @@ urlpatterns = [
     path('answer_form/<slug:stage>/', views.answer_form_selected, name='answer_form_selected'),
     path('worldcup/schedule/', views.world_cup_schedule, name='wc_schedule'),
 
-    path('global_leaderboard/', views.global_leaderboard, name='global_leaderboard'),
     path('leaderboards/', views.leaderboards, name='leaderboards'),
+    path('leaderboards/global_leaderboard/', views.global_leaderboard, name='global_leaderboard'),
     path('leaderboards/<slug:leaderboard>/', views.show_leaderboard, name='show_leaderboard'),
     path('leaderboards/<slug:leaderboard>/join_leaderboard/', views.join_leaderboard, name='join_leaderboard'),
     path('leaderboards/<slug:leaderboard>/leave_leaderboard/', views.leave_leaderboard, name='leave_leaderboard'),

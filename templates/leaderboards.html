@@ -31,7 +31,7 @@
                 <!-- Leaderboards Information -->
                 <div class="mb-4" id="form-instructions">
                     <div class="d-flex justify-content-between">
-                        <h4 class="text-center font-weight-light">Manage your leaderboards below.</h4>
+                        <h4 class="text-center font-weight-light pr-1 mr-1">Manage your leaderboards below.</h4>
                         <span class="pointer" data-toggle="modal" data-target="#leaderboardInfoModal">
                             <img src="{% static 'img/info.png' %}" alt="" class="icon">
                         </span>
@@ -91,6 +91,11 @@
                 <!-- Private Leaderboards -->                
                 <div class="pb-3 my-3">
                     {% include 'include_leaderboards.html' with leaderboards=private_lb private=True %} 
+                </div>
+
+                <!-- Universal Leaderboards -->
+                <div class="pb-3 my-3">
+                    {% include 'include_leaderboards.html' with universal=True short=True %} 
                 </div>
 
             </div>

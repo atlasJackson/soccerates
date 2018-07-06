@@ -310,11 +310,6 @@
                             <p>The leaderboards {{ user.username }} is currently subscribed to are given below.</p>
                         {% endif %}
                         <p>To create or join leaderboards, visit the leaderboards page <a href="{% url 'leaderboards' %}">here</a>.</p>
-                        
-                        <!-- Link to Global Leaderboard -->
-                        <div class="col-12 text-center">
-                            <a class="col-10 offset-1 btn btn-outline-secondary btn btn-block text-uppercase mb-1" href="{% url 'global_leaderboard' %}">Gaia Leaderboard</a>
-                        </div>
                     </div>
                 </div>
 
@@ -333,6 +328,15 @@
                         {% include 'include_leaderboards.html' with leaderboards=private_lb private=True short=True %} 
                     {% else %}
                         {% include 'include_leaderboards.html' with leaderboards=private_lb private=True short=True not_user=True %}                          
+                    {% endif %}
+                </div>
+
+                <!-- Universal Leaderboards -->                
+                <div class="pb-3 m-3">
+                    {% if user == request.user %}
+                        {% include 'include_leaderboards.html' with universal=True short=True %} 
+                    {% else %}
+                        {% include 'include_leaderboards.html' with universal=True short=True not_user=True %}                          
                     {% endif %}
                 </div>
             </div>
