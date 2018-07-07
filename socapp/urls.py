@@ -13,9 +13,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register', views.RegistrationView.as_view(), name='register'),
 
-    path('answer_form/', views.answer_form, name='answer_form'),
-    path('answer_form/points_system/', views.points_system, name='points_system'),
-    path('answer_form/<slug:stage>/', views.answer_form_selected, name='answer_form_selected'),
+    path('score_predictions/', views.answer_form, name='answer_form'),
+    path('score_predictions/points_system/', views.points_system, name='points_system'),
+    path('score_predictions/<slug:stage>/', views.answer_form_selected, name='answer_form_selected'),
+    
     path('worldcup/schedule/', views.world_cup_schedule, name='wc_schedule'),
 
     path('leaderboards/', views.leaderboards, name='leaderboards'),

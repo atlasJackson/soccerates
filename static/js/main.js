@@ -69,6 +69,15 @@ document.addEventListener("DOMContentLoaded", function() {
         $("#"+trigger).addClass("table-info");
     });
 
+    $("#pointsAugmentedTab").on("click", function(e) {
+        var trigger = e.target.id.slice(0,-4) + "-column";
+        var pointsColumns = $(".points-system-augmented-col");
+        for (i=0, len=pointsColumns.length; i <len; i++) {
+            pointsColumns[i].classList.remove("table-info");
+        }
+        $("#"+trigger).addClass("table-info");
+    });
+
 
     /* LEADERBOARDS */
     $(".join-boards").on("click", function() {
