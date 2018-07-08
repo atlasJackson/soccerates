@@ -1,0 +1,1 @@
+""" Soccerates Celery Tasks """

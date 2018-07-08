@@ -1,0 +1,1 @@
+""" Soccerates Celery app/config goes here """
