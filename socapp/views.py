@@ -1,9 +1,7 @@
-from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import F, Sum
 from django.db.models.functions import Lower
 from django.urls import reverse
@@ -11,14 +9,14 @@ from django.utils import timezone
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.edit import CreateView
 from django.template.loader import render_to_string
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.forms import formset_factory
-from .forms import RegistrationForm, UserProfileForm, AnswerForm, LeaderboardForm, PrivateAccessForm
+from .forms import UserProfileForm, AnswerForm, LeaderboardForm, PrivateAccessForm
 
-from .models import UserProfile, Fixture, Answer, Team, Leaderboard
+from .models import Fixture, Answer, Team, Leaderboard
+from socapp_auth.models import UserProfile
 from . import utils
 
 import datetime, re
@@ -561,26 +559,6 @@ def forums(request):
 
     context_dict = {}
     return render(request, 'forums.html', context_dict)
-
-
-#################
-## AUTH VIEWS
-#################
-
-class RegistrationView(SuccessMessageMixin, CreateView):
-    template_name = "register.html"
-    form_class = RegistrationForm
-    success_url = "profile"
-    success_message = "Registration successful. Welcome, %(username)s"
-
-    # Override to auto-login user when they register
-    def form_valid(self, form):
-        valid = super().form_valid(form)
-        username = self.request.POST['username']
-        pw = self.request.POST['password']
-        user = authenticate(username=username, password=pw)
-        login(self.request, user)
-        return valid
 
 
 #################################

@@ -8,7 +8,6 @@ from django.utils import timezone
 
 import socapp.utils as utils
 
-
 class Team(models.Model):
     group_names = ["A","B","C","D","E","F","G","H"]
     CHOICES = tuple((g, g) for g in group_names)
@@ -265,21 +264,8 @@ class Fixture(models.Model):
 
 
 ######################################################
-#  Models for users, their answers, and leaderboards
+#  Models for answers and leaderboards
 ######################################################
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
-    picture=models.ImageField(upload_to='profile/profile_images', blank=True)
-    points = models.IntegerField(default=0) # Hold the points for the user
-
-    def get_predictions(self):
-        return Answer.objects.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2') \
-            .filter(user=self.user)
-
-    def __str__(self):
-        return self.user.username
-        
 
 class Answer(models.Model):
     POINTS_NOT_ADDED = 0
@@ -364,6 +350,22 @@ class Leaderboard(models.Model):
 ###############################
 # !!!IGNORE FOR NOW
 
+# # Tournament container
+# class Tournament(models.Model):
+#     LEAGUE = 1
+#     KNOCKOUT = 2
+#     GROUP_THEN_KNOCKOUT = 3
+#     tournament_format_choices = (
+#         (LEAGUE, "League"),
+#         (KNOCKOUT, "Cup"),
+#         (GROUP_THEN_KNOCKOUT, "Group -> Knockout")
+#     )
+
+#     name = models.CharField(max_length=64)
+#     t_format = models.IntegerField(choices=tournament_format_choices, default=GROUP_THEN_KNOCKOUT)
+#     winner = models.OneToOneField(Team, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True)
+#
+#
 # class ScorelineAnswer(Answer):
 #     team1_goals = models.IntegerField()
 #     team2_goals = models.IntegerField()

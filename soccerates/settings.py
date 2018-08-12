@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'socapp',
+    'socapp_auth.apps.SocappAuthConfig',
     'django_extensions',
     'debug_toolbar',
     'django_cleanup',
