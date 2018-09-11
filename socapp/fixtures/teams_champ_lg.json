@@ -246,7 +246,7 @@
         "model": "socapp.Team",
         "pk": 60,
         "fields": {
-            "name": "Plzeň",
+            "name": "Plzen",
             "country_code": "CZE",
             "group": "G"
         }
