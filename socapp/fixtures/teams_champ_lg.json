@@ -1,0 +1,290 @@
+[
+    {
+        "model": "socapp.Team",
+        "pk": 33,
+        "fields": {
+            "name": " Atlético",
+            "country_code": "SPA",
+            "group": "A"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 34,
+        "fields": {
+            "name": "Dortmund",
+            "country_code": "GER",
+            "group": "A"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 35,
+        "fields": {
+            "name": "Monaco",
+            "country_code": "FRA",
+            "group": "A"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 36,
+        "fields": {
+            "name": "Club Brugge",
+            "country_code": "URU",
+            "group": "A"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 37,
+        "fields": {
+            "name": "Barcelona",
+            "country_code": "SPA",
+            "group": "B"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 38,
+        "fields": {
+            "name": "Tottenham",
+            "country_code": "ENG",
+            "group": "B"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 39,
+        "fields": {
+            "name": "PSV",
+            "country_code": "NED",
+            "group": "B"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 40,
+        "fields": {
+            "name": "Inter Milan",
+            "country_code": "ITA",
+            "group": "B"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 41,
+        "fields": {
+            "name": "Paris Saint-Germain",
+            "country_code": "FRA",
+            "group": "C"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 42,
+        "fields": {
+            "name": "Napoli",
+            "country_code": "ITA",
+            "group": "C"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 43,
+        "fields": {
+            "name": "Liverpool",
+            "country_code": "ENG",
+            "group": "C"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 44,
+        "fields": {
+            "name": "Red Star Belgrade",
+            "country_code": "SER",
+            "group": "C"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 45,
+        "fields": {
+            "name": "Galatasaray",
+            "country_code": "TUR",
+            "group": "D"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 46,
+        "fields": {
+            "name": "Lokomotiv Moscow",
+            "country_code": "RUS",
+            "group": "D"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 47,
+        "fields": {
+            "name": "Porto",
+            "country_code": "POR",
+            "group": "D"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 48,
+        "fields": {
+            "name": "Schalke 04",
+            "country_code": "GER",
+            "group": "D"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 49,
+        "fields": {
+            "name": "AEK Athens",
+            "country_code": "GRE",
+            "group": "E"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 50,
+        "fields": {
+            "name": "Ajax",
+            "country_code": "NED",
+            "group": "E"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 51,
+        "fields": {
+            "name": "Bayern Munich",
+            "country_code": "GER",
+            "group": "E"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 52,
+        "fields": {
+            "name": "Benfica",
+            "country_code": "POR",
+            "group": "E"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 53,
+        "fields": {
+            "name": "Hoffenheim",
+            "country_code": "GER",
+            "group": "F"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 54,
+        "fields": {
+            "name": "Manchester City",
+            "country_code": "ENG",
+            "group": "F"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 55,
+        "fields": {
+            "name": "Lyon",
+            "country_code": "FRA",
+            "group": "F"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 56,
+        "fields": {
+            "name": "Shakhtar Donetsk",
+            "country_code": "UKR",
+            "group": "F"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 57,
+        "fields": {
+            "name": "CSKA Moscow",
+            "country_code": "RUS",
+            "group": "G"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 58,
+        "fields": {
+            "name": "Real Madrid",
+            "country_code": "SPA",
+            "group": "G"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 59,
+        "fields": {
+            "name": "Roma",
+            "country_code": "ITA",
+            "group": "G"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 60,
+        "fields": {
+            "name": "Plzeň",
+            "country_code": "CZE",
+            "group": "G"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 61,
+        "fields": {
+            "name": "Juventus",
+            "country_code": "ITA",
+            "group": "H"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 62,
+        "fields": {
+            "name": "Manchester United",
+            "country_code": "ENG",
+            "group": "H"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 63,
+        "fields": {
+            "name": "Valencia",
+            "country_code": "SPA",
+            "group": "H"
+        }
+    },
+    {
+        "model": "socapp.Team",
+        "pk": 64,
+        "fields": {
+            "name": "Young Boys",
+            "country_code": "SWI",
+            "group": "H"
+        }
+    }
+]
