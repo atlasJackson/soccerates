@@ -8,6 +8,7 @@
 
 {% block body_block %}
     <div class="container mt-0">
+        {% if group_fixtures_exist %}
 
         <div class="row border-bottom border-primary">
             <div class="col-12 px-0">
@@ -40,5 +41,6 @@
             </div>
             {% endfor %}
         </main>
+        {% endif %}
     </div>
 {% endblock %}

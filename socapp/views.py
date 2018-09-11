@@ -29,6 +29,7 @@ def index(request):
 
     # Grouops by stage.
     group_fixtures = group_fixtures_dictionary()
+    group_fixtures_exist = any(group_fixtures.values())
     ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
     qf_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
     sf_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
@@ -37,10 +38,12 @@ def index(request):
 
     upcoming_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
+    
     past_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
     context = {
+        'group_fixtures_exist': group_fixtures_exist,
         'group_fixtures': group_fixtures,
         'ro16_fixtures' : ro16_fixtures,
         'qf_fixtures' : qf_fixtures,
@@ -69,10 +72,12 @@ def index(request):
 # Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
 def world_cup_schedule(request):
     
-    fixtures = group_fixtures_dictionary()
+    group_fixtures = group_fixtures_dictionary()
+    group_fixtures_exist = any(group_fixtures.values())
 
     context = {
-        'fixtures': fixtures
+        'fixtures': group_fixtures,
+        'group_fixtures_exist': group_fixtures_exist
     }
     return render(request, "world_cup.html", context)
 

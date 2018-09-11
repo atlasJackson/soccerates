@@ -95,11 +95,15 @@
 
                 <div class="card mb-3"> <!-- Display upcoming fixtures -->
                     <h5 class="card-header bg-dark text-white text-center text-uppercase">Upcoming Fixtures</h5>
-                    {% include 'include_fixtures.html' with fixtures=upcoming_fixtures %} 
+                    {% if upcoming_fixtures %}
+                        {% include 'include_fixtures.html' with fixtures=upcoming_fixtures %}
+                    {% endif %}
                 </div>
                 <div class="card mb-3"> <!-- Display recent results -->
                     <h5 class="card-header bg-dark text-white text-center text-uppercase">Results</h5>
-                    {% include 'include_fixtures.html' with fixtures=past_fixtures %} 
+                    {% if past_fixtures %}
+                        {% include 'include_fixtures.html' with fixtures=past_fixtures %}
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <a href="{% url 'wc_schedule' %}" class="btn btn-outline-secondary btn-sm btn-block text-uppercase">
@@ -126,6 +130,7 @@
                     </div>
 
                     <div class="tab-content" id="stageTabContent">
+                        {% if group_fixtures_exist %}
                         <!-- Group Stage Display -->
                         <div class="tab-pane fade show active" id="group-content" role="tabpanel" aria-labelledby="group-content">
                             <div>
@@ -156,7 +161,8 @@
 
                                 </ul>
                             </div>
-
+                            
+                            
                             <div class="tab-content" id="groupTabContent">
                                 {% for group, fixture_list in group_fixtures.items %}
 
@@ -173,10 +179,12 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
+                            {% endif %}
                         </div>
                         <!-- -->
 
                         <!-- Knockout Stage Display -->
+                        
                         <div class="tab-pane fade" id="knockout-content" role="tabpanel" aria-labelledby="knockout-content">
                             <div>
                                 <!-- Nav tabs for each knockout stage -->
@@ -222,6 +230,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- -->
                     </div>            
                 </div>
