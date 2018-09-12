@@ -43,6 +43,8 @@
                     {% endif %}
                         {% if fixture.team1.flag %}                                
                             <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
+                        {% else %}
+                            <small>{{ fixture.team1.name }}</small>
                         {% endif %}
                     </td>
 
@@ -67,6 +69,8 @@
                     {% endif %}
                         {% if fixture.team2.flag %}
                             <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
+                        {% else %}
+                            <small>{{ fixture.team2.name }}</small>
                         {% endif %}
                     </td>
 

@@ -30,7 +30,9 @@
             {% else %}
             <td class="group-team-name-cell">
             {% endif %}
+                {% if is_international %}
                 <img src="{% static team.flag.url %}" class="flag mr-1" alt="{{team.name}}"/>
+                {% endif %}
                 {{ team.name }}
             </td>
             <td class="group-team-data-cell text-right">
