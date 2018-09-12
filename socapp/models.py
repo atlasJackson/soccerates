@@ -94,10 +94,13 @@ class Tournament(models.Model):
     def __str__(self):
         return self.name
 
+    # Get all the fixtures in the tournament
+    def get_fixtures(self):
+        return Fixture.objects.filter(tournament=self.id)
+
     # Get all the fixtures for this tournament, ordered by match date.
     def all_fixtures_by_date(self):
-        return Fixture.objects.filter(pk=self.id) \
-            .select_related('team1', 'team2').order_by('match_date')
+        return self.get_fixtures().select_related('team1', 'team2').order_by('match_date')
 
 
 ################################################################################
