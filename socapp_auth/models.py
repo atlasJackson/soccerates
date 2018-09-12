@@ -10,9 +10,14 @@ class UserProfile(models.Model):
     # Stores points PER tournament for each tournament a user participates in
     tournament_points = models.ManyToManyField(Tournament, through='TournamentPoints')
 
-    def get_predictions(self):
-        return Answer.objects.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2') \
-            .filter(user=self.user)
+    # Returns all the user's predictions, filtered by tournament if arg is provided
+    def get_predictions(self, tournament=None):
+        base_qs = Answer.objects.filter(user=self.user)
+        if tournament is None:
+            return base_qs.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2')
+        else:
+            return base_qs.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2') \
+                .filter(fixture__tournament=tournament)
 
     def __str__(self):
         return self.user.username
