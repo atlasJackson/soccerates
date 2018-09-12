@@ -211,11 +211,11 @@ class FixtureTests(TestCase):
 
     # Tests the method that gets all the WC fixtures that have been played thus far
     def test_all_completed_fixtures(self):
-        #tournament = Tournament.objects.first()
+        tournament = Tournament.objects.first()
         # By default, no games are completed. Here, we set 2 games to completed, and test the method.
         Fixture.objects.filter(pk__in=[1,2]).update(status=Fixture.MATCH_STATUS_PLAYED)
         
-        completed_fixtures = Fixture.all_completed_fixtures()
+        completed_fixtures = tournament.all_completed_fixtures()
         self.assertEqual(completed_fixtures.count(), 2)
         self.assertQuerysetEqual(Fixture.objects.select_related('team1', 'team2').filter(
             pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x

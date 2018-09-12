@@ -194,7 +194,8 @@ class Fixture(models.Model):
     #################################
     ### STATIC METHODS
     #################################
-
+    
+    ## Move these to Tournament model ##
     
     @staticmethod
     def all_fixtures_by_stage(stage):

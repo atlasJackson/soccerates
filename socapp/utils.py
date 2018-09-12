@@ -365,6 +365,7 @@ def update_goals_fields(previous_fixture, updated_fixture, team):
 ### USER POINTS CALCULATION
 ###############################
 
+# Access tournament via saved fixture
 def update_user_pts(saved_fixture=None, prev_fixture=None, add=False, update=False, remove=False):
     """
     Calculates all users' points for the given fixture, or all played fixtures. 
@@ -396,51 +397,71 @@ def update_user_pts(saved_fixture=None, prev_fixture=None, add=False, update=Fal
             # Determine the operation to perform in order to update user points, and act accordingly.
             if add:
                 # If the fixture is added, add the points given for the answer
-                add_user_points(user, ans, total_points)
+                add_user_points(user, ans, total_points, fixture.tournament)
             elif update:
                 # If the fixture is updated, get the difference between the updated-points, and the original (total_points)
                 if saved_fixture is not None:
                     new_points = calculate_points(saved_fixture, ans)
                     pointsdelta = new_points - total_points
-                    update_user_points(user, ans, pointsdelta)
+                    update_user_points(user, ans, pointsdelta, fixture.tournament)
             elif remove:
                 # If the fixture is removed, remove the points given for the answer
-                rm_user_points(user, ans, total_points)
+                rm_user_points(user, ans, total_points, fixture.tournament)
 
-def add_user_points(user, answer, pts):
+def add_user_points(user, answer, pts, tournament):
     """
     Adds points for the provided user, if the points_added flag is set to POINTS_NOT_ADDED
     """
+    from socapp_auth.models import TournamentPoints
     # Add points to user's total. The if condition should always be evaluate to true.
     if not answer.points_added:
         user.profile.points = F('points') + pts
         user.save()
         user.refresh_from_db()
+
+        if TournamentPoints.objects.filter(user=user.profile, tournament=tournament).exists():
+            t_pts = TournamentPoints.objects.filter(user=user.profile, tournament=tournament)
+            t_pts.update(points = F('points') + pts)
+        else:
+            t_pts = TournamentPoints.objects.create(user=user.profile, tournament=tournament, points=pts)
+
         answer.points = pts
         answer.points_added = answer.POINTS_ADDED
         answer.save()
         answer.refresh_from_db()
 
 
-def update_user_points(user, ans, pts):
+def update_user_points(user, ans, pts, tournament):
     """ Updates the points already given out to a user based on an altered scoreline.
 
         user -> the user who provided the answer
         pts -> the difference between the points for the updated fixture, vs the points from the original fixture     
     """
+    from socapp_auth.models import TournamentPoints
     user.profile.points = F('points') + pts
     user.save()
     user.refresh_from_db()
+
+    if TournamentPoints.objects.filter(user=user.profile, tournament=tournament).exists():
+        t_pts = TournamentPoints.objects.filter(user=user.profile, tournament=tournament)
+        t_pts.update(points = F('points') + pts)
+
     ans.points = F('points') + pts
     ans.save()
     ans.refresh_from_db()
 
-def rm_user_points(user, answer, pts):
+def rm_user_points(user, answer, pts, tournament):
     """ Removes a user's points for a given answer, and resets the points_added flag to False """
+    from socapp_auth.models import TournamentPoints
     if answer.points_added:
         user.profile.points = F('points') - pts
         user.save()
         user.refresh_from_db()
+
+        if TournamentPoints.objects.filter(user=user.profile, tournament=tournament).exists():
+            t_pts = TournamentPoints.objects.filter(user=user.profile, tournament=tournament)
+            t_pts.update(points = F('points') - pts)
+
         answer.points_added = answer.POINTS_NOT_ADDED
         answer.points = None
         answer.save()
