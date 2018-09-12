@@ -115,6 +115,7 @@ def user_profile(request, username=None):
     
 
     ranking = utils.get_user_ranking(user)
+    franking = utils.get_user_franking(user)
     usercount = get_user_model().objects.count()
     points_percentage = utils.points_per_fixture(user)
     public_lb = Leaderboard.objects.filter(users=user.pk, is_private=False)
@@ -125,6 +126,7 @@ def user_profile(request, username=None):
         'group_answers': group_answers_subset,
         'knockout_answers': knockout_answers,
         'ranking': ranking,
+        'franking': franking,
         'usercount': usercount,
         'public_lb': public_lb,
         'private_lb': private_lb,
@@ -315,6 +317,7 @@ def leaderboards(request):
 
     # User's ranking for position on global leaderboard.
     ranking = utils.get_user_ranking(request.user)
+    franking = utils.get_user_franking(request.user)
 
     user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
     all_lb = Leaderboard.objects.all().order_by(Lower('name'))
@@ -328,6 +331,7 @@ def leaderboards(request):
 
     context_dict = {
         'ranking': ranking,
+        'franking': franking,
         'all_lb_subset': all_lb_subset, 
         'public_lb': public_lb, 
         'private_lb': private_lb,
@@ -479,11 +483,28 @@ def global_leaderboard(request):
 
     return render(request, "show_leaderboard.html", context)
 
+# Global leaderboard for all users in the system
+@login_required
+def friends_leaderboard(request):
+    stats = leaderboard_stats("Friends", user=request.user)
+    friends_leaderboard = True # Allows us to conditionally render/unrender parts of the template
+    
+    # Pagination stuff goes here
+
+    context = {
+        'friends_leaderboard': friends_leaderboard,
+        **stats
+    }
+
+    return render(request, "show_leaderboard.html", context)
+
 # Returns stats for the leaderboard passed in. If leaderboard is None, we assume global leaderboard
 # This may need altered when friend lists are added, to accommodate the extra option.
-def leaderboard_stats(leaderboard=None):
+def leaderboard_stats(leaderboard=None, user=None):
     if leaderboard is None:
         members = get_user_model().objects.select_related('profile').order_by('-profile__points')
+    elif leaderboard == "Friends":
+        members = user.profile.friends.all().select_related('profile').order_by('-profile__points') | get_user_model().objects.filter(username=user)
     else:
         members = leaderboard.users.select_related('profile').order_by('-profile__points')
     # Get a collection of board statistics.

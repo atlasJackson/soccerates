@@ -48,19 +48,17 @@
                 </td>
             </tr>
 
-            {% comment %}
             <!-- For user's friend board -->
             {% if not not_user %}
             <tr>
                 <td>
-                    <a href="#">Friends Leaderboard</a>
+                    <a href="{% url 'friends_leaderboard' %}">Friends Leaderboard</a>
                 </td>
                 <td class="text-right">
-                    ** Rank **
+                    {{ franking }}
                 </td>
             </tr>
             {% endif %}
-            {% endcomment %}
 
         {% else %}
             {% if leaderboards %}

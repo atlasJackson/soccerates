@@ -6,6 +6,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     picture = models.ImageField(upload_to='profile/profile_images', blank=True)
     points = models.IntegerField(default=0) # Hold the TOTAL points for the user over all tournaments
+    friends = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     # Stores points PER tournament for each tournament a user participates in
     tournament_points = models.ManyToManyField(Tournament, through='TournamentPoints')
