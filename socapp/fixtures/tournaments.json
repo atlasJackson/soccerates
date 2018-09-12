@@ -1,0 +1,20 @@
+[
+    {
+        "model": "socapp.Tournament",
+        "pk": 1,
+        "fields": {
+            "name": "World Cup 2018",
+            "start_date": "2018-06-14T16:00:00+00:00",
+            "is_international": true
+        }
+    },
+    {
+        "model": "socapp.Tournament",
+        "pk": 2,
+        "fields": {
+            "name": "UEFA Champions League 2018",
+            "start_date": "2018-09-18T17:55:00+00:00",
+            "is_international": false
+        }
+    }
+]
