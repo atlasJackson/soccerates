@@ -9,7 +9,8 @@ def generate_team(name, country_code, group):
     return team
 
 def generate_fixture(team1, team2, match_date, stage=Fixture.GROUP):
-    fixture = Fixture.objects.get_or_create(team1=team1, team2=team2, match_date=match_date, stage=stage)[0]
+    tournament = Tournament.objects.first()
+    fixture = Fixture.objects.get_or_create(team1=team1, team2=team2, tournament=tournament, match_date=match_date, stage=stage)[0]
     return fixture
 
 def generate_answer(user, fixture):

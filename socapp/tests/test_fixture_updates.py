@@ -11,7 +11,8 @@ When a result is entered, the user's points should be calculated based on the ac
 """
 
 class ResultEnteredTests(TestCase):
-    fixtures = ['teams.json', 'games.json']
+    fixtures = ['tournaments.json', 'teams.json', 'games.json']
+    
     results = [
         { 'team1_goals': 2, 'team2_goals': 1 }, # Russia vs Saudi Arabia
         { 'team1_goals': 0, 'team2_goals': 0 }, # Egypt vs Uruguay

@@ -6,12 +6,13 @@ from django.utils import timezone
 import socapp.tests.test_helpers as helpers
 
 from socapp.models import *
+from socapp_auth.models import UserProfile
 
 
 # Tests for the Team model
 class TeamTests(TestCase):
 
-    fixtures = ['teams.json', 'games.json']
+    fixtures = ['tournaments.json', 'teams.json', 'games.json']
     
     def setUp(self):
         self.group = "G"
@@ -77,13 +78,14 @@ class TeamTests(TestCase):
 
 # Tests for the Fixture model
 class FixtureTests(TestCase):
-    fixtures = ['teams.json', 'games.json']
+    fixtures = ['tournaments.json', 'teams.json', 'games.json']
 
     def setUp(self):
         self.group = "G"
         self.team1 = helpers.generate_team("Panama","PAN",self.group)
         self.team2 = helpers.generate_team("England", "ENG", self.group)
         self.fixture = helpers.generate_fixture(self.team1, self.team2, timezone.now())
+        self.tournament = Tournament.objects.first()
     
     def test_str_representation(self):
         self.assertEqual("Panama vs England", str(self.fixture))
@@ -174,7 +176,7 @@ class FixtureTests(TestCase):
 
     # Tests the static method on the Fixture model which returns all fixtures in order of their match-date
     def test_all_fixtures_by_date(self):
-        fixtures = Fixture.all_fixtures_by_date()
+        fixtures = self.tournament.all_fixtures_by_date()
         
         # Assert that 'fixtures' is ordered:
         sorted = True # Flag: changed within the for-loop below if the result is NOT in sorted order
@@ -311,7 +313,7 @@ class UserProfileTests(TestCase):
         self.assertEquals(self.user.profile.points, 0)
 
 class AnswerTests(TestCase):
-    fixtures = ['teams.json', 'games.json']
+    fixtures = ['tournaments.json', 'teams.json', 'games.json']
     
     def setUp(self):
         self.user = helpers.generate_user()

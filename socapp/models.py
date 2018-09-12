@@ -73,7 +73,35 @@ class Team(models.Model):
 
 ################################################################################
 
-# Potentially include details of whether it's a group match, or later... add penalties/extra time to the model (or result model)?
+# Tournament container model
+class Tournament(models.Model):
+    # LEAGUE = 1
+    # KNOCKOUT = 2
+    # GROUP_THEN_KNOCKOUT = 3
+    # tournament_format_choices = (
+    #     (LEAGUE, "League"),
+    #     (KNOCKOUT, "Cup"),
+    #     (GROUP_THEN_KNOCKOUT, "Group -> Knockout")
+    # )
+
+    name = models.CharField(max_length=128)
+    #t_format = models.IntegerField(choices=tournament_format_choices, default=GROUP_THEN_KNOCKOUT)
+    start_date = models.DateTimeField()
+    winner = models.OneToOneField(Team, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True)
+    is_international = models.BooleanField(default=False)
+    # best_user = models.OneToOneField(User)
+
+    def __str__(self):
+        return self.name
+
+    # Get all the fixtures for this tournament, ordered by match date.
+    def all_fixtures_by_date(self):
+        return Fixture.objects.filter(pk=self.id) \
+            .select_related('team1', 'team2').order_by('match_date')
+
+
+################################################################################
+
 class Fixture(models.Model):
     # Constants to determine if the match has been played, or not.
     # Could maybe extend this to add a status for matches that are happening?    
@@ -105,6 +133,7 @@ class Fixture(models.Model):
     # This allows us to access the reverse relation, using team.team1_set or team.team2_set
     team1 = models.ForeignKey(Team, related_name="team1_set", on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name="team2_set", on_delete=models.CASCADE)
+    tournament = models.ForeignKey("Tournament", on_delete=models.CASCADE)
     match_date = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(choices=MATCH_STATUS_CHOICES, default=MATCH_STATUS_NOT_PLAYED)
 
@@ -163,9 +192,6 @@ class Fixture(models.Model):
     ### STATIC METHODS
     #################################
 
-    @staticmethod
-    def all_fixtures_by_date():
-        return Fixture.objects.select_related('team1', 'team2').order_by('match_date')
     
     @staticmethod
     def all_fixtures_by_stage(stage):
@@ -350,21 +376,6 @@ class Leaderboard(models.Model):
 ###############################
 # !!!IGNORE FOR NOW
 
-# # Tournament container
-# class Tournament(models.Model):
-#     LEAGUE = 1
-#     KNOCKOUT = 2
-#     GROUP_THEN_KNOCKOUT = 3
-#     tournament_format_choices = (
-#         (LEAGUE, "League"),
-#         (KNOCKOUT, "Cup"),
-#         (GROUP_THEN_KNOCKOUT, "Group -> Knockout")
-#     )
-
-#     name = models.CharField(max_length=64)
-#     t_format = models.IntegerField(choices=tournament_format_choices, default=GROUP_THEN_KNOCKOUT)
-#     winner = models.OneToOneField(Team, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True)
-#
 #
 # class ScorelineAnswer(Answer):
 #     team1_goals = models.IntegerField()
