@@ -147,287 +147,287 @@
         "model": "socapp.Fixture",
         "pk": 65,
         "fields": {
-            "team1_id": 10,
-            "team2_id": 11,
-            "match_date": "2018-06-26T15:00:00+00:00"
+            "team1_id": 49,
+            "team2_id": 52,
+            "match_date": "2018-10-02T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 66,
         "fields": {
-            "team1_id": 12,
-            "team2_id": 9,
-            "match_date": "2018-06-26T15:00:00+00:00"
+            "team1_id": 51,
+            "team2_id": 50,
+            "match_date": "2018-10-02T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 67,
         "fields": {
-            "team1_id": 13,
-            "team2_id": 14,
-            "match_date": "2018-06-16T14:00:00+00:00"
+            "team1_id": 53,
+            "team2_id": 54,
+            "match_date": "2018-10-02T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 68,
         "fields": {
-            "team1_id": 15,
-            "team2_id": 16,
-            "match_date": "2018-06-16T20:00:00+00:00"
+            "team1_id": 55,
+            "team2_id": 56,
+            "match_date": "2018-10-02T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 69,
         "fields": {
-            "team1_id": 13,
-            "team2_id": 15,
-            "match_date": "2018-06-21T19:00:00+00:00"
+            "team1_id": 57,
+            "team2_id": 58,
+            "match_date": "2018-10-02T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 70,
         "fields": {
-            "team1_id": 16,
-            "team2_id": 14,
-            "match_date": "2018-06-22T16:00:00+00:00"
+            "team1_id": 59,
+            "team2_id": 60,
+            "match_date": "2018-10-02T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 71,
         "fields": {
-            "team1_id": 14,
-            "team2_id": 15,
-            "match_date": "2018-06-26T19:00:00+00:00"
+            "team1_id": 61,
+            "team2_id": 64,
+            "match_date": "2018-10-02T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 72,
         "fields": {
-            "team1_id": 16,
-            "team2_id": 13,
-            "match_date": "2018-06-26T19:00:00+00:00"
+            "team1_id": 62,
+            "team2_id": 63,
+            "match_date": "2018-10-02T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 73,
         "fields": {
-            "team1_id": 19,
-            "team2_id": 20,
-            "match_date": "2018-06-17T13:00:00+00:00"
+            "team1_id": 33,
+            "team2_id": 36,
+            "match_date": "2018-10-03T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 74,
         "fields": {
-            "team1_id": 17,
-            "team2_id": 18,
-            "match_date": "2018-06-17T19:00:00+00:00"
+            "team1_id": 34,
+            "team2_id": 35,
+            "match_date": "2018-10-03T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 75,
         "fields": {
-            "team1_id": 17,
-            "team2_id": 19,
-            "match_date": "2018-06-22T13:00:00+00:00"
+            "team1_id": 39,
+            "team2_id": 40,
+            "match_date": "2018-10-03T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 76,
         "fields": {
-            "team1_id": 20,
-            "team2_id": 18,
-            "match_date": "2018-06-22T19:00:00+00:00"
+            "team1_id": 38,
+            "team2_id": 37,
+            "match_date": "2018-10-03T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 77,
         "fields": {
-            "team1_id": 20,
-            "team2_id": 17,
-            "match_date": "2018-06-27T19:00:00+00:00"
+            "team1_id": 41,
+            "team2_id": 44,
+            "match_date": "2018-10-03T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 78,
         "fields": {
-            "team1_id": 18,
-            "team2_id": 19,
-            "match_date": "2018-06-27T19:00:00+00:00"
+            "team1_id": 42,
+            "team2_id": 43,
+            "match_date": "2018-10-03T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 79,
         "fields": {
-            "team1_id": 21,
-            "team2_id": 22,
-            "match_date": "2018-06-17T16:00:00+00:00"
+            "team1_id": 46,
+            "team2_id": 48,
+            "match_date": "2018-10-03T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 80,
         "fields": {
-            "team1_id": 23,
-            "team2_id": 24,
-            "match_date": "2018-06-18T13:00:00+00:00"
+            "team1_id": 47,
+            "team2_id": 45,
+            "match_date": "2018-10-03T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 81,
         "fields": {
-            "team1_id": 24,
-            "team2_id": 22,
-            "match_date": "2018-06-23T16:00:00+00:00"
+            "team1_id": 49,
+            "team2_id": 51,
+            "match_date": "2018-10-23T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 82,
         "fields": {
-            "team1_id": 21,
-            "team2_id": 23,
-            "match_date": "2018-06-23T19:00:00+00:00"
+            "team1_id": 50,
+            "team2_id": 52,
+            "match_date": "2018-10-23T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 83,
         "fields": {
-            "team1_id": 24,
-            "team2_id": 21,
-            "match_date": "2018-06-27T15:00:00+00:00"
+            "team1_id": 56,
+            "team2_id": 54,
+            "match_date": "2018-10-23T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 84,
         "fields": {
-            "team1_id": 22,
-            "team2_id": 23,
-            "match_date": "2018-06-27T15:00:00+00:00"
+            "team1_id": 53,
+            "team2_id": 55,
+            "match_date": "2018-10-23T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 85,
         "fields": {
-            "team1_id": 25,
-            "team2_id": 26,
-            "match_date": "2018-06-18T16:00:00+00:00"
+            "team1_id": 58,
+            "team2_id": 60,
+            "match_date": "2018-10-23T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 86,
         "fields": {
-            "team1_id": 27,
-            "team2_id": 28,
-            "match_date": "2018-06-18T19:00:00+00:00"
+            "team1_id": 59,
+            "team2_id": 57,
+            "match_date": "2018-10-23T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 87,
         "fields": {
-            "team1_id": 25,
-            "team2_id": 27,
-            "match_date": "2018-06-23T13:00:00+00:00"
+            "team1_id": 64,
+            "team2_id": 63,
+            "match_date": "2018-10-23T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 88,
         "fields": {
-            "team1_id": 28,
-            "team2_id": 26,
-            "match_date": "2018-06-24T13:00:00+00:00"
+            "team1_id": 62,
+            "team2_id": 61,
+            "match_date": "2018-10-23T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 89,
         "fields": {
-            "team1_id": 28,
-            "team2_id": 25,
-            "match_date": "2018-06-28T19:00:00+00:00"
+            "team1_id": 36,
+            "team2_id": 35,
+            "match_date": "2018-10-24T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 90,
         "fields": {
-            "team1_id": 26,
-            "team2_id": 27,
-            "match_date": "2018-06-28T19:00:00+00:00"
+            "team1_id": 34,
+            "team2_id": 33,
+            "match_date": "2018-10-24T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 91,
         "fields": {
-            "team1_id": 29,
-            "team2_id": 32,
-            "match_date": "2018-06-19T13:00:00+00:00"
+            "team1_id": 39,
+            "team2_id": 38,
+            "match_date": "2018-10-24T17:55:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 92,
         "fields": {
-            "team1_id": 31,
-            "team2_id": 30,
-            "match_date": "2018-06-19T16:00:00+00:00"
+            "team1_id": 37,
+            "team2_id": 40,
+            "match_date": "2018-10-24T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 93,
         "fields": {
-            "team1_id": 32,
-            "team2_id": 30,
-            "match_date": "2018-06-24T16:00:00+00:00"
+            "team1_id": 43,
+            "team2_id": 44,
+            "match_date": "2018-10-24T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 94,
         "fields": {
-            "team1_id": 31,
-            "team2_id": 29,
-            "match_date": "2018-06-24T19:00:00+00:00"
+            "team1_id": 41,
+            "team2_id": 42,
+            "match_date": "2018-10-24T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 95,
         "fields": {
-            "team1_id": 32,
-            "team2_id": 31,
-            "match_date": "2018-06-28T15:00:00+00:00"
+            "team1_id": 45,
+            "team2_id": 48,
+            "match_date": "2018-10-24T20:00:00+00:00"
         }
     },
     {
         "model": "socapp.Fixture",
         "pk": 96,
         "fields": {
-            "team1_id": 30,
-            "team2_id": 29,
+            "team1_id": 46,
+            "team2_id": 47,
             "match_date": "2018-06-28T15:00:00+00:00"
         }
     }

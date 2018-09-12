@@ -3,7 +3,7 @@
         "model": "socapp.Team",
         "pk": 33,
         "fields": {
-            "name": " Atlético",
+            "name": " Atletico Madrid",
             "country_code": "SPA",
             "group": "A"
         }
@@ -246,7 +246,7 @@
         "model": "socapp.Team",
         "pk": 60,
         "fields": {
-            "name": "Plzen",
+            "name": "Viktoria Plzen",
             "country_code": "CZE",
             "group": "G"
         }
