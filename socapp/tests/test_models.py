@@ -6,7 +6,7 @@ from django.utils import timezone
 import socapp.tests.test_helpers as helpers
 
 from socapp.models import *
-from socapp_auth.models import UserProfile
+from socapp_auth.models import UserProfile, TournamentPoints
 
 
 # Tests for the Team model
@@ -304,6 +304,11 @@ class FixtureTests(TestCase):
 class UserProfileTests(TestCase):
     def setUp(self):
         self.user = helpers.generate_user()
+        self.tournament = Tournament.objects.first()
+
+    # Queries the m2m table storing user points per tournament
+    def tournament_pts(self):
+        return self.user.profile.tournament_pts.filter(tournament=self.tournament).get().points
 
     # Tests to ensure a UserProfile is also created whenever a user is created
     def test_userprofile_creation(self):
@@ -312,6 +317,8 @@ class UserProfileTests(TestCase):
     # Tests that users have zero points upon creation
     def test_user_starts_with_zero_points(self):
         self.assertEquals(self.user.profile.points, 0)
+        with self.assertRaises(TournamentPoints.DoesNotExist):
+            self.assertEquals(self.tournament_pts(), 0)
 
 class AnswerTests(TestCase):
     fixtures = ['tournaments.json', 'teams.json', 'games.json']
@@ -319,7 +326,7 @@ class AnswerTests(TestCase):
     def setUp(self):
         self.user = helpers.generate_user()
         self.fixture = Fixture.objects.get(pk=1)
-    
+
     # Tests the unique_together constraint, to ensure a user can only have 1 answer for a given fixture
     def test_user_cannot_add_more_than_one_answer_per_match(self):
         a = helpers.generate_answer(self.user, self.fixture)

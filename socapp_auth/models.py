@@ -24,7 +24,7 @@ class UserProfile(models.Model):
 
 # Stores the number of points users gained in each tournament
 class TournamentPoints(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="t_pts")
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="tournament_pts")
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="tournament")
     points = models.IntegerField(default=0) # How many points the user got in the given tournament
 

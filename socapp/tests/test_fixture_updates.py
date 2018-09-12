@@ -82,7 +82,12 @@ class ResultEnteredTests(TestCase):
         self.saudi_fixtures = self.saudi.get_fixtures()
         self.egypt_fixtures = self.egypt.get_fixtures()
         self.uruguay_fixtures = self.uruguay.get_fixtures()
+        self.tournament = Tournament.objects.first()
     
+    # Queries the m2m table storing user points per tournament
+    def tournament_pts(self, user):
+        return user.profile.tournament_pts.filter(tournament=self.tournament).get().points
+
     #############
     #  Tests for adding results, and ensuring the updates propagate correctly to the Team model
     ##
@@ -337,7 +342,12 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(self.user.profile.points, self.USER1_TOTAL_POINTS)
         self.assertEquals(self.user2.profile.points, self.USER2_TOTAL_POINTS)
         self.assertEquals(self.user3.profile.points, self.USER3_TOTAL_POINTS)
-        
+
+        # Check tournament points m2m relationship
+        self.assertEquals(self.tournament_pts(user=self.user), self.USER1_TOTAL_POINTS)
+        self.assertEquals(self.tournament_pts(user=self.user2), self.USER2_TOTAL_POINTS)
+        self.assertEquals(self.tournament_pts(user=self.user3), self.USER3_TOTAL_POINTS)
+
         # Check the points added flag is set to true for each answer
         for answer in Answer.objects.all():
             self.assertEquals(answer.points_added, Answer.POINTS_ADDED)
@@ -347,6 +357,11 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(self.user.profile.points, self.USER1_UPDATED_TOTAL_POINTS)
         self.assertEquals(self.user2.profile.points, self.USER2_UPDATED_TOTAL_POINTS)
         self.assertEquals(self.user3.profile.points, self.USER3_UPDATED_TOTAL_POINTS)
+
+        # Check tournament points m2m relationship after update
+        self.assertEquals(self.tournament_pts(user=self.user), self.USER1_UPDATED_TOTAL_POINTS)
+        self.assertEquals(self.tournament_pts(user=self.user2), self.USER2_UPDATED_TOTAL_POINTS)
+        self.assertEquals(self.tournament_pts(user=self.user3), self.USER3_UPDATED_TOTAL_POINTS)
 
         # Random update: turns 0 points to 5
         f = Fixture.objects.get(team1__name="Uruguay", team2__name="Saudi Arabia")
@@ -359,6 +374,11 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(self.user2.profile.points, self.USER2_UPDATED_TOTAL_POINTS + 5)
         self.assertEquals(self.user3.profile.points, self.USER3_UPDATED_TOTAL_POINTS - 5)
 
+        # Check tournament points m2m relationship after random update
+        self.assertEquals(self.tournament_pts(user=self.user), self.USER1_UPDATED_TOTAL_POINTS - 1)
+        self.assertEquals(self.tournament_pts(user=self.user2), self.USER2_UPDATED_TOTAL_POINTS + 5)
+        self.assertEquals(self.tournament_pts(user=self.user3), self.USER3_UPDATED_TOTAL_POINTS - 5)
+
     def test_answer_points_field(self):
         user1_total_pts = Answer.objects.filter(user=self.user).aggregate(total=Sum('points'))['total']
         user2_total_pts = Answer.objects.filter(user=self.user2).aggregate(total=Sum('points'))['total']
@@ -366,6 +386,7 @@ class ResultEnteredTests(TestCase):
         self.assertEquals(user1_total_pts, self.USER1_TOTAL_POINTS)
         self.assertEquals(user2_total_pts, self.USER2_TOTAL_POINTS)
         self.assertEquals(user3_total_pts, self.USER3_TOTAL_POINTS)
+
         self.update_fixtures()
         user1_total_pts = Answer.objects.filter(user=self.user).aggregate(total=Sum('points'))['total']
         user2_total_pts = Answer.objects.filter(user=self.user2).aggregate(total=Sum('points'))['total']
@@ -386,6 +407,12 @@ class ResultEnteredTests(TestCase):
         self.remove_all_results()
         self.assertEquals(self.user.profile.points, 0)
         self.assertEquals(self.user2.profile.points, 0)
+
+        # Check tournament points m2m relationship
+        self.assertEquals(self.tournament_pts(user=self.user), 0)
+        self.assertEquals(self.tournament_pts(user=self.user2), 0)
+        self.assertEquals(self.tournament_pts(user=self.user3), 0)
+
         # Check the points added flag is set to false for each answer
         for answer in Answer.objects.all():
             self.assertEquals(answer.points_added, Answer.POINTS_NOT_ADDED)
@@ -397,6 +424,9 @@ class ResultEnteredTests(TestCase):
         f.team1_goals = f.team2_goals = None # Invalidate the result
         f.save()
         self.assertEquals(self.user.profile.points, self.USER1_TOTAL_POINTS - 5) # Check the user's points have been reset by 5
+        # Check tournament points m2m relationship
+        self.assertEquals(self.tournament_pts(user=self.user), self.USER1_TOTAL_POINTS - 5)
+
 
     #############
     #  Helper methods for setting up tests, and acquiring values from the Team and Fixture models
