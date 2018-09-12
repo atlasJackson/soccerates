@@ -42,6 +42,11 @@ def index(request):
     past_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
+    if upcoming_fixtures.exists():
+        is_international = upcoming_fixtures[0].tournament.is_international
+    elif past_fixtures.exists():
+        is_international = past_fixtures[0].tournament.is_international
+
     context = {
         'group_fixtures_exist': group_fixtures_exist,
         'group_fixtures': group_fixtures,
@@ -52,6 +57,7 @@ def index(request):
         'final_fixture' : final_fixture,
         'upcoming_fixtures' : upcoming_fixtures,
         'past_fixtures': past_fixtures,
+        'is_international': is_international
     }
 
     try:
