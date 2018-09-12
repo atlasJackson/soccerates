@@ -140,7 +140,7 @@ class FixtureTests(TestCase):
     # Also tests to ensure matches that AREN'T group stage matches do not raise this error.
     def test_teams_in_same_group(self):
         group = "B"
-        team = helpers.generate_team(name="Wales", country_code="WAL", group=group)
+        team = helpers.generate_team(name="Wales", short_code="WAL", group=group)
         
         with self.assertRaises(ValidationError):
             f = helpers.generate_fixture(team1=self.team1, team2=team, match_date=timezone.now())

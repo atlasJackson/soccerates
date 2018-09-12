@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "Russia",
-            "country_code": "RUS",
+            "short_code": "RUS",
             "group": "A"
         }
     },
@@ -13,7 +13,7 @@
         "pk": 2,
         "fields": {
             "name": "Saudi Arabia",
-            "country_code": "KSA",
+            "short_code": "KSA",
             "group": "A"
         }
     },
@@ -22,7 +22,7 @@
         "pk": 3,
         "fields": {
             "name": "Egypt",
-            "country_code": "EGY",
+            "short_code": "EGY",
             "group": "A"
         }
     },
@@ -31,7 +31,7 @@
         "pk": 4,
         "fields": {
             "name": "Uruguay",
-            "country_code": "URU",
+            "short_code": "URU",
             "group": "A"
         }
     },
@@ -40,7 +40,7 @@
         "pk": 5,
         "fields": {
             "name": "Portugal",
-            "country_code": "POR",
+            "short_code": "POR",
             "group": "B"
         }
     },
@@ -49,7 +49,7 @@
         "pk": 6,
         "fields": {
             "name": "Spain",
-            "country_code": "SPA",
+            "short_code": "SPA",
             "group": "B"
         }
     },
@@ -58,7 +58,7 @@
         "pk": 7,
         "fields": {
             "name": "Morocco",
-            "country_code": "MOR",
+            "short_code": "MOR",
             "group": "B"
         }
     },
@@ -67,7 +67,7 @@
         "pk": 8,
         "fields": {
             "name": "Iran",
-            "country_code": "IRN",
+            "short_code": "IRN",
             "group": "B"
         }
     },
@@ -76,7 +76,7 @@
         "pk": 9,
         "fields": {
             "name": "France",
-            "country_code": "FRA",
+            "short_code": "FRA",
             "group": "C"
         }
     },
@@ -85,7 +85,7 @@
         "pk": 10,
         "fields": {
             "name": "Australia",
-            "country_code": "AUS",
+            "short_code": "AUS",
             "group": "C"
         }
     },
@@ -94,7 +94,7 @@
         "pk": 11,
         "fields": {
             "name": "Peru",
-            "country_code": "PER",
+            "short_code": "PER",
             "group": "C"
         }
     },
@@ -103,7 +103,7 @@
         "pk": 12,
         "fields": {
             "name": "Denmark",
-            "country_code": "DEN",
+            "short_code": "DEN",
             "group": "C"
         }
     },
@@ -112,7 +112,7 @@
         "pk": 13,
         "fields": {
             "name": "Argentina",
-            "country_code": "ARG",
+            "short_code": "ARG",
             "group": "D"
         }
     },
@@ -121,7 +121,7 @@
         "pk": 14,
         "fields": {
             "name": "Iceland",
-            "country_code": "ICE",
+            "short_code": "ICE",
             "group": "D"
         }
     },
@@ -130,7 +130,7 @@
         "pk": 15,
         "fields": {
             "name": "Croatia",
-            "country_code": "CRO",
+            "short_code": "CRO",
             "group": "D"
         }
     },
@@ -139,7 +139,7 @@
         "pk": 16,
         "fields": {
             "name": "Nigeria",
-            "country_code": "NGA",
+            "short_code": "NGA",
             "group": "D"
         }
     },
@@ -148,7 +148,7 @@
         "pk": 17,
         "fields": {
             "name": "Brazil",
-            "country_code": "BRZ",
+            "short_code": "BRZ",
             "group": "E"
         }
     },
@@ -157,7 +157,7 @@
         "pk": 18,
         "fields": {
             "name": "Switzerland",
-            "country_code": "SWI",
+            "short_code": "SWI",
             "group": "E"
         }
     },
@@ -166,7 +166,7 @@
         "pk": 19,
         "fields": {
             "name": "Costa Rica",
-            "country_code": "CRC",
+            "short_code": "CRC",
             "group": "E"
         }
     },
@@ -175,7 +175,7 @@
         "pk": 20,
         "fields": {
             "name": "Serbia",
-            "country_code": "SER",
+            "short_code": "SER",
             "group": "E"
         }
     },
@@ -184,7 +184,7 @@
         "pk": 21,
         "fields": {
             "name": "Germany",
-            "country_code": "GER",
+            "short_code": "GER",
             "group": "F"
         }
     },
@@ -193,7 +193,7 @@
         "pk": 22,
         "fields": {
             "name": "Mexico",
-            "country_code": "MEX",
+            "short_code": "MEX",
             "group": "F"
         }
     },
@@ -202,7 +202,7 @@
         "pk": 23,
         "fields": {
             "name": "Sweden",
-            "country_code": "SWE",
+            "short_code": "SWE",
             "group": "F"
         }
     },
@@ -211,7 +211,7 @@
         "pk": 24,
         "fields": {
             "name": "South Korea",
-            "country_code": "KOR",
+            "short_code": "KOR",
             "group": "F"
         }
     },
@@ -220,7 +220,7 @@
         "pk": 25,
         "fields": {
             "name": "Belgium",
-            "country_code": "BEL",
+            "short_code": "BEL",
             "group": "G"
         }
     },
@@ -229,7 +229,7 @@
         "pk": 26,
         "fields": {
             "name": "Panama",
-            "country_code": "PAN",
+            "short_code": "PAN",
             "group": "G"
         }
     },
@@ -238,7 +238,7 @@
         "pk": 27,
         "fields": {
             "name": "Tunisia",
-            "country_code": "TUN",
+            "short_code": "TUN",
             "group": "G"
         }
     },
@@ -247,7 +247,7 @@
         "pk": 28,
         "fields": {
             "name": "England",
-            "country_code": "ENG",
+            "short_code": "ENG",
             "group": "G"
         }
     },
@@ -256,7 +256,7 @@
         "pk": 29,
         "fields": {
             "name": "Colombia",
-            "country_code": "COL",
+            "short_code": "COL",
             "group": "H"
         }
     },
@@ -265,7 +265,7 @@
         "pk": 30,
         "fields": {
             "name": "Senegal",
-            "country_code": "SEN",
+            "short_code": "SEN",
             "group": "H"
         }
     },
@@ -274,7 +274,7 @@
         "pk": 31,
         "fields": {
             "name": "Poland",
-            "country_code": "POL",
+            "short_code": "POL",
             "group": "H"
         }
     },
@@ -283,7 +283,7 @@
         "pk": 32,
         "fields": {
             "name": "Japan",
-            "country_code": "JPN",
+            "short_code": "JPN",
             "group": "H"
         }
     }

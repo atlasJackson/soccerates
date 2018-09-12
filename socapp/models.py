@@ -13,7 +13,7 @@ class Team(models.Model):
     CHOICES = tuple((g, g) for g in group_names)
 
     name = models.CharField(max_length=32, unique=True)
-    country_code = models.CharField(max_length=4)
+    short_code = models.CharField(max_length=4)
     group = models.CharField(max_length=1, choices=CHOICES)
     flag = models.ImageField(blank=True)
     
