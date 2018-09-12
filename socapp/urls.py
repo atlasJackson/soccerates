@@ -13,7 +13,7 @@ urlpatterns = [
     path('score_predictions/points_system/', views.points_system, name='points_system'),
     path('score_predictions/<slug:stage>/', views.answer_form_selected, name='answer_form_selected'),
     
-    path('worldcup/schedule/', views.world_cup_schedule, name='wc_schedule'),
+    path('tournaments/', views.tournaments, name='tournaments'),
 
     path('leaderboards/', views.leaderboards, name='leaderboards'),
     path('leaderboards/global_leaderboard/', views.global_leaderboard, name='global_leaderboard'),

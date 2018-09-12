@@ -82,7 +82,7 @@ def index(request):
 
 
 # Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
-def world_cup_schedule(request):
+def tournaments(request):
     
     group_fixtures = group_fixtures_dictionary()
     group_fixtures_exist = any(group_fixtures.values())
