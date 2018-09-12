@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('leaderboards/', views.leaderboards, name='leaderboards'),
     path('leaderboards/global_leaderboard/', views.global_leaderboard, name='global_leaderboard'),
+    path('leaderboards/friends_leaderboard/', views.friends_leaderboard, name='friends_leaderboard'),
     path('leaderboards/<slug:leaderboard>/', views.show_leaderboard, name='show_leaderboard'),
     path('leaderboards/<slug:leaderboard>/join_leaderboard/', views.join_leaderboard, name='join_leaderboard'),
     path('leaderboards/<slug:leaderboard>/leave_leaderboard/', views.leave_leaderboard, name='leave_leaderboard'),

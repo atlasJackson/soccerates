@@ -4,7 +4,9 @@
 
 {% block title_block %}
     {% if global_leaderboard %}
-        Leaderboard: Gaia
+        Leaderboard: Global
+    {% elif friends_leaderboard %}
+        Leaderboard: Friends of {{ request.user }}
     {% else %}
         Leaderboard: {{ leaderboard.name }}
     {% endif %}
@@ -29,7 +31,9 @@
             <div class="leaderboard-stats mb-5">
                 <h3 class="text-center font-weight-light">
                     {% if global_leaderboard %}
-                        Gaia Leaderboard
+                        Global Leaderboard
+                    {% elif friends_leaderboard %}
+                        Friends of {{ request.user }}
                     {% else %}
                         {{ leaderboard.name }}
                     {% endif %}
@@ -95,7 +99,7 @@
             </div>
 
             <!-- Leaderboard buttons. Uses ajax to reload join/leave functionality. Only if not the global leaderboard! -->
-            {% if not global_leaderboard %}
+            {% if not global_leaderboard and not friends_leaderboard %}
             <div class="leaderboard-buttons mb-5">
                 {% if user in members %}
                     <button class="btn btn-danger" type="button" id="leave-button" data-leaderboard="{{ leaderboard.name }}"

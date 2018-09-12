@@ -51,6 +51,21 @@ def get_user_ranking(user):
             ranking += len(grouping) # Increment the ranking by however many users were in the previous sublist
     return None
 
+def get_user_franking(user):
+    """
+    Takes a user, and returns their rank in the system compared to their friends. Based on the user's points field.
+    """
+    franked_users = group_users_by_points(user.profile.friends.all() | get_user_model().objects.filter(username=user)) 
+
+    # Iterates over the ranked friends sublists, finds which one the user is in, and returns the ranking
+    ranking = 1
+    for grouping in franked_users:
+        if user in grouping:
+            return ranking
+        else:
+            ranking += len(grouping) # Increment the ranking by however many users were in the previous sublist
+    return None
+
 def group_users_by_points(users_queryset=None):
     """ 
     Orders a queryset of users into groups based on the points each user has accumulated.

@@ -26,56 +26,99 @@
         </div>
         {% endif %}
         
-        <!-- User's profile details and stats -->
-        <div class="col-12 col-md-8 offset-md-2 col-xl-6 offset-xl-3 text-right">
-            <h3 class="text-success pb-1 pr-1 border-bottom border-secondary">{{ user.username }}</h3>
-        </div>
-
+        <!-- User's profile details, stats, and friends -->
         <div class="row pb-3 mb-3 border-bottom border-info">
             
-            <div class="col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
-                <ul class="">
-                    {% if user.username == request.user.username %}
-                        <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
-                        <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                        <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
-                        <li>Click on your profile picture to change it.</li>
+            <div class="col-9">
+
+                <div class="col-12 col-md-8 offset-md-2 col-xl-6 offset-xl-3 text-right">
+                    <h3 class="text-success pb-1 pr-1 border-bottom border-secondary">{{ user.username }}</h3>
+                </div>
+
+                <div class="col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
+                    <ul class="">
+                        {% if user.username == request.user.username %}
+                            <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
+                            <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                            <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                            <li>Click on your profile picture to change it.</li>
+                        {% else %}
+                            <li>{{ user.username }} currently has <strong>{{ user.profile.points }} points.</strong></li>
+                            <li>{{ user.username }} is currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                            <li>{{ user.username }} has scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                        {% endif %}
+                    </ul>
+                </div>   
+                
+                <!-- User profile image. On clicking, the user can change their display picture. -->
+                <div class="col-5 col-md-3 col-lg-2">
+                    <!-- Display the profile picture -->
+                    {% if user == request.user %}
+                        <div class="user-profile">
+                            {% if user.profile.picture %}
+                                <img src="{{ MEDIA_URL }}{{ request.user.profile.picture }}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                            {% else %}
+                                <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
+                            {% endif %}
+                        </div>
+                        <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
+                        <div class="profile-form">
+                            <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
+                                {% csrf_token %}
+                                {{ profile_form.picture|add_id:"picture-upload" }}
+                            </form>
+                        </div>
                     {% else %}
-                        <li>{{ user.username }} currently has <strong>{{ user.profile.points }} points.</strong></li>
-                        <li>{{ user.username }} is currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                        <li>{{ user.username }} has scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                        <div class="user-profile">
+                            {% if user.profile.picture %}
+                                <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-page-image rounded img-fluid" alt="Profile"/>
+                            {% else %}
+                                <img src="{% static 'img/soccerates-blank-profile.png' %}" class="profile-page-image rounded img-fluid" alt="Profile"/>
+                            {% endif %}
+                        </div>
                     {% endif %}
-                </ul>
-            </div>   
-            
-            <!-- User profile image. On clicking, the user can change their display picture. -->
-            <div class="col-5 col-md-3 col-lg-2">
-                <!-- Display the profile picture -->
-                {% if user == request.user %}
-                    <div class="user-profile">
-                        {% if user.profile.picture %}
-                            <img src="{{ MEDIA_URL }}{{ request.user.profile.picture }}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
-                        {% else %}
-                            <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
-                        {% endif %}
-                    </div>
-                    <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
-                    <div class="profile-form">
-                        <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
-                            {% csrf_token %}
-                            {{ profile_form.picture|add_id:"picture-upload" }}
-                        </form>
-                    </div>
-                {% else %}
-                    <div class="user-profile">
-                        {% if user.profile.picture %}
-                            <img src="{{ MEDIA_URL }}{{ user.profile.picture }}" class="profile-page-image rounded img-fluid" alt="Profile"/>
-                        {% else %}
-                            <img src="{% static 'img/soccerates-blank-profile.png' %}" class="profile-page-image rounded img-fluid" alt="Profile"/>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                </div>
             </div>
+
+            <!-- User's friends -->
+            <div class="col-3">
+                <div class="card mb-3">                    
+                    <div class="card-header bg-dark text-white d-flex justify-content-center">
+                        <h4 class="mb-3">Friends</h4>
+                    </div>
+
+                    <div class="card-body">
+                        {% if user.profile.friends.all %}
+                            <table class="table">
+                            <tbody>
+                                {% for friend in user.profile.friends.all %}
+                                <tr>
+                                    <td><a href="{% url 'other_user_profile' friend.username %}">
+                                        {% if friend.profile.picture %}
+                                            <img src="{{ MEDIA_URL }}{{ friend.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
+                                        {% else %}
+                                            <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded mr-3" height="25" width="25" alt="Profile"/>
+                                        {% endif %}
+                                        <strong>{{ friend.username }}</strong>
+                                    </a></td>
+
+                                    <td class="board-data-cell">{{ friend.profile.points }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        {% else %}
+                            {% if user.username == request.user.username %}
+                                <p class=text-ce>You have 0 friends.</p>
+                            {% else %}
+                                <p>{{ user.username }} doesn't have any friends.</p>                            
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
 
