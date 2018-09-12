@@ -430,5 +430,437 @@
             "team2_id": 47,
             "match_date": "2018-06-28T15:00:00+00:00"
         }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 97,
+        "fields": {
+            "team1_id": 35,
+            "team2_id": 36,
+            "match_date": "2018-11-06T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 98,
+        "fields": {
+            "team1_id": 33,
+            "team2_id": 34,
+            "match_date": "2018-11-06T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 99,
+        "fields": {
+            "team1_id": 40,
+            "team2_id": 37,
+            "match_date": "2018-11-06T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 100,
+        "fields": {
+            "team1_id": 38,
+            "team2_id": 39,
+            "match_date": "2018-11-06T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 101,
+        "fields": {
+            "team1_id": 44,
+            "team2_id": 43,
+            "match_date": "2018-11-06T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 102,
+        "fields": {
+            "team1_id": 42,
+            "team2_id": 41,
+            "match_date": "2018-11-06T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 103,
+        "fields": {
+            "team1_id": 47,
+            "team2_id": 46,
+            "match_date": "2018-11-06T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 104,
+        "fields": {
+            "team1_id": 48,
+            "team2_id": 45,
+            "match_date": "2018-11-06T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 105,
+        "fields": {
+            "team1_id": 52,
+            "team2_id": 50,
+            "match_date": "2018-11-07T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 106,
+        "fields": {
+            "team1_id": 51,
+            "team2_id": 49,
+            "match_date": "2018-11-07T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 107,
+        "fields": {
+            "team1_id": 55,
+            "team2_id": 53,
+            "match_date": "2018-11-07T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 108,
+        "fields": {
+            "team1_id": 54,
+            "team2_id": 56,
+            "match_date": "2018-11-07T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 109,
+        "fields": {
+            "team1_id": 57,
+            "team2_id": 59,
+            "match_date": "2018-11-07T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 110,
+        "fields": {
+            "team1_id": 60,
+            "team2_id": 58,
+            "match_date": "2018-11-07T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 111,
+        "fields": {
+            "team1_id": 63,
+            "team2_id": 64,
+            "match_date": "2018-11-07T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 112,
+        "fields": {
+            "team1_id": 61,
+            "team2_id": 62,
+            "match_date": "2018-11-07T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 113,
+        "fields": {
+            "team1_id": 49,
+            "team2_id": 50,
+            "match_date": "2018-11-27T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 114,
+        "fields": {
+            "team1_id": 51,
+            "team2_id": 52,
+            "match_date": "2018-11-27T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 115,
+        "fields": {
+            "team1_id": 55,
+            "team2_id": 54,
+            "match_date": "2018-11-27T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 116,
+        "fields": {
+            "team1_id": 53,
+            "team2_id": 56,
+            "match_date": "2018-11-27T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 117,
+        "fields": {
+            "team1_id": 57,
+            "team2_id": 60,
+            "match_date": "2018-11-27T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 118,
+        "fields": {
+            "team1_id": 59,
+            "team2_id": 58,
+            "match_date": "2018-11-27T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 119,
+        "fields": {
+            "team1_id": 61,
+            "team2_id": 63,
+            "match_date": "2018-11-27T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 120,
+        "fields": {
+            "team1_id": 62,
+            "team2_id": 64,
+            "match_date": "2018-11-27T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 121,
+        "fields": {
+            "team1_id": 33,
+            "team2_id": 35,
+            "match_date": "2018-11-28T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 122,
+        "fields": {
+            "team1_id": 34,
+            "team2_id": 36,
+            "match_date": "2018-11-28T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 123,
+        "fields": {
+            "team1_id": 39,
+            "team2_id": 37,
+            "match_date": "2018-11-28T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 124,
+        "fields": {
+            "team1_id": 38,
+            "team2_id": 40,
+            "match_date": "2018-11-28T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 125,
+        "fields": {
+            "team1_id": 42,
+            "team2_id": 44,
+            "match_date": "2018-11-28T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 126,
+        "fields": {
+            "team1_id": 41,
+            "team2_id": 43,
+            "match_date": "2018-11-28T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 127,
+        "fields": {
+            "team1_id": 46,
+            "team2_id": 45,
+            "match_date": "2018-11-28T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 128,
+        "fields": {
+            "team1_id": 47,
+            "team2_id": 48,
+            "match_date": "2018-11-28T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 129,
+        "fields": {
+            "team1_id": 36,
+            "team2_id": 33,
+            "match_date": "2018-12-11T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 130,
+        "fields": {
+            "team1_id": 35,
+            "team2_id": 34,
+            "match_date": "2018-12-11T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 131,
+        "fields": {
+            "team1_id": 37,
+            "team2_id": 38,
+            "match_date": "2018-12-11T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 132,
+        "fields": {
+            "team1_id": 40,
+            "team2_id": 39,
+            "match_date": "2018-12-11T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 133,
+        "fields": {
+            "team1_id": 44,
+            "team2_id": 41,
+            "match_date": "2018-12-11T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 134,
+        "fields": {
+            "team1_id": 43,
+            "team2_id": 42,
+            "match_date": "2018-12-11T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 135,
+        "fields": {
+            "team1_id": 48,
+            "team2_id": 46,
+            "match_date": "2018-12-11T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 136,
+        "fields": {
+            "team1_id": 45,
+            "team2_id": 47,
+            "match_date": "2018-12-11T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 137,
+        "fields": {
+            "team1_id": 50,
+            "team2_id": 51,
+            "match_date": "2018-12-12T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 138,
+        "fields": {
+            "team1_id": 52,
+            "team2_id": 49,
+            "match_date": "2018-12-12T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 139,
+        "fields": {
+            "team1_id": 54,
+            "team2_id": 53,
+            "match_date": "2018-12-12T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 140,
+        "fields": {
+            "team1_id": 56,
+            "team2_id": 55,
+            "match_date": "2018-12-12T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 141,
+        "fields": {
+            "team1_id": 58,
+            "team2_id": 57,
+            "match_date": "2018-12-12T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 142,
+        "fields": {
+            "team1_id": 60,
+            "team2_id": 59,
+            "match_date": "2018-12-12T17:55:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 143,
+        "fields": {
+            "team1_id": 63,
+            "team2_id": 62,
+            "match_date": "2018-12-12T20:00:00+00:00"
+        }
+    },
+    {
+        "model": "socapp.Fixture",
+        "pk": 144,
+        "fields": {
+            "team1_id": 64,
+            "team2_id": 61,
+            "match_date": "2018-12-12T20:00:00+00:00"
+        }
     }
 ]
