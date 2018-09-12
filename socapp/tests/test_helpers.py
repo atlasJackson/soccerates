@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from socapp.models import *
 
 
-def generate_team(name, country_code, group):
+def generate_team(name, short_code, group):
     team = Team.objects.get_or_create(name=name, group=group)[0]
-    team.country_code = country_code
+    team.short_code = short_code
     team.save()
     return team
 

@@ -28,11 +28,13 @@
                 <!-- End Fix Date -->
 
                     <!-- Team 1 Name column -->
+                    {% if is_international %}
                     {% if not short %}
                     <td class="fixture-team-name-cell text-right pr-0">
-                        <small class="d-inline d-sm-none">{{ fixture.team1.country_code }}</small>
+                        <small class="d-inline d-sm-none">{{ fixture.team1.short_code }}</small>
                         <div class="d-none d-sm-inline">{{ fixture.team1.name }}</div>
                     </td>
+                    {% endif %}
                     {% endif %}
 
                     <!-- Team 1 Flag column -->
@@ -41,11 +43,11 @@
                     {% else %}
                     <td class="fixture-team-flag-cell mx-0">
                     {% endif %}
-                        {% if fixture.team1.flag %}                                
-                            <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
-                        {% else %}
-                            <small>{{ fixture.team1.name }}</small>
-                        {% endif %}
+                    {% if fixture.team1.flag and is_international %}                                
+                        <img src="{% static fixture.team1.flag.url %}" class="flag mr-2" alt="{{ fixture.team1.name }}"/>
+                    {% else %}
+                        <small>{{ fixture.team1.name|truncatechars:12 }}</small>
+                    {% endif %}
                     </td>
 
                     <!-- Goals/Versus Column -->
@@ -62,28 +64,31 @@
                     </td>
 
                     <!-- Team 2 Flag column -->
+                    
                     {% if short %}
                     <td class="fixture-team-flag-cell-short  text-center mx-0">
                     {% else %}
                     <td class="fixture-team-flag-cell text-right mx-0">
                     {% endif %}
-                        {% if fixture.team2.flag %}
+                        {% if fixture.team2.flag and is_international %}
                             <img src="{% static fixture.team2.flag.url %}" class="flag ml-2" alt="{{ fixture.team2.name }}"/>
                         {% else %}
-                            <small>{{ fixture.team2.name }}</small>
+                            <small>{{ fixture.team2.name|truncatechars:12 }}</small>
                         {% endif %}
                     </td>
 
                     <!-- Team 2 Name and Fixture Stage columns -->
-                    {% if short %}
-                    <td class="fixture-stage-cell-short text-right">                    
-                    {% else %}
-                    <td class="fixture-team-name-cell col-lg-1">
-                        <small class="d-inline d-sm-none">{{ fixture.team2.country_code }}</small>
-                        <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
-                    </td>
-                    <td class="fixture-stage-cell text-right">
+                    {% if is_international %}
+                        {% if short %}
+                        <td class="fixture-stage-cell-short text-right">                    
+                        {% else %}
+                        <td class="fixture-team-name-cell col-lg-1">
+                            <small class="d-inline d-sm-none">{{ fixture.team2.short_code }}</small>
+                            <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
+                        </td>
+                        {% endif %}
                     {% endif %}
+                    <td class="fixture-stage-cell text-right">
                         <small>
                         {{ fixture.get_stage_display }}     
                         {% if fixture.stage == 1 %}

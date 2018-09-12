@@ -15,7 +15,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.forms import formset_factory
 from .forms import UserProfileForm, AnswerForm, LeaderboardForm, PrivateAccessForm
 
-from .models import Fixture, Answer, Team, Leaderboard
+from .models import Fixture, Answer, Team, Leaderboard, Tournament
 from socapp_auth.models import UserProfile
 from . import utils
 
@@ -28,6 +28,10 @@ def test(request):
 def index(request):
 
     # Grouops by stage.
+    upcoming_tournaments = Tournament.objects.filter(start_date__gt=timezone.now()).order_by('start_date')
+    past_tournaments = Tournament.objects.exclude(start_date__gt=timezone.now())
+
+
     group_fixtures = group_fixtures_dictionary()
     group_fixtures_exist = any(group_fixtures.values())
     ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
@@ -42,6 +46,11 @@ def index(request):
     past_fixtures = Fixture.objects.select_related('team1', 'team2') \
         .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
+    if upcoming_fixtures.exists():
+        is_international = upcoming_fixtures[0].tournament.is_international
+    elif past_fixtures.exists():
+        is_international = past_fixtures[0].tournament.is_international
+
     context = {
         'group_fixtures_exist': group_fixtures_exist,
         'group_fixtures': group_fixtures,
@@ -52,6 +61,9 @@ def index(request):
         'final_fixture' : final_fixture,
         'upcoming_fixtures' : upcoming_fixtures,
         'past_fixtures': past_fixtures,
+        'is_international': is_international,
+        'upcoming_tournaments': upcoming_tournaments,
+        'past_tournaments': past_tournaments
     }
 
     try:
@@ -70,7 +82,7 @@ def index(request):
 
 
 # Display the groups (which should update with the results), along w/ their fixtures. On a separate tab, show post-group matches
-def world_cup_schedule(request):
+def tournaments(request):
     
     group_fixtures = group_fixtures_dictionary()
     group_fixtures_exist = any(group_fixtures.values())

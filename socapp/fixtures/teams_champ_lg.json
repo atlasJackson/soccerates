@@ -4,7 +4,7 @@
         "pk": 33,
         "fields": {
             "name": " Atletico Madrid",
-            "country_code": "SPA",
+            "short_code": "ATL",
             "group": "A"
         }
     },
@@ -13,7 +13,7 @@
         "pk": 34,
         "fields": {
             "name": "Dortmund",
-            "country_code": "GER",
+            "short_code": "DOR",
             "group": "A"
         }
     },
@@ -22,7 +22,7 @@
         "pk": 35,
         "fields": {
             "name": "Monaco",
-            "country_code": "FRA",
+            "short_code": "MON",
             "group": "A"
         }
     },
@@ -31,7 +31,7 @@
         "pk": 36,
         "fields": {
             "name": "Club Brugge",
-            "country_code": "URU",
+            "short_code": "BRU",
             "group": "A"
         }
     },
@@ -40,7 +40,7 @@
         "pk": 37,
         "fields": {
             "name": "Barcelona",
-            "country_code": "SPA",
+            "short_code": "BAR",
             "group": "B"
         }
     },
@@ -49,7 +49,7 @@
         "pk": 38,
         "fields": {
             "name": "Tottenham",
-            "country_code": "ENG",
+            "short_code": "TOT",
             "group": "B"
         }
     },
@@ -57,8 +57,8 @@
         "model": "socapp.Team",
         "pk": 39,
         "fields": {
-            "name": "PSV",
-            "country_code": "NED",
+            "name": "PSV Eindhoven",
+            "short_code": "PSV",
             "group": "B"
         }
     },
@@ -67,7 +67,7 @@
         "pk": 40,
         "fields": {
             "name": "Inter Milan",
-            "country_code": "ITA",
+            "short_code": "INT",
             "group": "B"
         }
     },
@@ -76,7 +76,7 @@
         "pk": 41,
         "fields": {
             "name": "Paris Saint-Germain",
-            "country_code": "FRA",
+            "short_code": "PSG",
             "group": "C"
         }
     },
@@ -85,7 +85,7 @@
         "pk": 42,
         "fields": {
             "name": "Napoli",
-            "country_code": "ITA",
+            "short_code": "NAP",
             "group": "C"
         }
     },
@@ -94,7 +94,7 @@
         "pk": 43,
         "fields": {
             "name": "Liverpool",
-            "country_code": "ENG",
+            "short_code": "LIV",
             "group": "C"
         }
     },
@@ -103,7 +103,7 @@
         "pk": 44,
         "fields": {
             "name": "Red Star Belgrade",
-            "country_code": "SER",
+            "short_code": "BEL",
             "group": "C"
         }
     },
@@ -112,7 +112,7 @@
         "pk": 45,
         "fields": {
             "name": "Galatasaray",
-            "country_code": "TUR",
+            "short_code": "GAL",
             "group": "D"
         }
     },
@@ -121,7 +121,7 @@
         "pk": 46,
         "fields": {
             "name": "Lokomotiv Moscow",
-            "country_code": "RUS",
+            "short_code": "LOK",
             "group": "D"
         }
     },
@@ -130,7 +130,7 @@
         "pk": 47,
         "fields": {
             "name": "Porto",
-            "country_code": "POR",
+            "short_code": "POR",
             "group": "D"
         }
     },
@@ -139,7 +139,7 @@
         "pk": 48,
         "fields": {
             "name": "Schalke 04",
-            "country_code": "GER",
+            "short_code": "SCH",
             "group": "D"
         }
     },
@@ -148,7 +148,7 @@
         "pk": 49,
         "fields": {
             "name": "AEK Athens",
-            "country_code": "GRE",
+            "short_code": "AEK",
             "group": "E"
         }
     },
@@ -157,7 +157,7 @@
         "pk": 50,
         "fields": {
             "name": "Ajax",
-            "country_code": "NED",
+            "short_code": "AJA",
             "group": "E"
         }
     },
@@ -166,7 +166,7 @@
         "pk": 51,
         "fields": {
             "name": "Bayern Munich",
-            "country_code": "GER",
+            "short_code": "BAY",
             "group": "E"
         }
     },
@@ -175,7 +175,7 @@
         "pk": 52,
         "fields": {
             "name": "Benfica",
-            "country_code": "POR",
+            "short_code": "BEN",
             "group": "E"
         }
     },
@@ -184,7 +184,7 @@
         "pk": 53,
         "fields": {
             "name": "Hoffenheim",
-            "country_code": "GER",
+            "short_code": "HOF",
             "group": "F"
         }
     },
@@ -193,7 +193,7 @@
         "pk": 54,
         "fields": {
             "name": "Manchester City",
-            "country_code": "ENG",
+            "short_code": "MCFC",
             "group": "F"
         }
     },
@@ -202,7 +202,7 @@
         "pk": 55,
         "fields": {
             "name": "Lyon",
-            "country_code": "FRA",
+            "short_code": "LYO",
             "group": "F"
         }
     },
@@ -211,7 +211,7 @@
         "pk": 56,
         "fields": {
             "name": "Shakhtar Donetsk",
-            "country_code": "UKR",
+            "short_code": "SHK",
             "group": "F"
         }
     },
@@ -220,7 +220,7 @@
         "pk": 57,
         "fields": {
             "name": "CSKA Moscow",
-            "country_code": "RUS",
+            "short_code": "CSKA",
             "group": "G"
         }
     },
@@ -229,7 +229,7 @@
         "pk": 58,
         "fields": {
             "name": "Real Madrid",
-            "country_code": "SPA",
+            "short_code": "MAD",
             "group": "G"
         }
     },
@@ -238,7 +238,7 @@
         "pk": 59,
         "fields": {
             "name": "Roma",
-            "country_code": "ITA",
+            "short_code": "ROM",
             "group": "G"
         }
     },
@@ -247,7 +247,7 @@
         "pk": 60,
         "fields": {
             "name": "Viktoria Plzen",
-            "country_code": "CZE",
+            "short_code": "PLZ",
             "group": "G"
         }
     },
@@ -256,7 +256,7 @@
         "pk": 61,
         "fields": {
             "name": "Juventus",
-            "country_code": "ITA",
+            "short_code": "JUV",
             "group": "H"
         }
     },
@@ -265,7 +265,7 @@
         "pk": 62,
         "fields": {
             "name": "Manchester United",
-            "country_code": "ENG",
+            "short_code": "MAN",
             "group": "H"
         }
     },
@@ -274,7 +274,7 @@
         "pk": 63,
         "fields": {
             "name": "Valencia",
-            "country_code": "SPA",
+            "short_code": "VAL",
             "group": "H"
         }
     },
@@ -283,7 +283,7 @@
         "pk": 64,
         "fields": {
             "name": "Young Boys",
-            "country_code": "SWI",
+            "short_code": "YB",
             "group": "H"
         }
     }

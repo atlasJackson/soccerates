@@ -8,7 +8,7 @@
         <!-- Banner -->
         <div class="row mb-3">
             <div class="col-12 px-0">
-                <a href="{% url 'wc_schedule' %}">
+                <a href="{% url 'tournaments' %}">
                     <img src="{% static 'img/world-cup-2018-banner.png' %}" id="wc-banner" alt="Russia 2018 World Cup"/>
                 </a>
             </div>
@@ -24,8 +24,22 @@
 
                     {% if user.is_authenticated %}
                         <h4 class="my-4">Welcome, {{ user.username }}, to Soccerates: the online football score-prediction app!</h4>
+                        
+                        <!-- Upcoming tournaments -->
+                        <p>Upcoming tournaments. </p>
+                        <ul>
+                            {% for t in upcoming_tournaments %}
+                                <li>{{ t.name }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p>Past tournaments. </p>
+                        <ul>
+                            {% for t in past_tournaments %}
+                                <li>{{ t.name }}</li>
+                            {% endfor %}
+                        </ul>
                         <p>
-                            The 2018 FIFA World Cup will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
+                            The {{ upcoming_tournaments.0.name }} will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
                         </p>
                     {% else %}
                         <h4 class="my-4">Welcome to Soccerates: the online football score-prediction app!</h4>
@@ -106,7 +120,7 @@
                     {% endif %}
                 </div>
                 <div class="mb-3">
-                    <a href="{% url 'wc_schedule' %}" class="btn btn-outline-secondary btn-sm btn-block text-uppercase">
+                    <a href="{% url 'tournaments' %}" class="btn btn-outline-secondary btn-sm btn-block text-uppercase">
                         Full schedule...                    
                     </a>
                 </div>

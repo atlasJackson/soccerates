@@ -204,7 +204,7 @@
                                         <tr data-toggle="tooltip" data-placement="bottom" title="{{ answer|get_match_date }}">
                                         {% endif %}
                                             <td class="profile-pred-name-cell text-right">
-                                                <small class="d-inline d-sm-none">{{ answer.fixture.team1.country_code }}</small>
+                                                <small class="d-inline d-sm-none">{{ answer.fixture.team1.short_code }}</small>
                                                 <div class="d-none d-sm-inline">{{ answer.fixture.team1.name }}</div>
                                                 <img class="flag ml-2" src="{% static answer.fixture.team1.flag.url %}" alt="{{answer.fixture.team1.name}}">
                                                 
@@ -216,7 +216,7 @@
                                             <td class="profile-pred-score-cell text-left">{{ answer.team2_goals }}</td>
                                             <td class="profile-pred-name-cell text-left">
                                                 <img class="flag mr-2" src="{% static answer.fixture.team2.flag.url %}" alt="{{answer.fixture.team2.name}}">                                                
-                                                <small class="d-inline d-sm-none">{{ answer.fixture.team2.country_code }}</small>
+                                                <small class="d-inline d-sm-none">{{ answer.fixture.team2.short_code }}</small>
                                                 <div class="d-none d-sm-inline">{{ answer.fixture.team2.name }}</div>
                                             </td>
                                             <td>
