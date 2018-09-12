@@ -221,18 +221,29 @@ def answer_form_selected(request, stage):
         if stage_is_group:
             # Not a POST, so all forms will be blank unless the user has already submitted an answer.
             # If answers exist, populate the form with the existing answers.
-
+            if len(group_fixtures) > 0:
+                is_international = group_fixtures[0].tournament.is_international
+            else:
+                is_international = False # Dummy value for now
+                 
             zipped_groups = [fixture.team1.group for fixture in group_fixtures]
             formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
             context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
             context_dict['management_form'] = management_form
         else:
+            if len(knockout_fixtures) > 0:
+                is_international = knockout_fixtures[0].tournament.is_international
+            else:
+                is_international = False
+                
             formset = AnswerFormSet(initial=[data for data in initial_data])
             management_form = formset.management_form
 
             context_dict['fixtures_and_forms'] = zip(knockout_fixtures, formset)
             context_dict['management_form'] = management_form
+
+        context_dict['is_international'] = is_international
 
     return render(request, 'answer_form_selected.html', context_dict)
 

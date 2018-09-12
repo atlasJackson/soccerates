@@ -113,10 +113,16 @@
                                             
                                             <!-- Team 1 name and flag -->
                                             <td class="predict-name-cell text-right">
-                                                <img src="{% static fixture.team1.flag.url %}" class="d-inline d-sm-none flag text-right ml-2" alt="{{fixture.team1.name}}"/>
-                                                <small class="d-inline d-sm-none">{{ fixture.team1.short_code }}</small>
+                                                {% if is_international %}
+                                                    <img src="{% static fixture.team1.flag.url %}" class="d-inline d-sm-none flag text-right ml-2" alt="{{fixture.team1.name}}"/>
+                                                {% endif %}
+                                                <small class="d-inline d-sm-none">{{ fixture.team1.name|truncatechars:12 }}</small>
                                                 <div class="d-none d-sm-inline">{{ fixture.team1.name }}</div>
-                                                <img src="{% static fixture.team1.flag.url %}" class="d-none d-sm-inline flag text-right ml-2" alt="{{fixture.team1.name}}"/>
+                                                {% if is_international %}
+                                                    <img src="{% static fixture.team1.flag.url %}" 
+                                                         class="d-none d-sm-inline flag text-right ml-2" 
+                                                         alt="{{fixture.team1.name}}"/>
+                                                {% endif %}
                                             </td>
                                             
                                             <div class="form-group">
@@ -139,8 +145,10 @@
                                             
                                             <!-- Team 2 name and flag - switches order depending on screen size -->
                                             <td class="predict-name-cell text-left">
-                                                <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>        
-                                                <small class="d-inline d-sm-none">{{ fixture.team2.short_code }}</small>
+                                                {% if is_international %}
+                                                    <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>
+                                                {% endif %}   
+                                                <small class="d-inline d-sm-none">{{ fixture.team2.name|truncatechars:12 }}</small>
                                                 <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
                                             </td>
                                         </tr>
@@ -195,10 +203,18 @@
                                     
                                     <!-- Team 1 name and flag -->
                                     <td class="predict-name-cell text-right">
-                                        <img src="{% static fixture.team1.flag.url %}" class="d-inline d-sm-none flag text-right ml-2" alt="{{fixture.team1.name}}"/>
-                                        <small class="d-inline d-sm-none">{{ fixture.team1.short_code }}</small>
+                                        {% if is_international %}
+                                            <img src="{% static fixture.team1.flag.url %}" 
+                                                class="d-inline d-sm-none flag text-right ml-2" 
+                                                alt="{{fixture.team1.name}}"/>
+                                        {% endif %}
+                                        <small class="d-inline d-sm-none">{{ fixture.team1.name|truncatechars:12 }}</small>
                                         <div class="d-none d-sm-inline">{{ fixture.team1.name }}</div>
-                                        <img src="{% static fixture.team1.flag.url %}" class="d-none d-sm-inline flag text-right ml-2" alt="{{fixture.team1.name}}"/>
+                                        {% if is_international %}
+                                            <img src="{% static fixture.team1.flag.url %}" 
+                                                class="d-none d-sm-inline flag text-right ml-2" 
+                                                alt="{{fixture.team1.name}}"/>
+                                        {% endif %}
                                     </td>
                                     
                                     <div class="form-group">
@@ -221,7 +237,10 @@
                                     
                                     <!-- Team 2 name and flag - switches order depending on screen size -->
                                     <td class="predict-name-cell text-left">
-                                        <img src="{% static fixture.team2.flag.url %}" class="flag mr-2" alt="{{fixture.team1.name}}"/>        
+                                        {% if is_international %}
+                                            <img src="{% static fixture.team2.flag.url %}" 
+                                                class="flag mr-2" alt="{{fixture.team1.name}}"/>        
+                                        {% endif %}
                                         <small class="d-inline d-sm-none">{{ fixture.team2.short_code }}</small>
                                         <div class="d-none d-sm-inline">{{ fixture.team2.name }}</div>
                                     </td>
