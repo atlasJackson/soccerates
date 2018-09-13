@@ -196,7 +196,7 @@ class FixtureTests(TestCase):
         Fixture.objects.filter(pk=1).update(stage=Fixture.ROUND_OF_16)
 
         # Now, grab the group stage fixtures
-        fixtures = Fixture.all_fixtures_by_stage(Fixture.GROUP)
+        fixtures = self.tournament.all_fixtures_by_stage(Fixture.GROUP)
         correct_stage = True
         for fixture in fixtures:
             if not fixture.stage == Fixture.GROUP:
@@ -205,17 +205,16 @@ class FixtureTests(TestCase):
         self.assertTrue(correct_stage)
 
         # Test for the last-16 fixtures - there should be one (created above), with a PK of 1
-        fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16)
+        fixtures = self.tournament.all_fixtures_by_stage(Fixture.ROUND_OF_16)
         self.assertEqual(len(fixtures), 1)
         self.assertIn(Fixture.objects.get(pk=1), fixtures)
 
     # Tests the method that gets all the WC fixtures that have been played thus far
     def test_all_completed_fixtures(self):
-        tournament = Tournament.objects.first()
         # By default, no games are completed. Here, we set 2 games to completed, and test the method.
         Fixture.objects.filter(pk__in=[1,2]).update(status=Fixture.MATCH_STATUS_PLAYED)
         
-        completed_fixtures = tournament.all_completed_fixtures()
+        completed_fixtures = self.tournament.all_completed_fixtures()
         self.assertEqual(completed_fixtures.count(), 2)
         self.assertQuerysetEqual(Fixture.objects.select_related('team1', 'team2').filter(
             pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x

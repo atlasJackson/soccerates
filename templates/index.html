@@ -38,9 +38,11 @@
                                 <li>{{ t.name }}</li>
                             {% endfor %}
                         </ul>
-                        <p>
-                            The {{ upcoming_tournaments.0.name }} will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
-                        </p>
+                        {% if upcoming_tournaments %}
+                            <p>
+                                The {{ upcoming_tournaments.0.name }} will be starting soon, so it's time to <a href="{% url 'answer_form' %}">get your predictions in</a>. You can also <a href="{% url 'leaderboards' %}">join or create leaderboards</a> to compete against your friends.
+                            </p>
+                        {% endif %}
                     {% else %}
                         <h4 class="my-4">Welcome to Soccerates: the online football score-prediction app!</h4>
                         <p class="text-center">

@@ -394,7 +394,7 @@ def update_user_pts(saved_fixture=None, prev_fixture=None, add=False, update=Fal
     elif (remove or update) and prev_fixture is not None:
         fixtures = [prev_fixture]
     else:
-        fixtures = Fixture.all_completed_fixtures()
+        fixtures = Fixture.all_completed_fixtures() # preferably never use this
 
     # For the given fixture(s), add points for each user with answers relating to that fixture.
     for user in get_user_model().objects.all():
@@ -561,18 +561,18 @@ def sync_user_points():
         for answer in answers:
             total_points += calculate_points(answer.fixture, answer)
         if not total_points == user.profile.points == answers_points_field_total:
-            logger.error("User {} has {} points, but should have {} points".format(user, user.profile.points, total_points))
+            logger.warning("User {} has {} points, but should have {} points".format(user, user.profile.points, total_points))
         assert total_points == user.profile.points
 
-def stage_is_finished(stage):
+def stage_is_finished(tournament, stage):
     """ Given a stage (ie, group, last 16, quarter final, etc), determines whether it has been finished or not """
     from socapp.models import Fixture
-    return stage_completion_date(stage) < timezone.now()
+    return stage_completion_date(tournament, stage) < timezone.now()
 
-def stage_completion_date(stage):
+def stage_completion_date(tournament, stage):
     """ Given a stage (ie, group, last 16, quarter final, etc), determines (roughly) the date and time of completion """
     from socapp.models import Fixture
-    final_fixture = Fixture.all_fixtures_by_stage(stage).last()
+    final_fixture = tournament.all_fixtures_by_stage(stage).last()
     if final_fixture is not None:
         delta = datetime.timedelta(hours=2) # Probably change: currently set to 2 hours after the last match's kickoff
         return final_fixture.match_date + delta
