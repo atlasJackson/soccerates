@@ -106,6 +106,9 @@ def user_profile(request, username=None):
         else:
             return HttpResponseRedirect(reverse("index"))
 
+    # If not the user's profile, use this to determine if they are on the friends list. 
+    is_friend = False
+
     answers = user.profile.get_predictions()
     group_answers = answers.filter(fixture__stage=Fixture.GROUP).order_by("fixture__team1__group", "fixture__match_date")
     knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
@@ -113,6 +116,8 @@ def user_profile(request, username=None):
     if user.username != request.user.username:
         group_answers = [a for a in group_answers if a.points_added]
         knockout_answers = [a for a in knockout_answers if a.points_added]
+        if user in request.user.profile.friends.all():
+            is_friend = True
 
     if request.is_ajax():
         page = request.POST.get('page', 1)
@@ -125,7 +130,6 @@ def user_profile(request, username=None):
     else:
         group_answers_subset = paginated_data(group_answers, num_per_page=12, page=1)
     
-
     ranking = utils.get_user_ranking(user)
     franking = utils.get_user_franking(user)
     usercount = get_user_model().objects.count()
@@ -135,6 +139,7 @@ def user_profile(request, username=None):
 
     context = {
         'user': user,
+        'is_friend': is_friend,
         'group_answers': group_answers_subset,
         'knockout_answers': knockout_answers,
         'ranking': ranking,
@@ -163,6 +168,47 @@ def user_profile(request, username=None):
             print (profile_form.errors)
 
     return render(request, "user_profile.html", context)
+
+
+@login_required
+def add_friend(request, username):
+
+    # Get user and friend User objects.
+    user = request.user
+    friend = get_user_model().objects.get(username=username)
+
+    # Variable to check success.
+    friend_added = False
+
+    # Prevent action if user and friend are the same person (can't add ourself to friends list).
+    if user != friend:
+        user.profile.friends.add(friend)
+        user.save()
+        friend_added = True
+
+    data = {'friend_added': friend_added}
+
+    return JsonResponse(data)
+
+@login_required
+def remove_friend(request, username):
+
+    # Get user and friend User objects.
+    user = request.user
+    friend = get_user_model().objects.get(username=username)
+
+    # Variable to check success.
+    friend_removed = False
+
+    # Prevent action if user and friend are the same person (can't add ourself to friends list).
+    if user != friend:
+        user.profile.friends.remove(friend)
+        user.save()
+        friend_removed = True
+
+    data = {'friend_removed': friend_removed, "is_friend": False}
+
+    return JsonResponse(data)
 
 
 # Takes data, a number of entries to display per-page, and the page to display.
@@ -547,6 +593,7 @@ def leaderboard_stats(leaderboard=None, user=None):
         'percent_above_average': percent_above_average,
     })
     return stats_dict
+
 
 @login_required
 def join_leaderboard(request, leaderboard):

@@ -35,7 +35,7 @@
                     <h3 class="text-success pb-1 pr-1 border-bottom border-secondary">{{ user.username }}</h3>
                 </div>
 
-                <div class="col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
+                <div class="user-profile-data col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
                     <ul class="">
                         {% if user.username == request.user.username %}
                             <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
@@ -48,6 +48,21 @@
                             <li>{{ user.username }} has scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
                         {% endif %}
                     </ul>
+
+                    {% if not user == request.user %}
+                        <div class="friend-buttons text-center">
+                            {% if is_friend %}
+                                <button class="btn btn-danger" type="button" id="remove-friend" data-csrf_token="{{ csrf_token }}" >
+                                    Remove Friend
+                                </button>
+                            {% else %}
+                                <button class="btn btn-success" type="button" id="add-friend" data-csrf_token="{{ csrf_token }}" >
+                                    Add Friend
+                                </button>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
                 </div>   
                 
                 <!-- User profile image. On clicking, the user can change their display picture. -->
@@ -81,7 +96,7 @@
             </div>
 
             <!-- User's friends -->
-            <div class="col-3">
+            <div class="friend-list col-3">
                 <div class="card mb-3">                    
                     <div class="card-header bg-dark text-white d-flex justify-content-center">
                         <h4 class="mb-3">Friends</h4>

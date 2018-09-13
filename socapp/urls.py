@@ -8,6 +8,8 @@ urlpatterns = [
 
     path('profile', views.user_profile, name='profile'),
     path('users/<slug:username>/profile', views.user_profile, name='other_user_profile'),
+    path('users/<slug:username>/add_friend/', views.add_friend, name='add_friend'),
+    path('users/<slug:username>/remove_friend/', views.remove_friend, name='remove_friend'),
 
     path('score_predictions/', views.answer_form, name='answer_form'),
     path('score_predictions/points_system/', views.points_system, name='points_system'),

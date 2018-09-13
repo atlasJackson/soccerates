@@ -57,6 +57,21 @@ document.addEventListener("DOMContentLoaded", function() {
         $("#profile-image-form").submit();
     });
 
+    /* Buttons to add and remove friends */
+    $(".user-profile-data").on("click", "#add-friend", function(e) {
+
+        e.preventDefault();
+        buttonFriend($(this), "add_friend/");
+    });
+    $(".user-profile-data").on("click", "#remove-friend", function(e) {
+
+        e.preventDefault();
+        buttonFriend($(this), "remove_friend/");
+    });
+
+
+
+
     /*POINTS SYSTEM */
 
     /* Highlights the column whose result has been selected from the corresponding nav-tab */
@@ -219,6 +234,29 @@ function buttonJoinLeave(button, urlLink) {
 
             } else {
                 alert("Unable to process request. There may not be free spaces left for this leaderboard.");
+            }
+        },
+        error: function (rs, e) {
+            alert('Sorry, there was an error.');
+        }
+    });
+}
+
+/* Function that implements the adding and removing of friends using ajax. */
+function buttonFriend(button, urlLink) {
+    $.ajax({
+        type: "POST",
+        url: urlLink,
+        data: {
+            csrfmiddlewaretoken: button.data("csrf_token"),
+        },
+        dataType: "json",
+        success: function(data) {
+            if (data.friend_added || data.friend_removed) {
+                // Refresh friend list and button options on success.
+                window.location.reload();
+            } else {
+                alert("Unable to process request.");
             }
         },
         error: function (rs, e) {
