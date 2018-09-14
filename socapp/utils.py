@@ -36,16 +36,6 @@ def group_users_by_points(users_queryset=None):
 
     return users_grouped_by_points
 
-# Finds any fixtures for which the user has not made a prediction
-def get_fixtures_with_no_prediction(user, stage=None):
-    from socapp.models import Answer, Fixture
-    user_predictions = Answer.objects.select_related('user').filter(user=user).values('fixture')
-    if stage is not None:
-        fixtures = Fixture.objects.filter(stage=stage).exclude(pk__in=user_predictions)
-    else:
-        fixtures = Fixture.objects.exclude(pk__in=user_predictions)
-    return fixtures
-
 # Daily movement stats for a leaderboard. If no leaderboard is provided, assumes global leaderboard
 def user_daily_performance(leaderboard=None):
     from socapp.models import Fixture, Answer

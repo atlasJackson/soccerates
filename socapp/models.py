@@ -113,6 +113,9 @@ class Tournament(models.Model):
     def get_last_results(self, number=5):
         return self.completed_fixtures().reverse()[:number]
 
+    # Returns users ordered by the points they've gained in this tournament
+    def get_ranked_users(self):
+        return self.userprofile_set.select_related('user').order_by('-points')
 
 ################################################################################
 
@@ -122,6 +125,8 @@ class FixtureManager(models.Manager):
         return super().get_queryset().select_related('tournament', 'team1', 'team2')
 
 class Fixture(models.Model):
+
+    """ TO DO: figure out best indexes for Fixture model. Tournament? """
 
     objects = FixtureManager() # Set objects to the above manager
 
@@ -319,6 +324,7 @@ class Fixture(models.Model):
 ######################################################
 
 class Answer(models.Model):
+
     POINTS_NOT_ADDED = 0
     POINTS_ADDED = 1
 
@@ -347,7 +353,11 @@ class Answer(models.Model):
             self.team2_goals, 
             self.fixture.team2.name
         )
-    
+
+    @staticmethod
+    def tournament_answers(tournament):
+        return Answer.objects.select_related('user', 'fixture').filter(fixture__tournament=tournament)
+
     class Meta:
         # A user should only be able to submit one scoreline prediction per fixture
         unique_together = ('user', 'fixture')
