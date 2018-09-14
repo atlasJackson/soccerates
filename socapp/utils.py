@@ -19,8 +19,7 @@ def get_next_games(number=3):
 
     cur_date = timezone.now()
     # Since the Fixture model's default ordering is by match_date, we can just take a slice of the query results
-    fixtures = Fixture.objects.select_related('team1', 'team2') \
-        .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED)[:number]
+    fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED)[:number]
     for fixture in fixtures:
         assert cur_date < fixture.match_date # If this fails, something has gone wrong.
     return fixtures
@@ -29,8 +28,7 @@ def get_last_results(number=3):
     from .models import Fixture
     """ Returns the last games to be played, the number of which can be specified, but which defaults to 3 """
     cur_date = timezone.now()
-    fixtures = Fixture.objects.select_related('team1', 'team2') \
-        .filter(status=Fixture.MATCH_STATUS_PLAYED).reverse()[:number]
+    fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).reverse()[:number]
     for fixture in fixtures:
         assert cur_date > fixture.match_date
     return fixtures

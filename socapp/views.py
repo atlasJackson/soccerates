@@ -40,11 +40,9 @@ def index(request):
     tpp_fixture = Fixture.all_fixtures_by_stage(Fixture.TPP).order_by('match_date')
     final_fixture = Fixture.all_fixtures_by_stage(Fixture.FINAL).order_by('match_date')
 
-    upcoming_fixtures = Fixture.objects.select_related('team1', 'team2') \
-        .filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
+    upcoming_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED).order_by('match_date')[:5]
     
-    past_fixtures = Fixture.objects.select_related('team1', 'team2') \
-        .filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
+    past_fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).order_by('-match_date')[:5]
 
     if upcoming_fixtures.exists():
         is_international = upcoming_fixtures[0].tournament.is_international
@@ -664,7 +662,7 @@ def forums(request):
 # Returns a dictionary whose keys are the groups and whose values are a queryset of the fixtures in that group. 
 def group_fixtures_dictionary():
     fixtures = {}
-    f = Fixture.objects.select_related('team1', 'team2').filter(stage=Fixture.GROUP).order_by('team1__group', 'match_date')
+    f = Fixture.objects.filter(stage=Fixture.GROUP).order_by('team1__group', 'match_date')
     for group in Team.group_names:
         fixtures[group] = f.filter(team1__group=group)
 

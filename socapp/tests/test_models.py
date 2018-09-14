@@ -64,7 +64,7 @@ class TeamTests(TestCase):
     # Tests the Team model's get_fixtures method returns the correct fixtures
     def test_get_fixtures(self):
         fixture_set = self.team1.get_fixtures()
-        expected_fixtures = Fixture.objects.select_related('team1', 'team2').filter(Q(team1 = self.team1.id) | Q(team2 = self.team1.id))
+        expected_fixtures = Fixture.objects.filter(Q(team1 = self.team1.id) | Q(team2 = self.team1.id))
         self.assertQuerysetEqual(fixture_set, expected_fixtures, ordered=False, transform=lambda x: x)
 
     # There are 6 fixtures per group, and this test should verify that
@@ -72,8 +72,7 @@ class TeamTests(TestCase):
         groups = Team.objects.values('group').distinct()
         for group in groups:
             groupname = group['group']
-            num_fixtures_in_group = Fixture.objects.select_related('team1', 'team2') \
-                .filter(Q(team1__group=groupname)).count()
+            num_fixtures_in_group = Fixture.objects.filter(Q(team1__group=groupname)).count()
             self.assertEquals(num_fixtures_in_group, 6)
 
 # Tests for the Fixture model
@@ -217,7 +216,7 @@ class FixtureTests(TestCase):
         
         completed_fixtures = tournament.all_completed_fixtures()
         self.assertEqual(completed_fixtures.count(), 2)
-        self.assertQuerysetEqual(Fixture.objects.select_related('team1', 'team2').filter(
+        self.assertQuerysetEqual(Fixture.objects.filter(
             pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x
         )
 
@@ -226,7 +225,7 @@ class FixtureTests(TestCase):
     def test_all_fixtures_by_group(self):
         fixtures = Fixture.all_fixtures_by_group("A")
         expected_teams = Team.objects.filter(group="A")
-        expected_fixtures = Fixture.objects.select_related('team1','team2').filter(team1__in=expected_teams)
+        expected_fixtures = Fixture.objects.filter(team1__in=expected_teams)
         self.assertQuerysetEqual(fixtures, expected_fixtures, ordered=False, transform=lambda x: x)
 
         # Assert the list matches expected values

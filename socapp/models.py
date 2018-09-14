@@ -61,7 +61,7 @@ class Team(models.Model):
 
     # Returns the team instance's fixtures
     def get_fixtures(self):
-        return Fixture.objects.select_related('team1', 'team2').filter(Q(team1=self) | Q(team2=self))
+        return Fixture.objects.filter(Q(team1=self) | Q(team2=self))
         #return self.team1_set.all() | self.team2_set.all()
 
     def fixtures_by_stage(self, stage):
@@ -100,12 +100,20 @@ class Tournament(models.Model):
 
     # Get all the fixtures for this tournament, ordered by match date.
     def all_fixtures_by_date(self):
-        return self.get_fixtures().select_related('team1', 'team2').order_by('match_date')
+        return self.get_fixtures().order_by('match_date')
 
 
 ################################################################################
 
+# Override Fixture's normal 'objects' Manager to automatically query for tournament and team info when a Fixture is loaded from the DB
+class FixtureManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('tournament', 'team1', 'team2')
+
 class Fixture(models.Model):
+
+    objects = FixtureManager() # Set objects to the above manager
+
     # Constants to determine if the match has been played, or not.
     # Could maybe extend this to add a status for matches that are happening?    
     MATCH_STATUS_NOT_PLAYED = 0
@@ -191,6 +199,9 @@ class Fixture(models.Model):
     def has_result(self):
         return self.team1_goals is not None and self.team2_goals is not None
 
+    def is_international(self):
+        return self.tournament.is_international
+
     #################################
     ### STATIC METHODS
     #################################
@@ -199,24 +210,23 @@ class Fixture(models.Model):
     
     @staticmethod
     def all_fixtures_by_stage(stage):
-        return Fixture.objects.select_related('team1','team2').filter(stage=stage).order_by('match_date')
+        return Fixture.objects.filter(stage=stage).order_by('match_date')
     
     @staticmethod
     def all_completed_fixtures():
-        return Fixture.objects.select_related('team1','team2').filter(status=Fixture.MATCH_STATUS_PLAYED)
+        return Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED)
     
     @staticmethod
     def all_fixtures_by_group(group):
         if not group in Team.group_names:
             raise ValidationError("Invalid group name supplied")
-        return Fixture.objects.select_related('team1', 'team2') \
-            .filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
+        return Fixture.objects.filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
     
     # Gets all fixtures for the current day, or None if there are none
     @staticmethod
     def todays_fixtures():
         current_month, current_day = timezone.now().month, timezone.now().day   
-        fixtures = Fixture.objects.select_related('team1', 'team2').filter(match_date__month=current_month, match_date__day=current_day)
+        fixtures = Fixture.objects.filter(match_date__month=current_month, match_date__day=current_day)
         return fixtures or None
 
 
