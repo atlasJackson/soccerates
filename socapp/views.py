@@ -385,7 +385,7 @@ def leaderboards(request):
     user = request.user
     # User's ranking for position on global leaderboard.
     ranking = user.profile.get_ranking()
-    franking = user.get_ranking(friends=True)
+    franking = user.profile.get_ranking(friends=True)
 
     user_leaderboard_set = set(user.leaderboard_set.values_list('name',flat=True))
     all_lb = Leaderboard.objects.all().order_by(Lower('name'))
