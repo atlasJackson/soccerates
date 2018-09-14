@@ -69,6 +69,8 @@ class ResultEnteredTests(TestCase):
         self.user = helpers.generate_user(username="test", password="password")
         self.user2 = helpers.generate_user(username="test2", password="password")
         self.user3 = helpers.generate_user(username="username", password="password")
+        self.tournament = Tournament.objects.first()
+        
         self.add_predictions(self.user, self.user_predictions)
         self.add_predictions(self.user2, self.user2_predictions)
         self.add_predictions(self.user3, self.user3_predictions)
@@ -82,7 +84,6 @@ class ResultEnteredTests(TestCase):
         self.saudi_fixtures = self.saudi.get_fixtures()
         self.egypt_fixtures = self.egypt.get_fixtures()
         self.uruguay_fixtures = self.uruguay.get_fixtures()
-        self.tournament = Tournament.objects.first()
     
     # Queries the m2m table storing user points per tournament
     def tournament_pts(self, user):
@@ -419,7 +420,7 @@ class ResultEnteredTests(TestCase):
 
     def test_user_points_after_removing_individual_fixture(self):
         # Remove the fixture that got user1 five points:
-        f = Fixture.all_fixtures_by_group("A")[0]
+        f = self.tournament.all_fixtures_by_group("A")[0]
         assert f.team1.name == "Russia" and f.team2.name == "Saudi Arabia" # Ensure it's the same fixture
         f.team1_goals = f.team2_goals = None # Invalidate the result
         f.save()
@@ -434,7 +435,7 @@ class ResultEnteredTests(TestCase):
 
     # Create an answer for each fixture, for the user generated in the setUp method.
     def add_predictions(self, user, predictions):
-        fixtures = Fixture.all_fixtures_by_group("A")
+        fixtures = self.tournament.all_fixtures_by_group("A")
         assert fixtures.count() == len(predictions)
         for fixture, prediction in zip(fixtures, predictions):
             a = Answer(fixture=fixture, user=user)
@@ -444,7 +445,7 @@ class ResultEnteredTests(TestCase):
 
     # Add a result for each fixture in Group A
     def add_results(self):
-        fixtures = Fixture.all_fixtures_by_group("A")
+        fixtures = self.tournament.all_fixtures_by_group("A")
         assert fixtures.count() == len(self.results)
         for fixture, result in zip(fixtures, self.results):
             fixture.team1_goals = result['team1_goals']
@@ -456,7 +457,7 @@ class ResultEnteredTests(TestCase):
 
     # Sets all fixtures' team_goals fields to None
     def remove_all_results(self):
-        fixtures = Fixture.all_fixtures_by_group("A")
+        fixtures = self.tournament.all_fixtures_by_group("A")
         for fixture in fixtures:
             fixture.team1_goals = None
             fixture.team2_goals = None
@@ -467,7 +468,7 @@ class ResultEnteredTests(TestCase):
 
     # Updates the first three fixtures' results and refreshes the local team instances from the database
     def update_fixtures(self):
-        fixtures = Fixture.all_fixtures_by_group("A")[:3] # Grab the first 3 fixtures
+        fixtures = self.tournament.all_fixtures_by_group("A")[:3] # Grab the first 3 fixtures
         for fixture, result in zip(fixtures, self.updated_results):          
             fixture.team1_goals = result['team1_goals']
             fixture.team2_goals = result['team2_goals']
@@ -482,7 +483,7 @@ class ResultEnteredTests(TestCase):
 
     # Sets all matches to 0-0
     def update_fixtures_to_nil_nil(self):
-        for fixture in Fixture.all_fixtures_by_group("A"):
+        for fixture in self.tournament.all_fixtures_by_group("A"):
             fixture.team1_goals = 0
             fixture.team2_goals = 0
             fixture.save()

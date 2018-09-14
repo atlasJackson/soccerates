@@ -222,7 +222,7 @@ class FixtureTests(TestCase):
     # Tests the Fixture model's get_fixtures_by_group method, to ensure the correct Fixtures are returned
     # Group A teams are: Russia, Saudi Arabia, Egypt, Uruguay
     def test_all_fixtures_by_group(self):
-        fixtures = Fixture.all_fixtures_by_group("A")
+        fixtures = self.tournament.all_fixtures_by_group("A")
         expected_teams = Team.objects.filter(group="A")
         expected_fixtures = Fixture.objects.filter(team1__in=expected_teams)
         self.assertQuerysetEqual(fixtures, expected_fixtures, ordered=False, transform=lambda x: x)
@@ -234,7 +234,7 @@ class FixtureTests(TestCase):
 
         # Check that if an invalid group is passed as a parameter, a ValidationError is raised
         with self.assertRaises(ValidationError):
-            fixtures = Fixture.all_fixtures_by_group("X")
+            fixtures = self.tournament.all_fixtures_by_group("X")
         
     # Big test: ensures that when a result is entered, the changes in the Fixture model propagate to the Team model.
     # For example: entering a value for team1_goals in the Fixture should automatically increment the associated team's goals_for field.

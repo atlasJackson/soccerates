@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
+from django.utils import timezone
 import random, string, sys
 
 from socapp.models import *
@@ -55,6 +56,7 @@ class Command(BaseCommand):
 
     users = []
     prediction_list = [created_user_predictions, user1_predictions, user2_predictions, user3_predictions]
+    tournament = Tournament.objects.get(name='World Cup 2018', start_date='2018-06-14T16:00:00+00:00')
 
     # This method is executed when the management command is run.
     def handle(self, *args, **kwargs):
@@ -66,6 +68,7 @@ class Command(BaseCommand):
         """
         print("Working...")
         self.reset_fixtures()
+
         self.create_users(kwargs['username'], kwargs['password'])
         for user, predictions in zip(self.users, self.prediction_list):
             self.add_predictions(user, predictions)
@@ -83,7 +86,7 @@ class Command(BaseCommand):
 
     # Add a result for each fixture in Group A
     def add_results(self):
-        fixtures = Fixture.all_fixtures_by_group("A")
+        fixtures = self.tournament.all_fixtures_by_group("A")
         assert fixtures.count() == len(self.results)
         for fixture, result in zip(fixtures, self.results):
             fixture.team1_goals = result['team1_goals']
@@ -93,7 +96,7 @@ class Command(BaseCommand):
 
     # Create an answer for each fixture, for the user generated in the setUp method.
     def add_predictions(self, user, predictions):
-        fixtures = Fixture.all_fixtures_by_group("A")
+        fixtures = self.tournament.all_fixtures_by_group("A")
         assert fixtures.count() == len(predictions)
         for fixture, prediction in zip(fixtures, predictions):
             a = Answer(fixture=fixture, user=user)
@@ -121,8 +124,8 @@ class Command(BaseCommand):
                 email=self.str_generator() + "@pytest.com")
             self.users.append(u)
 
-    def reset_fixtures(self):
-        for f in Fixture.all_fixtures_by_group("A"):
+    def reset_fixtures(self, tournament):
+        for f in self.tournament.all_fixtures_by_group("A"):
             f.team1_goals = f.team2_goals = None
             f.save()
 

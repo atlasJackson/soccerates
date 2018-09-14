@@ -63,9 +63,8 @@ class UserProfile(models.Model):
         answers = self.get_predictions().filter(points_added=True)
         if tournament is not None:
             answers = answers.filter(fixture__tournament=tournament)
-
+            
         avg_points = answers.aggregate(avg=Avg('points'))['avg']
-        print(avg_points)
         if avg_points is not None:
             return round(avg_points, 2) # User's points divided by the number of results
         else:

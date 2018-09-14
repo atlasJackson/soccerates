@@ -84,7 +84,7 @@ class Tournament(models.Model):
     #     (GROUP_THEN_KNOCKOUT, "Group -> Knockout")
     # )
 
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     #t_format = models.IntegerField(choices=tournament_format_choices, default=GROUP_THEN_KNOCKOUT)
     start_date = models.DateTimeField()
     winner = models.OneToOneField(Team, on_delete=models.SET_DEFAULT, default=None, null=True, blank=True)
@@ -100,6 +100,16 @@ class Tournament(models.Model):
 
     def all_fixtures_by_stage(self, stage):
         return self.get_fixtures().filter(stage=stage)
+
+    def all_fixtures_by_group(self, group):
+        if not group in Team.group_names:
+            raise ValidationError("Invalid group name supplied")
+        return self.get_fixtures().filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
+    
+    def todays_fixtures(self):
+        year, month, day = timezone.now().year, timezone.now().month, timezone.now().day   
+        fixtures = self.get_fixtures().filter(match_date__year=year, match_date__month=month, match_date__day=day)
+        return fixtures or None
     
     def completed_fixtures(self):
         return self.get_fixtures().filter(status=Fixture.MATCH_STATUS_PLAYED)
@@ -232,16 +242,10 @@ class Fixture(models.Model):
     def all_completed_fixtures():
         return Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED)
     
-    @staticmethod
-    def all_fixtures_by_group(group):
-        if not group in Team.group_names:
-            raise ValidationError("Invalid group name supplied")
-        return Fixture.objects.filter((Q(team1__group=group) | Q(team2__group=group)) & Q(stage=Fixture.GROUP))
-    
     # Gets all fixtures for the current day, or None if there are none
     @staticmethod
     def todays_fixtures():
-        current_month, current_day = timezone.now().month, timezone.now().day   
+        current_year, current_month, current_day = timezone.now().year, timezone.now().month, timezone.now().day   
         fixtures = Fixture.objects.filter(match_date__month=current_month, match_date__day=current_day)
         return fixtures or None
 
