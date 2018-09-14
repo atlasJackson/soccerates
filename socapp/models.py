@@ -102,6 +102,12 @@ class Tournament(models.Model):
     def all_fixtures_by_date(self):
         return self.get_fixtures().order_by('match_date')
 
+    def all_fixtures_by_stage(self, stage):
+        return self.get_fixtures().select_related('team1','team2').filter(stage=stage)
+    
+    def all_completed_fixtures(self):
+        return self.get_fixtures().select_related('team1','team2').filter(status=Fixture.MATCH_STATUS_PLAYED)
+
 
 ################################################################################
 

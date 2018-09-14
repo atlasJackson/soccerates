@@ -27,13 +27,14 @@ def test(request):
 
 def index(request):
 
-    # Grouops by stage.
+    # Get current/previous tournaments
     upcoming_tournaments = Tournament.objects.filter(start_date__gt=timezone.now()).order_by('start_date')
     past_tournaments = Tournament.objects.exclude(start_date__gt=timezone.now())
 
-
     group_fixtures = group_fixtures_dictionary()
     group_fixtures_exist = any(group_fixtures.values())
+
+    ### Convert below to tournament specific ###
     ro16_fixtures = Fixture.all_fixtures_by_stage(Fixture.ROUND_OF_16).order_by('match_date')
     qf_fixtures = Fixture.all_fixtures_by_stage(Fixture.QUARTER_FINALS).order_by('match_date')
     sf_fixtures = Fixture.all_fixtures_by_stage(Fixture.SEMI_FINALS).order_by('match_date')
