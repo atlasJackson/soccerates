@@ -13,26 +13,6 @@ logger = logging.getLogger(__name__)
 Utility methods for common/complex tasks
 """
 
-def get_next_games(number=3):
-    from .models import Fixture
-    """ Returns the next games to be played, the number of which can be specified, but which defaults to 3 """
-
-    cur_date = timezone.now()
-    # Since the Fixture model's default ordering is by match_date, we can just take a slice of the query results
-    fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_NOT_PLAYED)[:number]
-    for fixture in fixtures:
-        assert cur_date < fixture.match_date # If this fails, something has gone wrong.
-    return fixtures
-
-def get_last_results(number=3):
-    from .models import Fixture
-    """ Returns the last games to be played, the number of which can be specified, but which defaults to 3 """
-    cur_date = timezone.now()
-    fixtures = Fixture.objects.filter(status=Fixture.MATCH_STATUS_PLAYED).reverse()[:number]
-    for fixture in fixtures:
-        assert cur_date > fixture.match_date
-    return fixtures
-
 def get_user_ranking(user):
     """
     Takes a user, and returns their rank in the system compared to other users. Based on the user's points field.

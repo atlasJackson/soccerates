@@ -175,7 +175,7 @@ class FixtureTests(TestCase):
 
     # Tests the static method on the Fixture model which returns all fixtures in order of their match-date
     def test_all_fixtures_by_date(self):
-        fixtures = self.tournament.all_fixtures_by_date()
+        fixtures = self.tournament.get_fixtures()
         
         # Assert that 'fixtures' is ordered:
         sorted = True # Flag: changed within the for-loop below if the result is NOT in sorted order
@@ -213,7 +213,7 @@ class FixtureTests(TestCase):
         # By default, no games are completed. Here, we set 2 games to completed, and test the method.
         Fixture.objects.filter(pk__in=[1,2]).update(status=Fixture.MATCH_STATUS_PLAYED)
         
-        completed_fixtures = self.tournament.all_completed_fixtures()
+        completed_fixtures = self.tournament.completed_fixtures()
         self.assertEqual(completed_fixtures.count(), 2)
         self.assertQuerysetEqual(Fixture.objects.filter(
             pk__in=[1,2]), completed_fixtures, ordered=False, transform=lambda x: x

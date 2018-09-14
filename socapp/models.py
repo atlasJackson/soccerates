@@ -94,19 +94,24 @@ class Tournament(models.Model):
     def __str__(self):
         return self.name
 
-    # Get all the fixtures in the tournament
+    # Get all the fixtures in the tournament, in date order (see Fixture Meta class)
     def get_fixtures(self):
         return Fixture.objects.filter(tournament=self.id)
-
-    # Get all the fixtures for this tournament, ordered by match date.
-    def all_fixtures_by_date(self):
-        return self.get_fixtures().order_by('match_date')
 
     def all_fixtures_by_stage(self, stage):
         return self.get_fixtures().filter(stage=stage)
     
-    def all_completed_fixtures(self):
+    def completed_fixtures(self):
         return self.get_fixtures().filter(status=Fixture.MATCH_STATUS_PLAYED)
+    
+    def unplayed_fixtures(self):
+        return self.get_fixtures().filter(status=Fixture.MATCH_STATUS_NOT_PLAYED)
+
+    def get_next_games(self, number=5):
+        return self.unplayed_fixtures()[:number]
+
+    def get_last_results(self, number=5):
+        return self.completed_fixtures().reverse()[:number]
 
 
 ################################################################################
