@@ -26,7 +26,7 @@ def test(request):
     return HttpResponseRedirect(reverse("index"))
 
 def index(request):
-
+    user = request.user
     # Get current/previous tournaments
     upcoming_tournaments = Tournament.objects.filter(start_date__gt=timezone.now()).order_by('start_date')
     past_tournaments = Tournament.objects.exclude(start_date__gt=timezone.now())
@@ -68,7 +68,7 @@ def index(request):
     try:
         ranking = request.user.profile.get_ranking()
         usercount = get_user_model().objects.count()
-        points_percentage = utils.points_per_fixture(request.user)
+        points_percentage = request.user.profile.points_per_fixture()
 
         context['ranking'] = ranking
         context['usercount'] = usercount
@@ -132,7 +132,7 @@ def user_profile(request, username=None):
     ranking = request.user.profile.get_ranking()
     franking = request.user.profile.get_ranking(friends=True)
     usercount = get_user_model().objects.count()
-    points_percentage = utils.points_per_fixture(user)
+    points_percentage = user.profile.points_per_fixture()
     public_lb = Leaderboard.objects.filter(users=user.pk, is_private=False)
     private_lb = Leaderboard.objects.filter(users=user.pk, is_private=True)
 

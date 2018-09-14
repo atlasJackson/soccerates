@@ -18,10 +18,18 @@ class UserProfile(models.Model):
     def get_predictions(self, tournament=None):
         base_qs = Answer.objects.filter(user=self.user)
         if tournament is None:
-            return base_qs.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2')
+            return base_qs.select_related('fixture', 'user')
         else:
-            return base_qs.select_related('fixture', 'user', 'fixture__team1', 'fixture__team2') \
-                .filter(fixture__tournament=tournament)
+            return base_qs.select_related('fixture', 'user').filter(fixture__tournament=tournament)
+
+    # Gets the user's points for the given tournament
+    def get_tournament_points(self, tournament):
+        tournament_pts = self.tournament_pts.filter(tournament=tournament)
+        if tournament_pts.exists():
+            user_pts = tournament_pts.get().points
+        else:
+            user_pts = 0
+        return user_pts
 
     # Returns user's rank in the system compared to all other users, or only their friends is the friends kwarg is set
     def get_ranking(self, friends=False):
@@ -41,16 +49,12 @@ class UserProfile(models.Model):
 
     # Gets the provided user's average points per fixture, globally or for the tournament passed in
     def points_per_fixture(self, tournament=None):
-        answers = Answer.objects.filter(user=self.user, points_added=True)
+        answers = self.get_predictions().filter(points_added=True)
         if tournament is None:
             user_pts = self.points
         else:
-            user_tournament_pts = self.tournament_pts.filter(tournament=tournament)
-            if user_tournament_pts.exists():
-                user_pts = user_tournament_pts.get().points
-            else:
-                user_pts = 0
-            answers = answers.filter(fixture__in=tournament.get_fixtures())
+            user_pts = self.get_tournament_points(tournament)
+            answers = answers.filter(fixture__tournament=tournament)
 
         if user_pts == 0: return 0
         num_results = answers.count()
