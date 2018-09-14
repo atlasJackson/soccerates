@@ -29,44 +29,16 @@
         <!-- User's profile details, stats, and friends -->
         <div class="row pb-3 mb-3 border-bottom border-info">
             
-            <div class="col-9">
+            <!-- User's profile details -->
+            <div class="col-12 col-lg-6 mb-3">
 
-                <div class="col-12 col-md-8 offset-md-2 col-xl-6 offset-xl-3 text-right">
-                    <h3 class="text-success pb-1 pr-1 border-bottom border-secondary">{{ user.username }}</h3>
+                <div class="col-12 text-left mb-4">
+                    <h2 class="text-capitalize mt-1 py-2 border-top border-bottom border-secondary">{{ user.username }}</h2>
                 </div>
 
-                <div class="user-profile-data col-7 col-md-5 offset-md-2 col-lg-6 col-xl-4 offset-xl-3 list-star-bullets mb-5">
-                    <ul class="">
-                        {% if user.username == request.user.username %}
-                            <li>You currently have <strong>{{ user.profile.points }} points.</strong></li>
-                            <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                            <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
-                            <li>Click on your profile picture to change it.</li>
-                        {% else %}
-                            <li>{{ user.username }} currently has <strong>{{ user.profile.points }} points.</strong></li>
-                            <li>{{ user.username }} is currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
-                            <li>{{ user.username }} has scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
-                        {% endif %}
-                    </ul>
-
-                    {% if not user == request.user %}
-                        <div class="friend-buttons text-center">
-                            {% if is_friend %}
-                                <button class="btn btn-danger" type="button" id="remove-friend" data-csrf_token="{{ csrf_token }}" >
-                                    Remove Friend
-                                </button>
-                            {% else %}
-                                <button class="btn btn-success" type="button" id="add-friend" data-csrf_token="{{ csrf_token }}" >
-                                    Add Friend
-                                </button>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-
-                </div>   
-                
                 <!-- User profile image. On clicking, the user can change their display picture. -->
-                <div class="col-5 col-md-3 col-lg-2">
+                <div class="row">
+                    <div class="col-6">
                     <!-- Display the profile picture -->
                     {% if user == request.user %}
                         <div class="user-profile">
@@ -76,6 +48,8 @@
                                 <img src="{% static 'img/soccerates-blank-profile.png' %}" id="user-profile-image" class="profile-page-image rounded img-fluid" alt="Profile" title="Click to change picture."/>
                             {% endif %}
                         </div>
+
+
                         <!-- Hidden form to submit a new profile picture. Upload and subumission is bound to the picture using jQuery. -->
                         <div class="profile-form">
                             <form id='profile-image-form' method="POST" action="{% url 'profile' %}" enctype="multipart/form-data" hidden>
@@ -92,51 +66,121 @@
                             {% endif %}
                         </div>
                     {% endif %}
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <p><strong class="display-1">{{ user.profile.points }}</strong></p>
+                        <p class="text-uppercase">points.</p>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="user-profile-data list-star-bullets mb-5">
+                            <hr />
+                            <h4 class="pl-3 mb-3 font-weight-bold">Statistics for {{ user.username }}</h4>
+                            <ul class="">
+                                {% if user.username == request.user.username %}
+                                    <li>You are currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                                    <li>You have scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                                    <li>Click on your profile picture to change it.</li>
+                                {% else %}
+                                    <li>{{ user.username }} is currently ranked <strong>#{{ ranking }}</strong> out of {{ usercount }} users.</li>
+                                    <li>{{ user.username }} has scored <strong>{{ points_percentage }}</strong> points per fixture.</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>                  
+
             </div>
 
             <!-- User's friends -->
-            <div class="friend-list col-3">
+            <div class="friend-list col-12 col-lg-6 border-left border-info">
                 <div class="card mb-3">                    
                     <div class="card-header bg-dark text-white d-flex justify-content-center">
+                        <img src="{% static 'img/friends.png' %}" class="icon"/>
                         <h4 class="mb-3">Friends</h4>
                     </div>
-
-                    <div class="card-body">
-                        {% if user.profile.friends.all %}
-                            <table class="table">
-                            <tbody>
-                                {% for friend in user.profile.friends.all %}
-                                <tr>
-                                    <td><a href="{% url 'other_user_profile' friend.username %}">
-                                        {% if friend.profile.picture %}
-                                            <img src="{{ MEDIA_URL }}{{ friend.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
-                                        {% else %}
-                                            <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded mr-3" height="25" width="25" alt="Profile"/>
-                                        {% endif %}
-                                        <strong>{{ friend.username }}</strong>
-                                    </a></td>
-
-                                    <td class="board-data-cell">{{ friend.profile.points }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            </table>
+                    
+                    <div class="card-body mx-4">
+                        {% if user.username == request.user.username %}
+                            <h5 class="font-weight-bold">Your friends are listed below.</h5>
+                            <hr />
+                            <p>To add/remove friends, click on the "Add Friend"/"Remove Friend" button on the profile page of the user you wish to add/remove.</p>
+                            <p>To find new friends, use the search box below.</p>
+                            <p>** IMPLEMENT SEARCH FUNCTION **</p>
                         {% else %}
-                            {% if user.username == request.user.username %}
-                                <p class=text-ce>You have 0 friends.</p>
+                            <p>{{ user.username }}'s friends are listed below.</p>
+                            
+                            {% if is_friend %}
+                                <p>To remove {{ user.username }} from your list of friends, click the button below.</p>
+                                <div class="friend-buttons text-center">
+                                    <button class="btn btn-danger" type="button" id="remove-friend" data-csrf_token="{{ csrf_token }}" >
+                                        Remove Friend
+                                    </button>
+                                </div>
                             {% else %}
-                                <p>{{ user.username }} doesn't have any friends.</p>                            
+                                <p>To add {{ user.username }} to your list of friends, click the button below.</p>
+                                <div class="friend-buttons text-center">
+                                    <button class="btn btn-success" type="button" id="add-friend" data-csrf_token="{{ csrf_token }}" >
+                                        Add Friend
+                                    </button>
+                                </div>
                             {% endif %}
                         {% endif %}
                     </div>
+                </div>
+                
+                <div class="pb-3 m-3">
+
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th class="board-name-cell">
+                                    Friend
+                                </th>        
+                                <th class="board-data-cell text-right">
+                                    Points
+                                </th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                        {% if user.profile.friends.all %}
+                            {% for friend in user.profile.friends.all %}
+                            <tr>
+                                <td><a href="{% url 'other_user_profile' friend.username %}">
+                                    {% if friend.profile.picture %}
+                                        <img src="{{ MEDIA_URL }}{{ friend.profile.picture }}" class="rounded mr-3" height="25" width="25" alt="Profile" />
+                                    {% else %}
+                                        <img src="{% static 'img/soccerates-blank-profile.png' %}" class="rounded mr-3" height="25" width="25" alt="Profile"/>
+                                    {% endif %}
+                                    <strong>{{ friend.username }}</strong>
+                                </a></td>
+
+                                <td class="board-data-cell">{{ friend.profile.points }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="text-center">
+                            {% if user.username == request.user.username %}
+                                <td colspan="12" class=text-ce>You have 0 friends.</td>
+                            {% else %}
+                                <td colspan="12">{{ user.username }} doesn't have any friends.</td>                            
+                            {% endif %}
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
 
                 </div>
+
             </div>
 
         </div>
 
-
+        <!-- NEXT ROW -->
         
         <!-- User's Predictions and Leaderboards columns -->
         <div class="row mt-1">

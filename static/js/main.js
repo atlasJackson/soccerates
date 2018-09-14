@@ -58,12 +58,12 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     /* Buttons to add and remove friends */
-    $(".user-profile-data").on("click", "#add-friend", function(e) {
+    $(".friend-buttons").on("click", "#add-friend", function(e) {
 
         e.preventDefault();
         buttonFriend($(this), "add_friend/");
     });
-    $(".user-profile-data").on("click", "#remove-friend", function(e) {
+    $(".friend-buttons").on("click", "#remove-friend", function(e) {
 
         e.preventDefault();
         buttonFriend($(this), "remove_friend/");
