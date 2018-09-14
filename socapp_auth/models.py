@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
-from socapp.models import Answer, Tournament
+from socapp.models import Answer, Tournament, Fixture
 
 from socapp.utils import group_users_by_points
 
@@ -16,15 +16,24 @@ class UserProfile(models.Model):
 
     # Returns all the user's predictions, filtered by tournament if arg is provided
     def get_predictions(self, tournament=None):
-        base_qs = Answer.objects.filter(user=self.user)
+        base_qs = Answer.objects.filter(user=self.user).select_related('fixture', 'user')
         if tournament is None:
-            return base_qs.select_related('fixture', 'user')
+            return base_qs
         else:
-            return base_qs.select_related('fixture', 'user').filter(fixture__tournament=tournament)
+            return base_qs.filter(fixture__tournament=tournament)
+
+    # Finds any fixtures for which the user has not made a prediction
+    def fixtures_with_no_prediction(self, tournament, stage=None):
+        user_predictions = self.get_predictions(tournament).values('fixture')
+        if stage is not None:
+            fixtures = tournament.all_fixtures_by_stage(stage).exclude(pk__in=user_predictions)
+        else:
+            fixtures = tournament.get_fixtures().exclude(pk__in=user_predictions)
+        return fixtures
 
     # Gets the user's points for the given tournament
     def get_tournament_points(self, tournament):
-        tournament_pts = self.tournament_pts.filter(tournament=tournament)
+        tournament_pts = self.tournament_pts.filter(tournament=tournament) # Looks at the M2M model
         if tournament_pts.exists():
             user_pts = tournament_pts.get().points
         else:
