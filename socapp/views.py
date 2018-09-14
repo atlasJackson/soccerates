@@ -66,7 +66,7 @@ def index(request):
     }
 
     try:
-        ranking = utils.get_user_ranking(request.user)
+        ranking = request.user.profile.get_ranking()
         usercount = get_user_model().objects.count()
         points_percentage = utils.points_per_fixture(request.user)
 
@@ -129,8 +129,8 @@ def user_profile(request, username=None):
     else:
         group_answers_subset = paginated_data(group_answers, num_per_page=12, page=1)
     
-    ranking = utils.get_user_ranking(user)
-    franking = utils.get_user_franking(user)
+    ranking = request.user.profile.get_ranking()
+    franking = request.user.profile.get_ranking(friends=True)
     usercount = get_user_model().objects.count()
     points_percentage = utils.points_per_fixture(user)
     public_lb = Leaderboard.objects.filter(users=user.pk, is_private=False)
@@ -382,16 +382,16 @@ def can_edit_answer(fixture):
 
 @login_required
 def leaderboards(request):
-
+    user = request.user
     # User's ranking for position on global leaderboard.
-    ranking = utils.get_user_ranking(request.user)
-    franking = utils.get_user_franking(request.user)
+    ranking = user.profile.get_ranking()
+    franking = user.get_ranking(friends=True)
 
-    user_leaderboard_set = set(request.user.leaderboard_set.values_list('name',flat=True))
+    user_leaderboard_set = set(user.leaderboard_set.values_list('name',flat=True))
     all_lb = Leaderboard.objects.all().order_by(Lower('name'))
 
-    public_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=False)
-    private_lb = Leaderboard.objects.prefetch_related('users').filter(users=request.user, is_private=True)
+    public_lb = Leaderboard.objects.prefetch_related('users').filter(users=user, is_private=False)
+    private_lb = Leaderboard.objects.prefetch_related('users').filter(users=user, is_private=True)
 
     # Code taken from https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
     page = request.GET.get('page', 1)
@@ -420,7 +420,7 @@ def leaderboards(request):
 
             # Save the new leaderboard to the database, and add the current user as a member.
             leaderboard = leaderboard_form.save()
-            leaderboard.users.add(request.user)
+            leaderboard.users.add(user)
             leaderboard.save()
  
             # Display newly-created leaderboard.
