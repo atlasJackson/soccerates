@@ -115,7 +115,7 @@ class Tournament(models.Model):
 
     # Returns users ordered by the points they've gained in this tournament
     def get_ranked_users(self):
-        return self.userprofile_set.select_related('user').order_by('-points')
+        return self.userprofile_set.select_related('user').order_by('-tournament_pts__points')
 
 ################################################################################
 

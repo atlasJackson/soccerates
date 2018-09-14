@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Avg
 from socapp.models import Answer, Tournament, Fixture
 
 from socapp.utils import group_users_by_points
@@ -8,7 +9,7 @@ from socapp.utils import group_users_by_points
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     picture = models.ImageField(upload_to='profile/profile_images', blank=True)
-    points = models.IntegerField(default=0) # Hold the TOTAL points for the user over all tournaments
+    points = models.IntegerField(default=0) # Hold the TOTAL points for the user over all tournaments.
     friends = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     # Stores points PER tournament for each tournament a user participates in
@@ -41,6 +42,7 @@ class UserProfile(models.Model):
         return user_pts
 
     # Returns user's rank in the system compared to all other users, or only their friends is the friends kwarg is set
+    # Extend for tournament?
     def get_ranking(self, friends=False):
         if friends:
             ranked_users = group_users_by_points(self.friends.all() | get_user_model().objects.filter(username=self.user.username))
@@ -59,16 +61,15 @@ class UserProfile(models.Model):
     # Gets the provided user's average points per fixture, globally or for the tournament passed in
     def points_per_fixture(self, tournament=None):
         answers = self.get_predictions().filter(points_added=True)
-        if tournament is None:
-            user_pts = self.points
-        else:
-            user_pts = self.get_tournament_points(tournament)
+        if tournament is not None:
             answers = answers.filter(fixture__tournament=tournament)
 
-        if user_pts == 0: return 0
-        num_results = answers.count()
-        avg_points = round((user_pts / num_results), 2) # User's points divided by the number of results
-        return avg_points
+        avg_points = answers.aggregate(avg=Avg('points'))['avg']
+        print(avg_points)
+        if avg_points is not None:
+            return round(avg_points, 2) # User's points divided by the number of results
+        else:
+            return 0
 
     def __str__(self):
         return self.user.username
