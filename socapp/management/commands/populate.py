@@ -124,7 +124,7 @@ class Command(BaseCommand):
                 email=self.str_generator() + "@pytest.com")
             self.users.append(u)
 
-    def reset_fixtures(self, tournament):
+    def reset_fixtures(self):
         for f in self.tournament.all_fixtures_by_group("A"):
             f.team1_goals = f.team2_goals = None
             f.save()
