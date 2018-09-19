@@ -129,8 +129,8 @@ def user_profile(request, username=None):
     else:
         group_answers_subset = paginated_data(group_answers, num_per_page=12, page=1)
     
-    ranking = request.user.profile.get_ranking()
-    franking = request.user.profile.get_ranking(friends=True)
+    ranking = user.profile.get_ranking()
+    franking = user.profile.get_ranking(friends=True)
     usercount = get_user_model().objects.count()
     points_percentage = user.profile.points_per_fixture()
     public_lb = Leaderboard.objects.filter(users=user.pk, is_private=False)
