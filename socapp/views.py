@@ -111,7 +111,6 @@ def user_profile(request, username=None):
     group_answers = answers.filter(fixture__stage=Fixture.GROUP).order_by("fixture__team1__group", "fixture__match_date")
     knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
 
-    print(user)
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
         group_answers = [a for a in group_answers if a.points_added]

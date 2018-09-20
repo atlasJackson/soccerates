@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from socapp.models import Answer, Tournament, Fixture
 
 from socapp.utils import group_users_by_points
@@ -45,7 +45,9 @@ class UserProfile(models.Model):
     # Extend for tournament?
     def get_ranking(self, friends=False):
         if friends:
-            ranked_users = group_users_by_points(self.friends.all() | get_user_model().objects.filter(username=self.user.username))
+            friend_pks = self.friends.all().values_list('pk', flat=True)
+            qs = get_user_model().objects.filter(Q(pk__in=friend_pks) | Q(pk=self.user.pk))
+            ranked_users = group_users_by_points(qs)
         else:
             ranked_users = group_users_by_points() # Groups users into sublists: each sublist has users with the same number of points.
 
