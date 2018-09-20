@@ -25,7 +25,7 @@ def group_users_by_points(users_queryset=None):
         User = get_user_model()
         users = User.objects.select_related('profile').order_by('-profile__points')
     else:
-        users = users_queryset
+        users = users_queryset.select_related('profile').order_by('-profile__points')
 
     # points_rank = Window(expression=Rank(), partition_by=F('profile__id'), order_by=F('profile__points').desc())
 
