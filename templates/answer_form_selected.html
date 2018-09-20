@@ -87,8 +87,8 @@
                                     <tbody>
                         {% endif %}
 
-                        <!-- Since there are 6 fixtures per-group, end the table tags if iteration index is divisible by 6, and create next group's table -->
-                        {% if forloop.counter0|divisibleby:6 and not forloop.first %}
+                        <!-- Ends the table tags if iteration index is divisible by the number of fixtures per group, and create next group's table -->
+                        {% if forloop.counter0|divisibleby:group_fixture_count and not forloop.first %}
                                     </tbody>
                                 </table>
                             </div>

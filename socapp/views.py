@@ -268,6 +268,10 @@ def answer_form_selected(request, stage):
         if stage_is_group:
             # Not a POST, so all forms will be blank unless the user has already submitted an answer.
             # If answers exist, populate the form with the existing answers.
+
+            # Get number of fixtures per group
+            group_fixture_count = len(group_fixtures) / len(Team.group_names)
+
             if len(group_fixtures) > 0:
                 is_international = group_fixtures[0].tournament.is_international
             else:
@@ -278,6 +282,7 @@ def answer_form_selected(request, stage):
             management_form = formset.management_form
             context_dict['fixtures_and_forms'] = zip(group_fixtures, formset, zipped_groups)
             context_dict['management_form'] = management_form
+            context_dict['group_fixture_count'] = group_fixture_count
         else:
             if len(knockout_fixtures) > 0:
                 is_international = knockout_fixtures[0].tournament.is_international
