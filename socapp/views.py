@@ -96,12 +96,16 @@ def tournaments(request):
 @login_required
 @csrf_exempt
 def user_profile(request, username=None):
-
+    print(request.path)
     try:
         user = get_user_model().objects.get(username=username)
     except:
         if username is None:
-            user = request.user
+            if request.is_ajax():
+                username = request.POST.get('username')
+                user = get_user_model().objects.filter(username__iexact=username).get()
+            else:
+                user = request.user
         else:
             return HttpResponseRedirect(reverse("index"))
 
@@ -111,6 +115,8 @@ def user_profile(request, username=None):
     answers = user.profile.get_predictions()
     group_answers = answers.filter(fixture__stage=Fixture.GROUP).order_by("fixture__team1__group", "fixture__match_date")
     knockout_answers = answers.exclude(fixture__stage=Fixture.GROUP)
+
+    print(user)
     # Filter out fixtures not yet played if viewing someone else's profile.
     if user.username != request.user.username:
         group_answers = [a for a in group_answers if a.points_added]

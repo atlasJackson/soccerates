@@ -32,8 +32,8 @@
             <!-- User's profile details -->
             <div class="col-12 col-lg-6 mb-3">
 
-                <div class="col-12 text-left mb-4">
-                    <h2 class="text-capitalize mt-1 py-2 border-top border-bottom border-secondary">{{ user.username }}</h2>
+                <div class="col-12 text-left mb-4" id="username-container">
+                    <h2 class="text-capitalize mt-1 py-2 border-top border-bottom border-secondary" id="username-header">{{ user.username }}</h2>
                 </div>
 
                 <!-- User profile image. On clicking, the user can change their display picture. -->
@@ -221,7 +221,7 @@
 
                         <div class="pb-3 m-3">
                             {% if group_answers %}
-                            <div class="userprofile-predictions">
+                            <div class="userprofile-predictions" data-url="{{ request.path }}">
                                 {% include 'ajax_partials/group_predictions.html' %}
                             </div>
                             {% else %}

@@ -7,6 +7,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     initTooltip()
 
+    function get_username() {
+        let urlpath = $(".userprofile-predictions").data("url")
+        let username
+        if (urlpath == "/profile") {
+            username = $("#username-container > #username-header").text()
+        } else {
+            username = urlpath.split("/")[2]
+        }
+        return username
+    }
+
     /* This block disables the submit button when a result has only been partially entered: ie - one team's goals, but not the other */
     let numberfields = $("input[type='number']")
     let invalid_scores = []
@@ -174,8 +185,9 @@ document.addEventListener("DOMContentLoaded", function() {
     $(".userprofile-predictions").on("click", ".prediction-pagination", function(e) {
         e.preventDefault()
         let page = $(this).attr("href")
+        let username = get_username()
         page = page.substr(page.length - 1)
-        var postRequest = $.post("/ajax/profile/get_predictions", {'page': page})
+        var postRequest = $.post("/ajax/profile/get_predictions", {'page': page, 'username': username})
         postRequest.done(function(data) {
             $(".userprofile-predictions").html(data.page_html)
             initTooltip()
