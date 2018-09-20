@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let page = $(this).attr("href")
         let username = get_username()
         page = page.substr(page.length - 1)
-        var postRequest = $.post("/ajax/profile/get_predictions", {'page': page, 'username': username})
+        var postRequest = $.post("/ajax/" + username + "/get_predictions", {'page': page})
         postRequest.done(function(data) {
             $(".userprofile-predictions").html(data.page_html)
             initTooltip()

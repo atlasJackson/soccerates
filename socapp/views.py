@@ -96,16 +96,11 @@ def tournaments(request):
 @login_required
 @csrf_exempt
 def user_profile(request, username=None):
-    print(request.path)
     try:
-        user = get_user_model().objects.get(username=username)
+        user = get_user_model().objects.filter(username__iexact=username).get()
     except:
         if username is None:
-            if request.is_ajax():
-                username = request.POST.get('username')
-                user = get_user_model().objects.filter(username__iexact=username).get()
-            else:
-                user = request.user
+            user = request.user
         else:
             return HttpResponseRedirect(reverse("index"))
 
