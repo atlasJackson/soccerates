@@ -51,6 +51,8 @@ class UserProfile(models.Model):
         else:
             ranked_users = group_users_by_points() # Groups users into sublists: each sublist has users with the same number of points.
 
+        # something else for ranking leaderboards?
+
         # Iterates over the ranked sublists, finds which one the user is in, and returns the ranking
         ranking = 1
         for grouping in ranked_users:

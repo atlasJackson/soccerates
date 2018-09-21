@@ -15,13 +15,16 @@ class UserProfileTests(TestCase):
         self.champ_lg = Tournament.objects.filter(name="UEFA Champions League 2018").get()
         self.wc_fixtures = Fixture.objects.filter(tournament=self.world_cup)
         self.cl_fixtures = Fixture.objects.filter(tournament=self.champ_lg)
-        for f in self.wc_fixtures:
-            helpers.generate_answer(self.user, f) # generate answers for all fixtures in the tournament
-        for f in self.cl_fixtures:
-            helpers.generate_answer(self.user, f) # generate answers for all fixtures in the tournament
+        self.enter_predictions(self.user)
 
     ### NON TEST HELPER METHODS ###
     # Queries the m2m table storing user points per tournament
+    def enter_predictions(self, user, team1_goals=1, team2_goals=1):
+        for f in self.wc_fixtures:
+            helpers.generate_answer(user, f, team1_goals, team2_goals) # generate answers for all fixtures in the tournament
+        for f in self.cl_fixtures:
+            helpers.generate_answer(user, f, team1_goals, team2_goals) # generate answers for all fixtures in the tournament
+
     def tournament_pts(self):
         return self.user.profile.tournament_pts.filter(tournament=self.world_cup).get().points
     
@@ -35,6 +38,11 @@ class UserProfileTests(TestCase):
         self.user.refresh_from_db() # grab the user from the DB, now that their points are added
         self.WC_POINTS = 10
         self.CL_POINTS = 6
+
+    def add_friends(self, user, friendlist):
+        for friend in friendlist:
+            user.profile.friends.add(friend)
+        user.refresh_from_db()
 
     ### TESTS ###
 
@@ -89,13 +97,13 @@ class UserProfileTests(TestCase):
         self.assertEqual(wc_pts, self.WC_POINTS)
 
         cl_pts = self.user.profile.get_tournament_points(tournament=self.champ_lg)
-        self.assertEqual(cl_pts, self.CL_POINTS)
+        self.assertEquals(cl_pts, self.CL_POINTS)
 
         # Create fake tournament and assert the points = 0
         t = Tournament.objects.create(name="Atlantic League", start_date=timezone.now())
         t_pts = self.user.profile.get_tournament_points(tournament=t)
-        self.assertEqual(t_pts, 0)
-        self.assertEqual(self.user.profile.points, (wc_pts + cl_pts + t_pts))
+        self.assertEquals(t_pts, 0)
+        self.assertEquals(self.user.profile.points, (wc_pts + cl_pts + t_pts))
 
     # Tests the user's points per fixture method, globally and with a provided tournament
     def test_points_per_fixture(self):
@@ -110,9 +118,60 @@ class UserProfileTests(TestCase):
         avg_pts_wc = wc_pts / user_points.filter(fixture__tournament=self.world_cup).count()
         avg_pts_cl = cl_pts / user_points.filter(fixture__tournament=self.champ_lg).count()
 
-        self.assertEqual(self.user.profile.points_per_fixture(), avg_pts)
-        self.assertEqual(self.user.profile.points_per_fixture(tournament=self.world_cup), avg_pts_wc)
-        self.assertEqual(self.user.profile.points_per_fixture(tournament=self.champ_lg), avg_pts_cl)
+        self.assertEquals(self.user.profile.points_per_fixture(), avg_pts)
+        self.assertEquals(self.user.profile.points_per_fixture(tournament=self.world_cup), avg_pts_wc)
+        self.assertEquals(self.user.profile.points_per_fixture(tournament=self.champ_lg), avg_pts_cl)
 
+    # Tests the get_ranking functionality
     def test_get_ranking(self):
-        pass
+        user2 = helpers.generate_user(username="test2")
+        self.enter_predictions(user2, 2, 2)
+        self.enter_results()
+        user2_wc_pts = 6
+        user2_cl_pts = 3
+        user2.refresh_from_db()
+
+        self.assertEquals(user2.profile.points, user2_cl_pts + user2_wc_pts)
+        self.assertEquals(user2.profile.get_tournament_points(tournament=self.world_cup), user2_wc_pts)
+        self.assertEquals(user2.profile.get_tournament_points(tournament=self.champ_lg), user2_cl_pts)
+
+        # Ensure self.user has more points for each tournament than user2
+        assert self.user.profile.get_tournament_points(tournament=self.world_cup) > user2.profile.get_tournament_points(tournament=self.world_cup)
+        assert self.user.profile.get_tournament_points(tournament=self.champ_lg) > user2.profile.get_tournament_points(tournament=self.champ_lg)
+        u1_rank = self.user.profile.get_ranking()
+        u2_rank = user2.profile.get_ranking()
+        self.assertEquals(u1_rank, 1)
+        self.assertEquals(u2_rank, 2)
+
+        # Create dummy user and ensure they're ranked below user2
+        user3 = helpers.generate_user(username="test3")
+        u3_rank = user3.profile.get_ranking()
+        self.assertEquals(u3_rank, 3)
+
+    def test_get_friend_ranking(self):
+        user2, user3 = helpers.generate_user(username="test2"), helpers.generate_user(username="test3")
+        self.enter_predictions(user2, 1, 1)
+        self.enter_predictions(user3, 0, 2)
+        self.enter_results()
+        user2_wc_pts, user3_wc_pts = 6, 1
+        user2_cl_pts = 3, 1
+        user2.refresh_from_db()
+        user3.refresh_from_db()
+
+        # The above results should see user1,user2 ranked #1 and user3 ranked #3
+        self.assertEquals(self.user.profile.get_ranking(), 1)
+        self.assertEquals(user2.profile.get_ranking(), 1)
+        self.assertEquals(user3.profile.get_ranking(), 3)
+
+        # since no friends have been added, the friend ranking should be #1 for all initially
+        self.assertEquals(self.user.profile.get_ranking(friends=True), 1)
+        self.assertEquals(user3.profile.get_ranking(friends=True), 1)
+
+        self.add_friends(self.user, [user2, user3])
+        self.assertEqual(self.user.profile.friends.count(), 2)
+        self.assertEquals(self.user.profile.get_ranking(friends=True), 1)
+        
+        self.add_friends(user3, [user2])
+        self.assertEqual(user3.profile.get_ranking(friends=True), 2)
+        self.add_friends(user3, [self.user])
+        self.assertEqual(user3.profile.get_ranking(friends=True), 3)
