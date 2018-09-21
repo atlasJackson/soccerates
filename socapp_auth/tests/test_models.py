@@ -148,6 +148,7 @@ class UserProfileTests(TestCase):
         u3_rank = user3.profile.get_ranking()
         self.assertEquals(u3_rank, 3)
 
+    # Tests the get_ranking method when used among friends only
     def test_get_friend_ranking(self):
         user2, user3 = helpers.generate_user(username="test2"), helpers.generate_user(username="test3")
         self.enter_predictions(user2, 1, 1)
@@ -167,10 +168,12 @@ class UserProfileTests(TestCase):
         self.assertEquals(self.user.profile.get_ranking(friends=True), 1)
         self.assertEquals(user3.profile.get_ranking(friends=True), 1)
 
+        # Add friends for user1 and check ranking among them
         self.add_friends(self.user, [user2, user3])
         self.assertEqual(self.user.profile.friends.count(), 2)
         self.assertEquals(self.user.profile.get_ranking(friends=True), 1)
         
+        # Add friends for user3 and check ranking among them
         self.add_friends(user3, [user2])
         self.assertEqual(user3.profile.get_ranking(friends=True), 2)
         self.add_friends(user3, [self.user])

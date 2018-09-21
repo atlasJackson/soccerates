@@ -497,9 +497,7 @@ def show_leaderboard(request, leaderboard):
         access_form = PrivateAccessForm(request.POST or None)
         context_dict = {'access_form': access_form, 'leaderboard': leaderboard}
 
-        # Check if the request was HTTP POST.
         if request.method == 'POST':
-
             # Check if the provided form is valid.
             if access_form.is_valid():
 
@@ -572,14 +570,13 @@ def friends_leaderboard(request):
     return render(request, "show_leaderboard.html", context)
 
 # Returns stats for the leaderboard passed in. If leaderboard is None, we assume global leaderboard
-# This may need altered when friend lists are added, to accommodate the extra option.
 def leaderboard_stats(leaderboard=None, user=None):
     if leaderboard is None:
         members = get_user_model().objects.select_related('profile').order_by('-profile__points')
     elif leaderboard == "Friends":
         members = user.profile.friends.all().select_related('profile').order_by('-profile__points') | get_user_model().objects.filter(username=user)
     else:
-        members = leaderboard.users.select_related('profile').order_by('-profile__points')
+        members = leaderboard.get_members()
     # Get a collection of board statistics.
     total_points = members.aggregate(tp=Sum('profile__points'))['tp']
 
