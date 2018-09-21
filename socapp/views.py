@@ -269,8 +269,8 @@ def answer_form_selected(request, stage):
             # Not a POST, so all forms will be blank unless the user has already submitted an answer.
             # If answers exist, populate the form with the existing answers.
 
-            # Get number of fixtures per group
-            group_fixture_count = len(group_fixtures) / len(Team.group_names)
+            # Get number of fixtures per group. Move to tournament model?
+            group_fixture_count = group_fixtures.count() / len(Team.group_names)
 
             if len(group_fixtures) > 0:
                 is_international = group_fixtures[0].tournament.is_international
