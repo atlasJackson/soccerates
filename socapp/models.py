@@ -127,6 +127,9 @@ class Tournament(models.Model):
     def get_ranked_users(self):
         return self.userprofile_set.select_related('user').order_by('-tournament_pts__points')
 
+    def num_fixtures_per_group(self):
+        pass
+
 ################################################################################
 
 # Override Fixture's normal 'objects' Manager to automatically query for tournament and team info when a Fixture is loaded from the DB
@@ -410,6 +413,27 @@ class Leaderboard(models.Model):
         self.slug = slugify(self.name)
         super(Leaderboard, self).save(*args, **kwargs)
 
+    # Gets the leaderboard members from the DB
+    def get_members(self):
+        return self.users.all().select_related('profile').order_by("-profile__points")
+
+
+    def total_points(self):
+        return self.get_members().aggregate(tp=Sum('profile__points'))['tp']
+
+    def num_members(self):
+        return self.get_members().count()
+
+    def avg_points_per_user(self):
+        num_members = self.num_members()
+        if num_members > 0:
+            return self.total_points() / self.num_members()
+    
+    def percent_above_avg_points(self):
+        average_points = self.avg_points_per_user()
+        num_members = self.num_members()
+        if num_members > 0:
+            return self.get_members().filter(profile__points__gte=average_points).count()*100 / num_members
 
 
 ###############################

@@ -13,8 +13,8 @@ def generate_fixture(team1, team2, match_date, stage=Fixture.GROUP):
     fixture = Fixture.objects.get_or_create(team1=team1, team2=team2, tournament=tournament, match_date=match_date, stage=stage)[0]
     return fixture
 
-def generate_answer(user, fixture):
-    answer = Answer.objects.create(user=user,fixture=fixture, team1_goals=1, team2_goals=1)
+def generate_answer(user, fixture, team1_goals=1, team2_goals=1):
+    answer = Answer.objects.create(user=user,fixture=fixture, team1_goals=team1_goals, team2_goals=team2_goals)
     return answer
 
 def generate_user(username="test", password="password"):

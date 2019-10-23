@@ -299,25 +299,6 @@ class FixtureTests(TestCase):
         self.assertEquals(self.fixture.team1.games_drawn, 0)
         self.assertEquals(self.fixture.team2.games_drawn, 0)
 
-class UserProfileTests(TestCase):
-    def setUp(self):
-        self.user = helpers.generate_user()
-        self.tournament = Tournament.objects.first()
-
-    # Queries the m2m table storing user points per tournament
-    def tournament_pts(self):
-        return self.user.profile.tournament_pts.filter(tournament=self.tournament).get().points
-
-    # Tests to ensure a UserProfile is also created whenever a user is created
-    def test_userprofile_creation(self):
-        self.assertIsInstance(self.user.profile, UserProfile)
-    
-    # Tests that users have zero points upon creation
-    def test_user_starts_with_zero_points(self):
-        self.assertEquals(self.user.profile.points, 0)
-        with self.assertRaises(TournamentPoints.DoesNotExist):
-            self.assertEquals(self.tournament_pts(), 0)
-
 class AnswerTests(TestCase):
     fixtures = ['tournaments.json', 'teams.json', 'games.json']
     
