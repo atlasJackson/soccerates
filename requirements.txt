@@ -1,6 +1,6 @@
 beautifulsoup4==4.6.0
 certifi==2018.1.18
-Django==2.0.11
+Django==2.2.10
 django-cleanup==2.1.0
 django-crispy-forms==1.7.2
 django-debug-toolbar==1.9.1
