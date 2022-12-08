@@ -1,5 +1,5 @@
 beautifulsoup4==4.6.0
-certifi==2018.1.18
+certifi==2022.12.7
 Django==2.0.11
 django-cleanup==2.1.0
 django-crispy-forms==1.7.2
